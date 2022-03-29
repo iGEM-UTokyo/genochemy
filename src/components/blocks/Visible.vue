@@ -1,7 +1,7 @@
 <template>
   <div>
-    <img src="/blocks/promoter.svg" />
-    <span>T7 promoter</span>
+    <img src="@/assets/blocks/visible.svg" />
+    <span>mCherry</span>
   </div>
 </template>
 

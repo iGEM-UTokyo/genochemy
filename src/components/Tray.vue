@@ -1,9 +1,14 @@
 <template>
   <div class="tray">
-    <BlocksPromoter />
-    <BlocksVisible />
+    <Promoter />
+    <Visible />
   </div>
 </template>
+
+<script setup lang="ts">
+import Promoter from './blocks/Promoter.vue'
+import Visible from './blocks/Visible.vue'
+</script>
 
 <style scoped>
 .tray {

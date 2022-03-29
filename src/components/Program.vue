@@ -8,29 +8,26 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-import { programStore } from '~/store'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from '../store'
 
 const componentName = {
   'promoter': 'BlocksPromoter',
   'visible': 'BlocksVisible',
 }
-export default Vue.extend({
-  name: 'Program',
-  computed: {
-    blockComponents() {
-      return programStore.blocks.map(block => {
-        return {
-          block,
-          is: componentName[block.type],
-        }
-      })
-    },
-  }
+
+const { blocks } = useStore()
+
+const blockComponents = computed(() => {
+  return blocks.map(block => {
+    return {
+      block,
+      is: componentName[block.type],
+    }
+  })
 })
 </script>
-
 
 <style scoped>
 .tray {
