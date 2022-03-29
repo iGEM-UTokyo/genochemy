@@ -1,0 +1,4 @@
+html, body, #__nuxt, #__layout, #__layout > div {
+  margin: 0;
+  height: 100%;
+}
