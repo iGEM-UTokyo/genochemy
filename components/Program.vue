@@ -1,9 +1,36 @@
 <template>
-  <div class="tray">
-    <BlocksPromoter />
-    <BlocksVisible />
+  <div class="program">
+    <component
+      v-for="(component, index) in blockComponents"
+      :key="index"
+      :is="component.is"
+      :block="block" />
   </div>
 </template>
+
+<script lang="ts">
+import Vue from 'vue'
+import { programStore } from '~/store'
+
+const componentName = {
+  'promoter': 'BlocksPromoter',
+  'visible': 'BlocksVisible',
+}
+export default Vue.extend({
+  name: 'Program',
+  computed: {
+    blockComponents() {
+      return programStore.blocks.map(block => {
+        return {
+          block,
+          is: componentName[block.type],
+        }
+      })
+    },
+  }
+})
+</script>
+
 
 <style scoped>
 .tray {
