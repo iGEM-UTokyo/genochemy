@@ -5,12 +5,9 @@
   </main>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-
-export default Vue.extend({
-  name: 'IndexPage'
-})
+<script setup lang="ts">
+import Tray from './components/Tray.vue'
+import Program from './components/Program.vue'
 </script>
 
 <style scoped>

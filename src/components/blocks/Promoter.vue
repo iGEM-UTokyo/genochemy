@@ -1,7 +1,7 @@
 <template>
   <div>
-    <img src="/blocks/visible.svg" />
-    <span>mCherry</span>
+    <img src="@/assets/blocks/promoter.svg" />
+    <span>T7 promoter</span>
   </div>
 </template>
 
@@ -20,3 +20,8 @@ span {
   font-size: 18px;
 }
 </style>
+
+<script setup lang="ts">
+
+</script>
+
