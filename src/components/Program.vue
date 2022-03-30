@@ -4,22 +4,25 @@
       v-for="(component, index) in blockComponents"
       :key="index"
       :is="component.is"
-      :block="block" />
+      :block="component.block" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useStore } from '../store'
+import Promoter from './blocks/Promoter.vue'
+import Visible from './blocks/Promoter.vue'
 
 const componentName = {
-  'promoter': 'BlocksPromoter',
-  'visible': 'BlocksVisible',
+  'promoter': Promoter,
+  'visible': Visible,
 }
 
 const { blocks } = useStore()
 
 const blockComponents = computed(() => {
+  console.log(blocks)
   return blocks.map(block => {
     return {
       block,

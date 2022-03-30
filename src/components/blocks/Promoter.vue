@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="click">
     <img src="@/assets/blocks/promoter.svg" />
     <span>T7 promoter</span>
   </div>
@@ -22,6 +22,13 @@ span {
 </style>
 
 <script setup lang="ts">
+import { PromoterBlock } from '../../utils/block'
+import { useStore } from '../../store'
 
+const { addBlock } = useStore()
+const click = () => {
+  console.log("hoge")
+  addBlock(new PromoterBlock('T7 promoter', [0, 0]))
+}
 </script>
 

@@ -1,7 +1,11 @@
 import { defineStore } from 'pinia'
-import { Block } from '../utils/block'
+import { Ref, ref } from 'vue'
+import { Block } from './utils/block'
 
 export const useStore = defineStore('main', () => {
-  const blocks: Block[] = []
-  return { blocks }
+  const blocks: Ref<Block[]> = ref([])
+  const addBlock = (block: Block) => {
+    blocks.value.push(block)
+  }
+  return { blocks, addBlock }
 })
