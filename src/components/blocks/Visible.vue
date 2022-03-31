@@ -9,14 +9,11 @@
 div {
   position: relative;
 }
-img {
-  width: 100%;
-}
 span {
   color: white;
   position: absolute;
   left: 20px;
-  bottom: 15px;
-  font-size: 18px;
+  bottom: 10px;
+  font-size: 16px;
 }
 </style>

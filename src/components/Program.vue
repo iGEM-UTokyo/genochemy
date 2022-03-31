@@ -1,8 +1,8 @@
 <template>
   <div class="program">
     <component
-      v-for="(component, index) in blockComponents"
-      :key="index"
+      v-for="component in blockComponents"
+      :key="component.block.uuid"
       :is="component.is"
       :block="component.block" />
   </div>
@@ -22,7 +22,6 @@ const componentName = {
 const { blocks } = useStore()
 
 const blockComponents = computed(() => {
-  console.log(blocks)
   return blocks.map(block => {
     return {
       block,

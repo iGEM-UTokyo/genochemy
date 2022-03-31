@@ -11,10 +11,12 @@
   "dependencies": {
     "core-js": "^3.8.3",
     "pinia": "^2.0.12",
+    "uuid": "^8.3.2",
     "vue": "^3.2.13"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",
