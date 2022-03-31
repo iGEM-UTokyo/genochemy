@@ -24,7 +24,7 @@ span {
 <script setup lang="ts">
 import { PromoterBlock, Block, BlockWithUUID } from '../../utils/block'
 import { useStore } from '../../store'
-import { Ref, ref, withDefaults, defineProps, computed } from 'vue';
+import { Ref, ref, withDefaults, defineProps, computed, StyleValue, ComputedRef } from 'vue';
 
 const props = withDefaults(defineProps<{
   showcase: boolean,
@@ -51,7 +51,7 @@ const down = () => {
 
 const top = ref(0)
 const left = ref(0)
-const style = computed(() => props.showcase ? {} : {
+const style: ComputedRef<StyleValue> = computed(() => props.showcase ? {} : {
   position: 'absolute',
   top: `${top.value}px`,
   left: `${left.value}px`,
