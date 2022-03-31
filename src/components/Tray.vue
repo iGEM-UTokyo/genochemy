@@ -1,11 +1,15 @@
 <template>
   <div class="tray">
-    <Promoter />
-    <Visible />
+    <Promoter :showcase="true" :block="new PromoterBlock({
+      promoterName: 'T7 promoter',
+      location: [0, 0],
+    })" />
+    <Visible :showcase="true" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { PromoterBlock } from '@/utils/block';
 import Promoter from './blocks/Promoter.vue'
 import Visible from './blocks/Visible.vue'
 </script>
