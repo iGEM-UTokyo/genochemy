@@ -1,17 +1,18 @@
 <template>
   <div class="tray">
-    <Promoter :showcase="true" :block="new PromoterBlock({
-      promoterName: 'T7 promoter',
-      location: [0, 0],
-    })" />
-    <Visible :showcase="true" />
+    <TrayBlock
+      v-for="(detail, name) in blockDesignDetails"
+      :key="name"
+      :blockName="name"
+      :src="detail.imageSrc"
+      :block-class="detail.blockClass"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { PromoterBlock } from '@/utils/block';
-import Promoter from './blocks/Promoter.vue'
-import Visible from './blocks/Visible.vue'
+import TrayBlock from './TrayBlock.vue'
+import { blockDesignDetails } from '../utils/block-designs'
 </script>
 
 <style scoped>
