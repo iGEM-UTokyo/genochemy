@@ -1,25 +1,32 @@
 import { defineStore } from 'pinia'
 import { Ref, ref } from 'vue'
-import { Block, BlockWithUUID } from './utils/block'
+import { Block, BlockWithUUID, Vector2 } from './utils/block'
+import { Snake } from './utils/snake'
 import { v4 as uuidv4 } from 'uuid'
 
 function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
   block.uuid = uuid
 }
 export const useStore = defineStore('main', () => {
-  const blocks: Ref<BlockWithUUID[]> = ref([])
-  const addBlock = (block: Block) => {
+  const snakes: Ref<Record<string, Snake>> = ref({})
+  const grabbing = ref(false)
+  const addBlock = (block: Block, anchorPrev: Vector2) => {
     setUUID(block, uuidv4())
-    blocks.value.push(block)
+    const snakeUUID = uuidv4()
+    snakes.value[snakeUUID] = new Snake({
+      uuid: snakeUUID,
+      blocks: [block],
+      anchorPrev,
+    })
   }
-  const updateBlock = (block: BlockWithUUID) => {
-    // todo: to obj
-    for (let i = 0; i < blocks.value.length; i++) {
-      if (blocks.value[i].uuid === block.uuid) {
-        blocks.value[i] = block
-        break
-      }
-    }
+  const updateSnake = (snake: Snake) => {
+    snakes.value[snake.uuid] = snake
   }
-  return { blocks, addBlock, updateBlock }
+  const grabStart = (grabbingBlock: BlockWithUUID) => {
+    grabbing.value = true
+  }
+  const grabEnd = () => {
+    grabbing.value = false
+  }
+  return { snakes, addBlock, updateSnake }
 })

@@ -37,9 +37,8 @@ const { addBlock } = useStore()
 const down = () => {
   if (block.value !== null) {
     // todo: throw exception
-    addBlock(new props.blockClass(
-      [block.value.offsetLeft, block.value.offsetTop]
-    ))
+    addBlock(new props.blockClass(),
+      [block.value.offsetLeft, block.value.offsetTop + block.value.offsetHeight])
   }
 }
 </script>
