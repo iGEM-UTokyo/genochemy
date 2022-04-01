@@ -5,19 +5,17 @@ export type Vector2 = [number, number]
 export abstract class Block {
   abstract type: BlockTypes
   abstract name: BlockNames
-  location: Vector2
+  abstract width: number
   uuid?: string
-  constructor(args: Pick<Block, 'location' | 'uuid'>) {
-    this.location = args.location
+  constructor(args: Pick<Block, 'uuid'>) {
     this.uuid = args.uuid
   }
 }
 
 export abstract class PromoterBlock extends Block {
   type: 'promoter' = 'promoter'
-  constructor(args: Pick<Block, 'location' | 'uuid'>) {
+  constructor(args: Pick<Block, 'uuid'>) {
     super({
-      location: args.location,
       uuid: args.uuid
     })
   }
@@ -25,32 +23,29 @@ export abstract class PromoterBlock extends Block {
 
 export abstract class VisibilityBlock extends Block {
   type: 'visibility' = 'visibility'
-  constructor(args: Pick<Block, 'location' | 'uuid'>) {
+  constructor(args: Pick<Block, 'uuid'>) {
     super({
-      location: args.location,
       uuid: args.uuid
     })
   }
 }
 
 export type FinalBlock = {
-  new(location: Vector2): Block;
+  new(): Block;
 }
 
 export class T7PromoterBlock extends PromoterBlock {
   name: 'T7 promoter' = 'T7 promoter'
-  constructor(location: Vector2) {
-    super({
-      location
-    })
+  width = 268.2
+  constructor() {
+    super({})
   }
 }
 
 export class MCherryBlock extends VisibilityBlock {
   name: 'mCherry' = 'mCherry'
-  constructor(location: Vector2) {
-    super({
-      location
-    })
+  width = 268.2
+  constructor() {
+    super({})
   }
 }

@@ -1,18 +1,17 @@
 <template>
   <div class="program">
-    <Block
-      v-for="block in blocks"
-      :key="block.uuid"
-      :block="block" />
+    <Snake
+      v-for="snake in snakes"
+      :key="snake.uuid"
+      :snake="snake" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useStore } from '../store'
-import Block from './Block.vue'
+import Snake from '@/components/Snake.vue'
 
-const { blocks } = useStore()
+const { snakes } = useStore()
 
 </script>
 
