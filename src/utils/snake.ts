@@ -14,7 +14,7 @@ export class Snake {
       return prev + current.width
     }, 0)
   }
-  get anchorNext() {
+  get anchorNext(): Vector2 {
     return [this.anchorPrev[0] + this.width, this.anchorPrev[1]]
   }
 }

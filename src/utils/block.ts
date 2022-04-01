@@ -36,7 +36,7 @@ export type FinalBlock = {
 
 export class T7PromoterBlock extends PromoterBlock {
   name: 'T7 promoter' = 'T7 promoter'
-  width = 268.2
+  width = 184
   constructor() {
     super({})
   }
@@ -44,7 +44,7 @@ export class T7PromoterBlock extends PromoterBlock {
 
 export class MCherryBlock extends VisibilityBlock {
   name: 'mCherry' = 'mCherry'
-  width = 268.2
+  width = 184
   constructor() {
     super({})
   }

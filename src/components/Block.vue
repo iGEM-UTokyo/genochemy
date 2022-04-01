@@ -8,6 +8,7 @@
 <style scoped>
 div {
   position: relative;
+  display: flex /* for height-adjustment */
 }
 img {
   pointer-events: none;
@@ -16,7 +17,7 @@ span {
   color: white;
   position: absolute;
   left: 20px;
-  bottom: 10px;
+  bottom: 3px;
   font-size: 16px;
 }
 </style>
