@@ -1,34 +1,19 @@
 <template>
   <div class="program">
-    <component
-      v-for="component in blockComponents"
-      :key="component.block.uuid"
-      :is="component.is"
-      :block="component.block" />
+    <Block
+      v-for="block in blocks"
+      :key="block.uuid"
+      :block="block" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useStore } from '../store'
-import Promoter from './blocks/Promoter.vue'
-import Visible from './blocks/Promoter.vue'
-
-const componentName = {
-  'promoter': Promoter,
-  'visible': Visible,
-}
+import Block from './Block.vue'
 
 const { blocks } = useStore()
 
-const blockComponents = computed(() => {
-  return blocks.map(block => {
-    return {
-      block,
-      is: componentName[block.type],
-    }
-  })
-})
 </script>
 
 <style scoped>
