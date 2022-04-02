@@ -33,7 +33,7 @@ let currentSnake = ref(Snake.copy(props.snake))
 // props.snake: not working
 watch(props, () => {
   currentSnake.value = Snake.copy(props.snake)
-})
+}, { flush: 'post' })
 const snakeRef: Ref<HTMLElement | null> = ref(null)
 const { updateSnake, snakes, mergeToTail, mergeToHead } = useStore()
 // non-reactive. updated on mousedown
@@ -51,10 +51,12 @@ const down = () => {
 }
 
 const anchorTail = computed(() => currentSnake.value.anchorTail)
-const style: ComputedRef<StyleValue> = computed(() => ({
-  top: `${anchorTail.value[1] - (snakeRef.value ? snakeRef.value.clientHeight : 0)}px`,
-  left: `${anchorTail.value[0]}px`,
-}))
+const style: ComputedRef<StyleValue> = computed(() => {
+  return {
+    top: `${anchorTail.value[1] - (snakeRef.value ? snakeRef.value.clientHeight : 0)}px`,
+    left: `${anchorTail.value[0]}px`,
+  }
+})
 
 const currentBindInfo: Ref<{
   bindGuide: [Readonly<Vector2>, Readonly<Vector2>],
