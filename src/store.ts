@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive, Ref, ref, watch } from 'vue'
+import { reactive, readonly, Ref, ref, watch } from 'vue'
 import { Block, BlockWithUUID, Vector2 } from './utils/block'
 import { Snake } from './utils/snake'
 import { v4 as uuidv4 } from 'uuid'
@@ -56,5 +56,5 @@ export const useStore = defineStore('main', () => {
   const grabEnd = () => {
     grabbing.value = false
   }
-  return { snakes, addBlock, updateSnake, mergeToTail, mergeToHead }
+  return { snakes: readonly(snakes), addBlock, updateSnake, mergeToTail, mergeToHead }
 })

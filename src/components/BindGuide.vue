@@ -11,7 +11,7 @@ import { Vector2 } from '@/utils/block';
 import { StyleValue, defineProps, ComputedRef, computed } from 'vue';
 
 const props = defineProps<{
-  positions: [Vector2, Vector2]
+  positions: [Readonly<Vector2>, Readonly<Vector2>]
 }>()
 
 const style: ComputedRef<StyleValue> = computed(() => {
