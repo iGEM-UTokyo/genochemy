@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <img :src="src" />
+  <div :style="divStyle">
+    <img :src="src" :width="props.block.width" />
     <span>{{ props.block.name }}</span>
   </div>
 </template>
@@ -24,12 +24,17 @@ span {
 
 <script setup lang="ts">
 import { Block } from '../utils/block'
-import { defineProps, computed } from 'vue';
+import { overlap } from '../utils/snake'
+import { defineProps, computed, StyleValue, ComputedRef } from 'vue';
 import { blockDesignDetails } from '@/utils/block-designs';
 
 const props = defineProps<{
   block: Block,
 }>()
 const src = computed(() => blockDesignDetails[props.block.name].imageSrc)
+
+const divStyle: ComputedRef<StyleValue> = computed(() => ({
+  width: `${props.block.width - overlap}px`
+}))
 </script>
 
