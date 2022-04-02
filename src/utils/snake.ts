@@ -10,6 +10,13 @@ export class Snake {
     this.blocks = args.blocks
     this.anchorTail = args.anchorTail
   }
+  static copy(snake: Snake) {
+    return new Snake({
+      uuid: snake.uuid,
+      blocks: snake.blocks,
+      anchorTail: [snake.anchorTail[0], snake.anchorTail[1]]
+    })
+  }
   get width() {
     return this.blocks.reduce((prev, current) => {
       if (prev === 0) {
