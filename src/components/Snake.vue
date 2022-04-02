@@ -1,13 +1,18 @@
 <template>
-  <div @mousedown="down" @mouseup="up" ref="snakeRef" :style="style">
+  <div
+    class="snake"
+    @mousedown="down"
+    @mouseup="up"
+    ref="snakeRef"
+    :style="style">
     <Block
       v-for="block in props.snake.blocks"
       :key="block.uuid"
       :block="block" />
     <teleport to=".program">
       <BindGuide
-        v-if="currentBindGuide !== null"
-        :positions="currentBindGuide" />
+        v-if="currentBindInfo !== null"
+        :positions="currentBindInfo.bindGuide" />
     </teleport>
   </div>
 </template>
@@ -25,7 +30,7 @@ const props = defineProps<{
 }>()
 
 const snakeRef: Ref<HTMLElement | null> = ref(null)
-const { updateSnake, snakes } = useStore()
+const { updateSnake, snakes, mergeToTail, mergeToHead } = useStore()
 // non-reactive. updated on mousedown
 let tailAnchors: { pos: Vector2, uuid: string }[] = []
 // non-reactive. updated on mousedown
@@ -42,13 +47,15 @@ const down = () => {
 
 const anchorTail = computed(() => props.snake.anchorTail)
 const style: ComputedRef<StyleValue> = computed(() => ({
-  position: 'absolute',
   top: `${anchorTail.value[1] - (snakeRef.value ? snakeRef.value.clientHeight : 0)}px`,
   left: `${anchorTail.value[0]}px`,
 }))
 
-let currentBindUUID: string | null = null
-const currentBindGuide: Ref<[Vector2, Vector2] | null> = ref(null)
+const currentBindInfo: Ref<{
+  bindGuide: [Vector2, Vector2],
+  toUUID: string,
+  mode: 'head' | 'tail'
+} | null> = ref(null)
 const move = (event: MouseEvent) => {
   // eslint-disable-next-line vue/no-mutating-props
   props.snake.anchorTail[0] += event.movementX
@@ -60,8 +67,11 @@ const move = (event: MouseEvent) => {
     if (tailAnchor.uuid === props.snake.uuid) continue
     const distance = (tailAnchor.pos[0] - _head[0]) ** 2 + (tailAnchor.pos[1] - _head[1]) ** 2
     if (distance <= 50 ** 2) {
-      currentBindUUID = tailAnchor.uuid
-      currentBindGuide.value = [tailAnchor.pos, _head]
+      currentBindInfo.value = {
+        bindGuide: [tailAnchor.pos, _head],
+        toUUID: tailAnchor.uuid,
+        mode: 'tail',
+      }
       hasSet = true
     }
   }
@@ -70,24 +80,42 @@ const move = (event: MouseEvent) => {
     if (headAnchor.uuid === props.snake.uuid) continue
     const distance = (headAnchor.pos[0] - _tail[0]) ** 2 + (headAnchor.pos[1] - _tail[1]) ** 2
     if (distance <= 50 ** 2) {
-      currentBindUUID = headAnchor.uuid
-      currentBindGuide.value = [headAnchor.pos, _tail]
+      currentBindInfo.value = {
+        bindGuide: [headAnchor.pos, _tail],
+        toUUID: headAnchor.uuid,
+        mode: 'head'
+      }
       hasSet = true
     }
   }
   if (!hasSet) {
-    currentBindUUID = null
-    currentBindGuide.value = null
+    currentBindInfo.value = null
   }
 }
 const up = () => {
   window.removeEventListener('mousemove', move)
-  currentBindGuide.value = null
-  const newSnake = Object.assign(Object.create(Object.getPrototypeOf(props.snake)), props.snake) as Snake
-  newSnake.anchorTail = anchorTail.value
-  updateSnake(newSnake)
+  if (currentBindInfo.value !== null) {
+    if (currentBindInfo.value.mode === 'head') {
+      mergeToHead(props.snake.uuid, currentBindInfo.value.toUUID)
+    } else {
+      mergeToTail(props.snake.uuid, currentBindInfo.value.toUUID)
+    }
+    currentBindInfo.value = null
+  } else {
+    const newSnake = Object.assign(Object.create(Object.getPrototypeOf(props.snake)), props.snake) as Snake
+    newSnake.anchorTail = anchorTail.value
+    updateSnake(newSnake)
+  }
 }
 
 // on setup, mouse is down
 down()
 </script>
+
+<style scoped>
+.snake {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+}
+</style>
