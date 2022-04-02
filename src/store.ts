@@ -10,13 +10,13 @@ function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
 export const useStore = defineStore('main', () => {
   const snakes: Ref<Record<string, Snake>> = ref({})
   const grabbing = ref(false)
-  const addBlock = (block: Block, anchorPrev: Vector2) => {
+  const addBlock = (block: Block, anchorTail: Vector2) => {
     setUUID(block, uuidv4())
     const snakeUUID = uuidv4()
     snakes.value[snakeUUID] = new Snake({
       uuid: snakeUUID,
       blocks: [block],
-      anchorPrev,
+      anchorTail,
     })
   }
   const updateSnake = (snake: Snake) => {
