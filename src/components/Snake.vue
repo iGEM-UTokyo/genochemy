@@ -22,10 +22,11 @@ import { useStore } from '../store'
 import Block from '@/components/Block.vue'
 import BindGuide from '@/components/BindGuide.vue'
 import { Ref, ref, reactive, defineProps, computed, StyleValue, ComputedRef, toRaw, watch } from 'vue';
-import { Vector2 } from '@/utils/block';
+import { BlockWithUUID, Vector2 } from '@/utils/block';
+import { DeepReadonly } from '@/utils/deep-readonly'
 
 const props = defineProps<{
-  snake: Snake
+  snake: DeepReadonly<Snake>
 }>()
 
 let currentSnake = ref(Snake.copy(props.snake))

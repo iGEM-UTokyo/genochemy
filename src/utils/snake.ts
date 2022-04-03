@@ -1,5 +1,6 @@
 import { BlockWithUUID, Vector2 } from "./block";
 import { v4 as uuidv4 } from 'uuid'
+import { DeepReadonly } from '@/utils/deep-readonly'
 
 export const overlap = 9
 export const splitMovement = 5
@@ -16,7 +17,7 @@ export class Snake {
     this.anchorTail = args.anchorTail
     this.fromTray = args.fromTray || false
   }
-  static copy(snake: Snake) {
+  static copy(snake: DeepReadonly<Snake>) {
     return new Snake({
       uuid: snake.uuid,
       blocks: snake.blocks.slice(0),
