@@ -55,7 +55,6 @@ export class Snake {
           blocks: this.blocks.splice(index + 1),
           anchorTail: [anchorX, this.anchorTail[1]]
         })
-        console.log(this.blocks)
         return newSnake
       }
     }
