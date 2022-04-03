@@ -71,9 +71,11 @@ const move = (event: MouseEvent) => {
   if (!hasSplitted && grabbingBlockUUID !== null && event.shiftKey) {
     if (event.movementX < 0) {
       hasSplitted = true
+      updateSnake(Snake.copy(currentSnake.value))
       splitHead(currentSnake.value.uuid, grabbingBlockUUID)
     } else if (event.movementX > 0) {
       hasSplitted = true
+      updateSnake(Snake.copy(currentSnake.value))
       splitTail(currentSnake.value.uuid, grabbingBlockUUID)
     }
   }
