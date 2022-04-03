@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive, readonly, Ref, ref, watch } from 'vue'
+import { isReadonly, reactive, readonly, Ref, ref, watch } from 'vue'
 import { Block, BlockWithUUID, Vector2 } from './utils/block'
 import { Snake } from './utils/snake'
 import { v4 as uuidv4 } from 'uuid'
@@ -17,6 +17,7 @@ export const useStore = defineStore('main', () => {
       uuid: snakeUUID,
       blocks: [block],
       anchorTail,
+      fromTray: true
     })
   }
   const updateSnake = (snake: Snake) => {
@@ -50,11 +51,39 @@ export const useStore = defineStore('main', () => {
     snakes[toUUID].appendToHead(snakes[snakeUUID])
     delete snakes[snakeUUID]
   }
+  const splitHead = (snakeUUID: string, blockUUID: string) => {
+    if (!snakes[snakeUUID]) {
+      console.error(`snake uuid is invalid: ${snakeUUID}`)
+      return
+    }
+    const newSnake = snakes[snakeUUID].splitHead(blockUUID)
+    if (newSnake) {
+      snakes[newSnake.uuid] = newSnake
+    }
+  }
+  const splitTail = (snakeUUID: string, blockUUID: string) => {
+    if (!snakes[snakeUUID]) {
+      console.error(`snake uuid is invalid: ${snakeUUID}`)
+      return
+    }
+    const newSnake = snakes[snakeUUID].splitTail(blockUUID)
+    if (newSnake) {
+      snakes[newSnake.uuid] = newSnake
+    }
+  }
   const grabStart = (grabbingBlock: BlockWithUUID) => {
     grabbing.value = true
   }
   const grabEnd = () => {
     grabbing.value = false
   }
-  return { snakes: readonly(snakes), addBlock, updateSnake, mergeToTail, mergeToHead }
+  return {
+    snakes: readonly(snakes),
+    addBlock,
+    updateSnake,
+    mergeToTail,
+    mergeToHead,
+    splitHead,
+    splitTail,
+  }
 })
