@@ -8,7 +8,8 @@
 <style scoped>
 div {
   position: relative;
-  display: flex /* for height-adjustment */
+  display: flex; /* for height-adjustment */
+  user-select: none;
 }
 img {
   pointer-events: none;
