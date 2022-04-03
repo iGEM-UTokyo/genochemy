@@ -1,12 +1,11 @@
 <template>
   <div
     class="snake"
-    @mousedown="down"
-    @mouseup="up"
     ref="snakeRef"
     :style="style">
     <Block
       v-for="block in props.snake.blocks"
+      @mousedown="down(block.uuid)"
       :key="block.uuid"
       :block="block" />
     <teleport to=".program">
@@ -35,15 +34,19 @@ watch(props, () => {
   currentSnake.value = Snake.copy(props.snake)
 }, { flush: 'post' })
 const snakeRef: Ref<HTMLElement | null> = ref(null)
-const { updateSnake, snakes, mergeToTail, mergeToHead } = useStore()
+const { updateSnake, snakes, mergeToTail, mergeToHead, splitHead, splitTail } = useStore()
 // non-reactive. updated on mousedown
 let tailAnchors: { pos: Readonly<Vector2>, uuid: string }[] = []
 // non-reactive. updated on mousedown
 let headAnchors: { pos: Readonly<Vector2>, uuid: string }[] = []
-const down = () => {
+let grabbingBlockUUID: string | null = null
+let hasSplitted = false
+const down = (blockUUID: string) => {
   window.addEventListener('mousemove', move)
+  window.addEventListener('mouseup', up)
   tailAnchors = []
   headAnchors = []
+  grabbingBlockUUID = blockUUID
   for (let snake of Object.values(snakes)) {
     tailAnchors.push({ pos: snake.anchorTail, uuid: snake.uuid })
     headAnchors.push({ pos: snake.anchorNext, uuid: snake.uuid })
@@ -64,6 +67,15 @@ const currentBindInfo: Ref<{
   mode: 'head' | 'tail'
 } | null> = ref(null)
 const move = (event: MouseEvent) => {
+  if (!hasSplitted && grabbingBlockUUID !== null && event.shiftKey) {
+    if (event.movementX < 0) {
+      hasSplitted = true
+      splitHead(currentSnake.value.uuid, grabbingBlockUUID)
+    } else if (event.movementX > 0) {
+      hasSplitted = true
+      splitTail(currentSnake.value.uuid, grabbingBlockUUID)
+    }
+  }
   currentSnake.value.anchorTail[0] += event.movementX
   currentSnake.value.anchorTail[1] += event.movementY
   let hasSet = false
@@ -99,6 +111,10 @@ const move = (event: MouseEvent) => {
 }
 const up = () => {
   window.removeEventListener('mousemove', move)
+  window.removeEventListener('mouseup', up)
+  grabbingBlockUUID = null
+  hasSplitted = false
+
   if (currentBindInfo.value !== null) {
     if (currentBindInfo.value.mode === 'head') {
       mergeToHead(currentSnake.value.uuid, currentBindInfo.value.toUUID)
@@ -111,8 +127,9 @@ const up = () => {
   }
 }
 
-// on setup, mouse is down
-down()
+if (currentSnake.value.fromTray) {
+  down(currentSnake.value.blocks[0].uuid)
+}
 </script>
 
 <style scoped>
