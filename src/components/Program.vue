@@ -16,13 +16,7 @@ const { snakes } = useStore()
 </script>
 
 <style scoped>
-.tray {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding-right: 20px;
-  border-right: 1px solid #aaa;
+.program {
+  flex: 1;
 }
 </style>
