@@ -13,5 +13,9 @@ export const blockDesignDetails: { [K in Block.BlockNames]: BlockDesignDetail } 
   'mCherry': {
     imageSrc: '/blocks/visible.svg',
     blockClass: Block.MCherryBlock
-  }
+  },
+  'CYC1 Terminator': {
+    imageSrc: '/blocks/terminator.svg',
+    blockClass: Block.CYC1TerminatorBlock
+  },
 }
