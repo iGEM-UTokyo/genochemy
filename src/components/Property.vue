@@ -4,13 +4,14 @@
     <div class="tab-item">RNA</div>
     <div class="tab-item">Protein</div>
     <div class="tabs-separator" />
-    <div class="tab-button"><font-awesome-icon icon="play" /></div>
+    <div class="tab-button" @click="run"><font-awesome-icon icon="play" /></div>
     <div class="tab-button"><font-awesome-icon icon="stop" /></div>
   </div>
 </template>
 
 <script setup lang="ts">
-
+import { useStore } from '@/store'
+const { run } = useStore()
 </script>
 
 <style scoped>
