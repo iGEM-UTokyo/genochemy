@@ -1,5 +1,5 @@
-export type BlockTypes = 'promoter' | 'visibility'
-export type BlockNames = 'T7 promoter' | 'mCherry'
+export type BlockTypes = 'promoter' | 'visibility' | 'terminator'
+export type BlockNames = 'T7 promoter' | 'mCherry' | 'CYC1 Terminator'
 export type BlockWithUUID = Block & { uuid: string }
 export type Vector2 = [number, number]
 export abstract class Block {
@@ -30,6 +30,15 @@ export abstract class VisibilityBlock extends Block {
   }
 }
 
+export abstract class TerminatorBlock extends Block {
+  type: 'terminator' = 'terminator'
+  constructor(args: Pick<Block, 'uuid'>) {
+    super({
+      uuid: args.uuid
+    })
+  }
+}
+
 export type FinalBlock = {
   new(): Block;
 }
@@ -44,6 +53,14 @@ export class T7PromoterBlock extends PromoterBlock {
 
 export class MCherryBlock extends VisibilityBlock {
   name: 'mCherry' = 'mCherry'
+  width = 184
+  constructor() {
+    super({})
+  }
+}
+
+export class CYC1TerminatorBlock extends TerminatorBlock {
+  name: 'CYC1 Terminator' = 'CYC1 Terminator'
   width = 184
   constructor() {
     super({})
