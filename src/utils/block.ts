@@ -1,3 +1,5 @@
+import { Promoter, T7Promoter } from "./matter"
+
 export type BlockTypes = 'promoter' | 'visibility' | 'terminator'
 export type BlockNames = 'T7 promoter' | 'mCherry' | 'CYC1 Terminator'
 export type BlockWithUUID = Block & { uuid: string }
@@ -14,6 +16,7 @@ export abstract class Block {
 
 export abstract class PromoterBlock extends Block {
   type: 'promoter' = 'promoter'
+  abstract get promoter(): Promoter
   constructor(args: Pick<Block, 'uuid'>) {
     super({
       uuid: args.uuid
@@ -45,6 +48,7 @@ export type FinalBlock = {
 
 export class T7PromoterBlock extends PromoterBlock {
   name: 'T7 promoter' = 'T7 promoter'
+  promoter = new T7Promoter()
   width = 184
   constructor() {
     super({})

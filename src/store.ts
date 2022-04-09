@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia'
-import { isReadonly, reactive, readonly, Ref, ref, watch } from 'vue'
-import { Block, BlockWithUUID, Vector2 } from './utils/block'
+import { computed, isReadonly, reactive, readonly, Ref, ref, watch } from 'vue'
+import { Block, BlockWithUUID, PromoterBlock, TerminatorBlock, Vector2 } from './utils/block'
 import { Snake } from './utils/snake'
 import { v4 as uuidv4 } from 'uuid'
+import { OperonMessengerRNA, Promoter, Protein } from './utils/matter'
 
 function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
   block.uuid = uuid
 }
+export type Snakes = Record<string, Snake>
 export const useStore = defineStore('main', () => {
-  const snakes: Record<string, Snake> = reactive({})
+  const snakes: Snakes = reactive({})
   const grabbing = ref(false)
   const addBlock = (block: Block, anchorTail: Vector2) => {
     setUUID(block, uuidv4())
@@ -77,6 +79,49 @@ export const useStore = defineStore('main', () => {
   const grabEnd = () => {
     grabbing.value = false
   }
+  const operonMessengerRNAs = computed(() => {
+    const mRNAs: Record<string, OperonMessengerRNA> = {}
+    for (const snake of Object.values(snakes)) {
+      let promoterBlock: PromoterBlock | null = null
+      let codingBlocks: Block[] = []
+      for (const block of snake.blocks) {
+        if (block instanceof PromoterBlock) {
+          promoterBlock = block
+          codingBlocks = [] // todo
+        } else if (block instanceof TerminatorBlock) {
+          if (promoterBlock !== null && codingBlocks.length > 0) {
+            const newMessengerRNA = new OperonMessengerRNA([promoterBlock.promoter], codingBlocks.map(block => block.name))
+            if (!mRNAs[newMessengerRNA.name]) {
+              mRNAs[newMessengerRNA.name] = newMessengerRNA
+            } else {
+              mRNAs[newMessengerRNA.name].promoters.push(promoterBlock.promoter)
+            }
+          }
+          promoterBlock = null
+        } else {
+          codingBlocks.push(block)
+        }
+      }
+    }
+    return Object.values(mRNAs)
+  })
+  const proteins = computed(() => {
+    const proteins: Record<string, Protein> = {}
+    for (const mRNA of operonMessengerRNAs.value) {
+      for (const proteinName of mRNA.proteinNames) {
+        if (!proteins[proteinName]) {
+          proteins[proteinName] = new Protein(proteinName, [mRNA])
+        } else {
+          proteins[proteinName].messengerRNAs.push(mRNA)
+        }
+      }
+    }
+    return Object.values(proteins)
+  })
+  const run = () => {
+    console.log(operonMessengerRNAs.value.map(mRNA => mRNA.buildDE()))
+    console.log(proteins.value.map(protein => protein.buildDE()))
+  }
   return {
     snakes: readonly(snakes),
     addBlock,
@@ -85,5 +130,8 @@ export const useStore = defineStore('main', () => {
     mergeToHead,
     splitHead,
     splitTail,
+    operonMessengerRNAs,
+    proteins,
+    run
   }
 })
