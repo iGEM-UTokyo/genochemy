@@ -125,11 +125,16 @@ export const useStore = defineStore('main', () => {
       ...proteins.value.map(protein => protein.buildDE()),
     ];
     const runner = new Runner(equations, 0.1);
-    for (let i = 0; i < 30; i++) {
+    const tick = () => {
       runner.next();
-      console.log(runner.variables);
+      runnerOutputs.lightEmission = runner.variables["protein-mCherry"];
+      requestAnimationFrame(tick);
     }
+    tick();
   }
+  const runnerOutputs = reactive({
+    lightEmission: 0,
+  })
   return {
     snakes: readonly(snakes),
     addBlock,
@@ -140,6 +145,7 @@ export const useStore = defineStore('main', () => {
     splitTail,
     operonMessengerRNAs,
     proteins,
-    run
+    run,
+    runnerOutputs
   }
 })
