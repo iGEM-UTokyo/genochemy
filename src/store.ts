@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, isReadonly, reactive, readonly, Ref, ref, watch } from 'vue'
-import { Block, BlockWithUUID, PromoterBlock, TerminatorBlock, Vector2 } from './utils/block'
+import { Block, BlockWithUUID, CodingBlock, PromoterBlock, TerminatorBlock, Vector2 } from './utils/block'
 import { Snake } from './utils/snake'
 import { v4 as uuidv4 } from 'uuid'
 import { OperonMessengerRNA, Promoter, Protein } from './utils/matter'
@@ -84,14 +84,14 @@ export const useStore = defineStore('main', () => {
     const mRNAs: Record<string, OperonMessengerRNA> = {}
     for (const snake of Object.values(snakes)) {
       let promoterBlock: PromoterBlock | null = null
-      let codingBlocks: Block[] = []
+      let codingBlocks: CodingBlock[] = []
       for (const block of snake.blocks) {
         if (block instanceof PromoterBlock) {
           promoterBlock = block
           codingBlocks = [] // todo
         } else if (block instanceof TerminatorBlock) {
           if (promoterBlock !== null && codingBlocks.length > 0) {
-            const newMessengerRNA = new OperonMessengerRNA([promoterBlock.promoter], codingBlocks.map(block => block.name))
+            const newMessengerRNA = new OperonMessengerRNA([promoterBlock.promoter], codingBlocks)
             if (!mRNAs[newMessengerRNA.name]) {
               mRNAs[newMessengerRNA.name] = newMessengerRNA
             } else {
@@ -99,7 +99,7 @@ export const useStore = defineStore('main', () => {
             }
           }
           promoterBlock = null
-        } else {
+        } else if (block instanceof CodingBlock) {
           codingBlocks.push(block)
         }
       }
@@ -109,11 +109,11 @@ export const useStore = defineStore('main', () => {
   const proteins = computed(() => {
     const proteins: Record<string, Protein> = {}
     for (const mRNA of operonMessengerRNAs.value) {
-      for (const proteinName of mRNA.proteinNames) {
-        if (!proteins[proteinName]) {
-          proteins[proteinName] = new Protein(proteinName, [mRNA])
+      for (const block of mRNA.codingBlocks) {
+        if (!proteins[block.name]) {
+          proteins[block.name] = new block.ProteinClass(block.name, [mRNA]);
         } else {
-          proteins[proteinName].messengerRNAs.push(mRNA)
+          proteins[block.name].messengerRNAs.push(mRNA)
         }
       }
     }
@@ -121,11 +121,15 @@ export const useStore = defineStore('main', () => {
   })
   const run = () => {
     const equations = [
-      ...operonMessengerRNAs.value.map(mRNA => mRNA.buildDE()),
-      ...proteins.value.map(protein => protein.buildDE()),
+      ...operonMessengerRNAs.value.map(mRNA => mRNA.buildDE()).flat(),
+      ...proteins.value.map(protein => protein.buildDE()).flat(),
     ];
+    console.log(equations)
     const runner = new Runner(equations, 0.1);
     const tick = () => {
+      if (typeof runner.variables['drug'] !== 'undefined') {
+        runner.variables['drug'] = drug.value
+      }
       runner.next();
       runnerOutputs.lightEmission = runner.variables["protein-mCherry"];
       requestAnimationFrame(tick);
@@ -135,6 +139,10 @@ export const useStore = defineStore('main', () => {
   const runnerOutputs = reactive({
     lightEmission: 0,
   })
+  const drug = ref(0)
+  const updateDrug = (_drug: number) => {
+    drug.value = _drug
+  }
   return {
     snakes: readonly(snakes),
     addBlock,
@@ -146,6 +154,7 @@ export const useStore = defineStore('main', () => {
     operonMessengerRNAs,
     proteins,
     run,
-    runnerOutputs
+    runnerOutputs,
+    updateDrug,
   }
 })

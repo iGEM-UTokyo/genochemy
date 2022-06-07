@@ -7,5 +7,15 @@ export type Term = {
 } | {
   type: 'multiply',
   values: [Term, Term]
+} | {
+  type: 'hill',
+  const: Term,
+  deg: Term,
+  value: Term
+} | {
+  type: 'hillrev',
+  const: Term,
+  deg: Term,
+  value: Term
 }
 export type DE = { target: string, terms: Term[] };

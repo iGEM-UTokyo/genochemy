@@ -3,34 +3,34 @@ import { DE, Term } from "./de-term";
 
 export type DecodeFunctionArgs = Record<string, number>;
 export type DecodeFunction = (args: DecodeFunctionArgs) => number;
-export const decodeFunctions = {
-  sum(functions: DecodeFunction[]): DecodeFunction {
-    return (args: DecodeFunctionArgs) =>
-      functions.map(fn => fn(args)).reduce((a, b) => a + b, 0);
-  },
-  const(constNumber: number): DecodeFunction {
-    return (args: DecodeFunctionArgs) => constNumber;
-  },
-  multiply(functions: DecodeFunction[]): DecodeFunction {
-    return (args: DecodeFunctionArgs) =>
-      functions.map(fn => fn(args)).reduce((a, b) => a * b, 1);
-  },
-  getVariable(variableName: string): DecodeFunction {
-    return (args: DecodeFunctionArgs) => args[variableName];
-  }
-}
 export function factoryTerm(term: Term): DecodeFunction {
   switch (term.type) {
     case "const":
-      return decodeFunctions.const(term.value);
+      return (args: DecodeFunctionArgs) => term.value;
     case "multiply":
-      return decodeFunctions.multiply(term.values.map(child => factoryTerm(child)));
+      return (args: DecodeFunctionArgs) =>
+        term.values.map(value => factoryTerm(value)(args)).reduce((a, b) => a * b, 1);
     case "variable":
-      return decodeFunctions.getVariable(term.name);
+      return (args: DecodeFunctionArgs) => args[term.name];
+    case "hill":
+      return (args: DecodeFunctionArgs) => {
+        const computedConst = factoryTerm(term.const)(args);
+        const computedDeg = factoryTerm(term.deg)(args);
+        const computedValue = factoryTerm(term.value)(args);
+        return computedValue ** computedDeg / (computedConst ** computedDeg + computedValue ** computedDeg);
+      };
+    case "hillrev":
+      return (args: DecodeFunctionArgs) => {
+        const computedConst = factoryTerm(term.const)(args);
+        const computedDeg = factoryTerm(term.deg)(args);
+        const computedValue = factoryTerm(term.value)(args);
+        return computedConst ** computedDeg / (computedConst ** computedDeg + computedValue ** computedDeg);
+      };
   }
 }
 export function factoryFunction(terms: Term[]): DecodeFunction {
-  return decodeFunctions.sum(terms.map(factoryTerm))
+  return (args: DecodeFunctionArgs) =>
+    terms.map(factoryTerm).reduce((a, b) => a + b(args), 0)
 }
 
 export default class Runner {
