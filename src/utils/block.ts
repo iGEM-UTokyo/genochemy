@@ -67,7 +67,7 @@ export class T7PromoterBlock extends PromoterBlock {
 export class DrugRepressiblePromoterBlock extends PromoterBlock {
   name: 'Drug Repressible Promoter' = 'Drug Repressible Promoter'
   promoter = new DrugRepressiblePromoter()
-  width = 200
+  width = 184
   constructor() {
     super({})
   }
