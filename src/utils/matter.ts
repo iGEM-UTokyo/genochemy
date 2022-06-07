@@ -1,11 +1,12 @@
+import { CodingBlock } from "./block";
 import { DE, Term } from "./de-term";
 
 export abstract class Promoter {
-  abstract buildDEForMessangerRNA(): Term[]
+  abstract buildDEForMessengerRNA(): Term[]
 }
 
 export class T7Promoter extends Promoter {
-  buildDEForMessangerRNA(): Term[] {
+  buildDEForMessengerRNA(): Term[] {
     return [{
       type: 'const',
       value: 1,
@@ -13,9 +14,20 @@ export class T7Promoter extends Promoter {
   }
 }
 
+export class DrugRepressiblePromoter extends Promoter {
+  buildDEForMessengerRNA(): Term[] {
+    return [{
+      type: 'hillrev',
+      deg: { type: 'const', value: 1 },
+      const: { type: 'const', value: 1 },
+      value: { type: 'variable', name: 'protein-Repressor-bound' }
+    }]
+  }
+}
+
 export abstract class Matter {
   abstract get name(): string
-  abstract buildDE(): DE
+  abstract buildDE(): DE[]
 }
 
 export function toMRNAName(name: string) {
@@ -25,24 +37,24 @@ export function toMRNAName(name: string) {
 export class OperonMessengerRNA extends Matter {
   constructor(
     public promoters: Promoter[],
-    public proteinNames: string[],
+    public codingBlocks: CodingBlock[],
   ) {
     super()
   }
   get name() {
-    return `mRNA-${this.proteinNames.join('-')}`
+    return `mRNA-${this.codingBlocks.map(block => block.name).join('-')}`
   }
-  buildDE(): DE {
-    return {
+  buildDE(): DE[] {
+    return [{
       target: this.name,
       terms: [
-        ...this.promoters.map(promoter => promoter.buildDEForMessangerRNA()).flat(),
+        ...this.promoters.map(promoter => promoter.buildDEForMessengerRNA()).flat(),
         {
           type: 'multiply',
           values: [{ type: 'const', value: -1 }, { type: 'variable', name: this.name }]
         },
       ]
-    }
+    }]
   }
   buildDEForProtein(): Term[] {
     return [{
@@ -62,8 +74,8 @@ export class Protein extends Matter {
   get name() {
     return `protein-${this._name}`
   }
-  buildDE(): DE {
-    return {
+  buildDE(): DE[] {
+    return [{
       target: this.name,
       terms: [
         ...this.messengerRNAs.map(mRNA => mRNA.buildDEForProtein()).flat(),
@@ -72,6 +84,54 @@ export class Protein extends Matter {
           values: [{ type: 'const', value: -1 }, { type: 'variable', name: this.name }]
         },
       ]
-    }
+    }]
+  }
+}
+
+export class Repressor extends Protein {
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+  buildDE(): DE[] {
+    const baseTerm = super.buildDE()[0];
+    baseTerm.terms.push({
+      type: 'multiply',
+      values: [{ type: 'const', value: -1 }, {
+        type: 'multiply',
+        values: [{ type: 'variable', name: this.name },
+          { type: 'variable', name: 'drug' }]
+      }]
+    })
+    baseTerm.terms.push({
+      type: 'multiply',
+      values: [{ type: 'const', value: 0.5 }, {
+        type: 'variable',
+        name: 'protein-Repressor-bound'
+      }]
+    })
+    return [
+      baseTerm,
+      {
+        target: 'drug',
+        terms: []
+      },
+      {
+        target: 'protein-Repressor-bound',
+        terms: [{
+          type: 'multiply',
+          values: [{ type: 'const', value: 1 }, {
+            type: 'multiply',
+            values: [{ type: 'variable', name: this.name },
+              { type: 'variable', name: 'drug' }]
+          }]
+        }, {
+          type: 'multiply',
+          values: [{ type: 'const', value: -0.5 }, {
+            type: 'variable',
+            name: 'protein-Repressor-bound'
+          }]
+        }]
+      }
+    ]
   }
 }

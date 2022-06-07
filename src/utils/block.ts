@@ -1,7 +1,7 @@
-import { Promoter, T7Promoter } from "./matter"
+import { DrugRepressiblePromoter, OperonMessengerRNA, Promoter, Protein, Repressor, T7Promoter } from "./matter"
 
 export type BlockTypes = 'promoter' | 'visibility' | 'terminator'
-export type BlockNames = 'T7 promoter' | 'mCherry' | 'CYC1 Terminator'
+export type BlockNames = 'T7 promoter' | 'Drug Repressible Promoter' | 'mCherry' | 'Repressor' | 'CYC1 Terminator'
 export type BlockWithUUID = Block & { uuid: string }
 export type Vector2 = [number, number]
 export abstract class Block {
@@ -24,7 +24,12 @@ export abstract class PromoterBlock extends Block {
   }
 }
 
-export abstract class VisibilityBlock extends Block {
+export abstract class CodingBlock extends Block {
+  get ProteinClass(): ProteinImpl {
+    return Protein
+  }
+}
+export abstract class VisibilityBlock extends CodingBlock {
   type: 'visibility' = 'visibility'
   constructor(args: Pick<Block, 'uuid'>) {
     super({
@@ -46,6 +51,10 @@ export type FinalBlock = {
   new(): Block;
 }
 
+export type ProteinImpl = {
+  new(_name: string, messengerRNAs: OperonMessengerRNA[]): Protein;
+}
+
 export class T7PromoterBlock extends PromoterBlock {
   name: 'T7 promoter' = 'T7 promoter'
   promoter = new T7Promoter()
@@ -55,9 +64,29 @@ export class T7PromoterBlock extends PromoterBlock {
   }
 }
 
+export class DrugRepressiblePromoterBlock extends PromoterBlock {
+  name: 'Drug Repressible Promoter' = 'Drug Repressible Promoter'
+  promoter = new DrugRepressiblePromoter()
+  width = 200
+  constructor() {
+    super({})
+  }
+}
+
 export class MCherryBlock extends VisibilityBlock {
   name: 'mCherry' = 'mCherry'
   width = 184
+  constructor() {
+    super({})
+  }
+}
+
+export class RepressorBlock extends VisibilityBlock {
+  name: 'Repressor' = 'Repressor'
+  width = 184
+  get ProteinClass(): ProteinImpl {
+    return Repressor
+  }
   constructor() {
     super({})
   }

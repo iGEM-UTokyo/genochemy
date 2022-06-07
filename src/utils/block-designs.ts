@@ -10,9 +10,17 @@ export const blockDesignDetails: { [K in Block.BlockNames]: BlockDesignDetail } 
     imageSrc: '/blocks/promoter.svg',
     blockClass: Block.T7PromoterBlock
   },
+  'Drug Repressible Promoter': {
+    imageSrc: '/blocks/promoter.svg',
+    blockClass: Block.DrugRepressiblePromoterBlock
+  },
   'mCherry': {
     imageSrc: '/blocks/visible.svg',
     blockClass: Block.MCherryBlock
+  },
+  'Repressor': {
+    imageSrc: '/blocks/visible.svg',
+    blockClass: Block.RepressorBlock
   },
   'CYC1 Terminator': {
     imageSrc: '/blocks/terminator.svg',
