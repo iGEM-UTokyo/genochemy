@@ -4,8 +4,7 @@
       v-for="(detail, name) in blockDesignDetails"
       :key="name"
       :blockName="name"
-      :src="detail.imageSrc"
-      :block-class="detail.blockClass"
+      :detail="detail"
     />
   </div>
 </template>

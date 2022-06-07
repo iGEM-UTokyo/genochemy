@@ -1,7 +1,7 @@
 <template>
   <div @mousedown="down" ref="block">
-    <img :src="props.src" />
-    <span>{{ props.blockName }}</span>
+    <img :src="props.detail.imageSrc" />
+    <span>{{ props.detail.displayName || props.blockName }}</span>
   </div>
 </template>
 
@@ -23,14 +23,13 @@ span {
 </style>
 
 <script setup lang="ts">
-import { FinalBlock } from '../utils/block'
 import { useStore } from '../store'
 import { Ref, ref, defineProps } from 'vue';
+import { BlockDesignDetail } from '@/utils/block-designs';
 
 const props = defineProps<{
-  blockName: string,
-  src: string,
-  blockClass: FinalBlock
+  detail: BlockDesignDetail,
+  blockName: string
 }>()
 
 const block: Ref<HTMLElement | null> = ref(null)
@@ -38,7 +37,7 @@ const { addBlock } = useStore()
 const down = () => {
   if (block.value !== null) {
     // todo: throw exception
-    addBlock(new props.blockClass(),
+    addBlock(new props.detail.blockClass(),
       [block.value.offsetLeft, block.value.offsetTop + block.value.offsetHeight])
   }
 }
