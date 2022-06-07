@@ -1,7 +1,7 @@
 <template>
   <div :style="divStyle">
     <img :src="src" :width="props.block.width" />
-    <span>{{ props.block.name }}</span>
+    <span>{{ displayName }}</span>
   </div>
 </template>
 
@@ -33,6 +33,7 @@ const props = defineProps<{
   block: Block,
 }>()
 const src = computed(() => blockDesignDetails[props.block.name].imageSrc)
+const displayName = computed(() => blockDesignDetails[props.block.name].displayName || props.block.name)
 
 const divStyle: ComputedRef<StyleValue> = computed(() => ({
   width: `${props.block.width - overlap}px`
