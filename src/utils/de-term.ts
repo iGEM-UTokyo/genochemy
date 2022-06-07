@@ -8,4 +8,4 @@ export type Term = {
   type: 'multiply',
   values: [Term, Term]
 }
-export type Terms = Record<string, Term[]>;
+export type DE = { target: string, terms: Term[] };
