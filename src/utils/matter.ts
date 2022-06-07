@@ -1,4 +1,4 @@
-import { Term } from "./de-term";
+import { DE, Term } from "./de-term";
 
 export abstract class Promoter {
   abstract buildDEForMessangerRNA(): Term[]
@@ -15,7 +15,7 @@ export class T7Promoter extends Promoter {
 
 export abstract class Matter {
   abstract get name(): string
-  abstract buildDE(): Term[]
+  abstract buildDE(): DE
 }
 
 export function toMRNAName(name: string) {
@@ -32,14 +32,17 @@ export class OperonMessengerRNA extends Matter {
   get name() {
     return `mRNA-${this.proteinNames.join('-')}`
   }
-  buildDE(): Term[] {
-    return [
-      ...this.promoters.map(promoter => promoter.buildDEForMessangerRNA()).flat(),
-      {
-        type: 'multiply',
-        values: [{ type: 'const', value: -1 }, { type: 'variable', name: this.name }]
-      },
-    ]
+  buildDE(): DE {
+    return {
+      target: this.name,
+      terms: [
+        ...this.promoters.map(promoter => promoter.buildDEForMessangerRNA()).flat(),
+        {
+          type: 'multiply',
+          values: [{ type: 'const', value: -1 }, { type: 'variable', name: this.name }]
+        },
+      ]
+    }
   }
   buildDEForProtein(): Term[] {
     return [{
@@ -59,13 +62,16 @@ export class Protein extends Matter {
   get name() {
     return `protein-${this._name}`
   }
-  buildDE(): Term[] {
-    return [
-      ...this.messengerRNAs.map(mRNA => mRNA.buildDEForProtein()).flat(),
-      {
-        type: 'multiply',
-        values: [{ type: 'const', value: -1 }, { type: 'variable', name: this.name }]
-      },
-    ]
+  buildDE(): DE {
+    return {
+      target: this.name,
+      terms: [
+        ...this.messengerRNAs.map(mRNA => mRNA.buildDEForProtein()).flat(),
+        {
+          type: 'multiply',
+          values: [{ type: 'const', value: -1 }, { type: 'variable', name: this.name }]
+        },
+      ]
+    }
   }
 }

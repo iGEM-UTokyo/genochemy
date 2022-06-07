@@ -4,6 +4,7 @@ import { Block, BlockWithUUID, PromoterBlock, TerminatorBlock, Vector2 } from '.
 import { Snake } from './utils/snake'
 import { v4 as uuidv4 } from 'uuid'
 import { OperonMessengerRNA, Promoter, Protein } from './utils/matter'
+import Runner from './utils/runner'
 
 function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
   block.uuid = uuid
@@ -119,8 +120,15 @@ export const useStore = defineStore('main', () => {
     return Object.values(proteins)
   })
   const run = () => {
-    console.log(operonMessengerRNAs.value.map(mRNA => mRNA.buildDE()))
-    console.log(proteins.value.map(protein => protein.buildDE()))
+    const equations = [
+      ...operonMessengerRNAs.value.map(mRNA => mRNA.buildDE()),
+      ...proteins.value.map(protein => protein.buildDE()),
+    ];
+    const runner = new Runner(equations, 0.1);
+    for (let i = 0; i < 30; i++) {
+      runner.next();
+      console.log(runner.variables);
+    }
   }
   return {
     snakes: readonly(snakes),
