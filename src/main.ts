@@ -1,16 +1,16 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-import App from './App.vue'
+import App from "./App.vue";
 
-const app = createApp(App)
+const app = createApp(App);
 
-library.add(faPlay)
-library.add(faStop)
-app.component('font-awesome-icon', FontAwesomeIcon)
+library.add(faPlay);
+library.add(faStop);
+app.component("font-awesome-icon", FontAwesomeIcon);
 
-app.use(createPinia())
-app.mount('#app')
+app.use(createPinia());
+app.mount("#app");

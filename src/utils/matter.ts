@@ -2,65 +2,78 @@ import { CodingBlock } from "./block";
 import { DE, Term } from "./de-term";
 
 export abstract class Promoter {
-  abstract buildDEForMessengerRNA(): Term[]
+  abstract buildDEForMessengerRNA(): Term[];
 }
 
 export class T7Promoter extends Promoter {
   buildDEForMessengerRNA(): Term[] {
-    return [{
-      type: 'const',
-      value: 1,
-    }]
+    return [
+      {
+        type: "const",
+        value: 1,
+      },
+    ];
   }
 }
 
 export class DrugRepressiblePromoter extends Promoter {
   buildDEForMessengerRNA(): Term[] {
-    return [{
-      type: 'hillrev',
-      deg: { type: 'const', value: 1 },
-      const: { type: 'const', value: 1 },
-      value: { type: 'variable', name: 'protein-Repressor-bound' }
-    }]
+    return [
+      {
+        type: "hillrev",
+        deg: { type: "const", value: 1 },
+        const: { type: "const", value: 1 },
+        value: { type: "variable", name: "protein-Repressor-bound" },
+      },
+    ];
   }
 }
 
 export abstract class Matter {
-  abstract get name(): string
-  abstract buildDE(): DE[]
+  abstract get name(): string;
+  abstract buildDE(): DE[];
 }
 
 export function toMRNAName(name: string) {
-  return `m${name}`
+  return `m${name}`;
 }
 
 export class OperonMessengerRNA extends Matter {
   constructor(
     public promoters: Promoter[],
-    public codingBlocks: CodingBlock[],
+    public codingBlocks: CodingBlock[]
   ) {
-    super()
+    super();
   }
   get name() {
-    return `mRNA-${this.codingBlocks.map(block => block.name).join('-')}`
+    return `mRNA-${this.codingBlocks.map((block) => block.name).join("-")}`;
   }
   buildDE(): DE[] {
-    return [{
-      target: this.name,
-      terms: [
-        ...this.promoters.map(promoter => promoter.buildDEForMessengerRNA()).flat(),
-        {
-          type: 'multiply',
-          values: [{ type: 'const', value: -1 }, { type: 'variable', name: this.name }]
-        },
-      ]
-    }]
+    return [
+      {
+        target: this.name,
+        terms: [
+          ...this.promoters
+            .map((promoter) => promoter.buildDEForMessengerRNA())
+            .flat(),
+          {
+            type: "multiply",
+            values: [
+              { type: "const", value: -1 },
+              { type: "variable", name: this.name },
+            ],
+          },
+        ],
+      },
+    ];
   }
   buildDEForProtein(): Term[] {
-    return [{
-      type: 'variable',
-      name: this.name
-    }]
+    return [
+      {
+        type: "variable",
+        name: this.name,
+      },
+    ];
   }
 }
 
@@ -69,22 +82,27 @@ export class Protein extends Matter {
     private _name: string,
     public messengerRNAs: OperonMessengerRNA[]
   ) {
-    super()
+    super();
   }
   get name() {
-    return `protein-${this._name}`
+    return `protein-${this._name}`;
   }
   buildDE(): DE[] {
-    return [{
-      target: this.name,
-      terms: [
-        ...this.messengerRNAs.map(mRNA => mRNA.buildDEForProtein()).flat(),
-        {
-          type: 'multiply',
-          values: [{ type: 'const', value: -1 }, { type: 'variable', name: this.name }]
-        },
-      ]
-    }]
+    return [
+      {
+        target: this.name,
+        terms: [
+          ...this.messengerRNAs.map((mRNA) => mRNA.buildDEForProtein()).flat(),
+          {
+            type: "multiply",
+            values: [
+              { type: "const", value: -1 },
+              { type: "variable", name: this.name },
+            ],
+          },
+        ],
+      },
+    ];
   }
 }
 
@@ -95,43 +113,62 @@ export class Repressor extends Protein {
   buildDE(): DE[] {
     const baseTerm = super.buildDE()[0];
     baseTerm.terms.push({
-      type: 'multiply',
-      values: [{ type: 'const', value: -1 }, {
-        type: 'multiply',
-        values: [{ type: 'variable', name: this.name },
-          { type: 'variable', name: 'drug' }]
-      }]
-    })
+      type: "multiply",
+      values: [
+        { type: "const", value: -1 },
+        {
+          type: "multiply",
+          values: [
+            { type: "variable", name: this.name },
+            { type: "variable", name: "drug" },
+          ],
+        },
+      ],
+    });
     baseTerm.terms.push({
-      type: 'multiply',
-      values: [{ type: 'const', value: 0.5 }, {
-        type: 'variable',
-        name: 'protein-Repressor-bound'
-      }]
-    })
+      type: "multiply",
+      values: [
+        { type: "const", value: 0.5 },
+        {
+          type: "variable",
+          name: "protein-Repressor-bound",
+        },
+      ],
+    });
     return [
       baseTerm,
       {
-        target: 'drug',
-        terms: []
+        target: "drug",
+        terms: [],
       },
       {
-        target: 'protein-Repressor-bound',
-        terms: [{
-          type: 'multiply',
-          values: [{ type: 'const', value: 1 }, {
-            type: 'multiply',
-            values: [{ type: 'variable', name: this.name },
-              { type: 'variable', name: 'drug' }]
-          }]
-        }, {
-          type: 'multiply',
-          values: [{ type: 'const', value: -0.5 }, {
-            type: 'variable',
-            name: 'protein-Repressor-bound'
-          }]
-        }]
-      }
-    ]
+        target: "protein-Repressor-bound",
+        terms: [
+          {
+            type: "multiply",
+            values: [
+              { type: "const", value: 1 },
+              {
+                type: "multiply",
+                values: [
+                  { type: "variable", name: this.name },
+                  { type: "variable", name: "drug" },
+                ],
+              },
+            ],
+          },
+          {
+            type: "multiply",
+            values: [
+              { type: "const", value: -0.5 },
+              {
+                type: "variable",
+                name: "protein-Repressor-bound",
+              },
+            ],
+          },
+        ],
+      },
+    ];
   }
 }
