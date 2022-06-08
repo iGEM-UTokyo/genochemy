@@ -2,7 +2,15 @@
   <div class="runner">
     <img src="/runner/bacterium.svg" class="bacterium" />
     <div class="light" :style="{ backgroundColor: lightRGBA }" />
-    <input class="drug" type="range" v-model="drug" @change="update" min="0" max="1" step="0.01" />
+    <input
+      class="drug"
+      type="range"
+      v-model="drug"
+      @change="update"
+      min="0"
+      max="1"
+      step="0.01"
+    />
   </div>
 </template>
 
@@ -12,11 +20,16 @@ import { useStore } from "../store";
 const { runnerOutputs, updateDrug } = useStore();
 
 const mCherryColor = [208, 25, 187];
-const lightRGBA = computed(() => `rgba(${mCherryColor[0]}, ${mCherryColor[1]}, ${mCherryColor[2]}, ${Math.min(runnerOutputs.lightEmission * 0.8, 0.8)})`)
+const lightRGBA = computed(
+  () =>
+    `rgba(${mCherryColor[0]}, ${mCherryColor[1]}, ${
+      mCherryColor[2]
+    }, ${Math.min(runnerOutputs.lightEmission * 0.8, 0.8)})`
+);
 const drug = ref(0);
 const update = () => {
-  updateDrug(drug.value)
-}
+  updateDrug(drug.value);
+};
 </script>
 
 <style scoped>

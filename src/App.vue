@@ -10,10 +10,10 @@
 </template>
 
 <script setup lang="ts">
-import Tray from './components/Tray.vue'
-import Program from './components/Program.vue'
-import Runner from '@/components/Runner.vue'
-import Property from '@/components/Property.vue'
+import Tray from "./components/Tray.vue";
+import Program from "./components/Program.vue";
+import Runner from "@/components/Runner.vue";
+import Property from "@/components/Property.vue";
 </script>
 
 <style scoped>

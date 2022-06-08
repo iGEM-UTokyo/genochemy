@@ -9,7 +9,9 @@ export function factoryTerm(term: Term): DecodeFunction {
       return (args: DecodeFunctionArgs) => term.value;
     case "multiply":
       return (args: DecodeFunctionArgs) =>
-        term.values.map(value => factoryTerm(value)(args)).reduce((a, b) => a * b, 1);
+        term.values
+          .map((value) => factoryTerm(value)(args))
+          .reduce((a, b) => a * b, 1);
     case "variable":
       return (args: DecodeFunctionArgs) => args[term.name];
     case "hill":
@@ -17,20 +19,26 @@ export function factoryTerm(term: Term): DecodeFunction {
         const computedConst = factoryTerm(term.const)(args);
         const computedDeg = factoryTerm(term.deg)(args);
         const computedValue = factoryTerm(term.value)(args);
-        return computedValue ** computedDeg / (computedConst ** computedDeg + computedValue ** computedDeg);
+        return (
+          computedValue ** computedDeg /
+          (computedConst ** computedDeg + computedValue ** computedDeg)
+        );
       };
     case "hillrev":
       return (args: DecodeFunctionArgs) => {
         const computedConst = factoryTerm(term.const)(args);
         const computedDeg = factoryTerm(term.deg)(args);
         const computedValue = factoryTerm(term.value)(args);
-        return computedConst ** computedDeg / (computedConst ** computedDeg + computedValue ** computedDeg);
+        return (
+          computedConst ** computedDeg /
+          (computedConst ** computedDeg + computedValue ** computedDeg)
+        );
       };
   }
 }
 export function factoryFunction(terms: Term[]): DecodeFunction {
   return (args: DecodeFunctionArgs) =>
-    terms.map(factoryTerm).reduce((a, b) => a + b(args), 0)
+    terms.map(factoryTerm).reduce((a, b) => a + b(args), 0);
 }
 
 export default class Runner {
@@ -39,7 +47,7 @@ export default class Runner {
   constructor(equations: DE[], public interval: number) {
     for (const equation of equations) {
       this.variables[equation.target] = 0; // todo
-      this.equations[equation.target] = factoryFunction(equation.terms)
+      this.equations[equation.target] = factoryFunction(equation.terms);
     }
   }
   next() {
@@ -49,7 +57,7 @@ export default class Runner {
       vars1[varName] = h * this.equations[varName](this.variables);
     }
     const vars2: Record<string, number> = {};
-    let varsForNextVars: Record<string, number> = {}
+    let varsForNextVars: Record<string, number> = {};
     for (const varName in this.variables) {
       varsForNextVars[varName] = this.variables[varName] + vars1[varName] / 2;
     }
@@ -57,7 +65,7 @@ export default class Runner {
       vars2[variableName] = h * this.equations[variableName](varsForNextVars);
     }
     const vars3: Record<string, number> = {};
-    varsForNextVars = {}
+    varsForNextVars = {};
     for (const varName in this.variables) {
       varsForNextVars[varName] = this.variables[varName] + vars2[varName] / 2;
     }
@@ -65,7 +73,7 @@ export default class Runner {
       vars3[variableName] = h * this.equations[variableName](varsForNextVars);
     }
     const vars4: Record<string, number> = {};
-    varsForNextVars = {}
+    varsForNextVars = {};
     for (const varName in this.variables) {
       varsForNextVars[varName] = this.variables[varName] + vars3[varName];
     }
@@ -73,7 +81,12 @@ export default class Runner {
       vars4[variableName] = h * this.equations[variableName](varsForNextVars);
     }
     for (const varName in this.variables) {
-      this.variables[varName] += (vars1[varName] + vars2[varName] * 2 + vars3[varName] * 2 + vars4[varName]) / 6;
+      this.variables[varName] +=
+        (vars1[varName] +
+          vars2[varName] * 2 +
+          vars3[varName] * 2 +
+          vars4[varName]) /
+        6;
     }
   }
 }

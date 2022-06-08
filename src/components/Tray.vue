@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import TrayBlock from './TrayBlock.vue'
-import { blockDesignDetails } from '../utils/block-designs'
+import TrayBlock from "./TrayBlock.vue";
+import { blockDesignDetails } from "../utils/block-designs";
 </script>
 
 <style scoped>

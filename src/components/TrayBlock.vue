@@ -8,7 +8,7 @@
 <style scoped>
 div {
   position: relative;
-  display: flex /* for height-adjustment */
+  display: flex; /* for height-adjustment */
 }
 img {
   pointer-events: none;
@@ -23,22 +23,24 @@ span {
 </style>
 
 <script setup lang="ts">
-import { useStore } from '../store'
-import { Ref, ref, defineProps } from 'vue';
-import { BlockDesignDetail } from '@/utils/block-designs';
+import { useStore } from "../store";
+import { Ref, ref, defineProps } from "vue";
+import { BlockDesignDetail } from "@/utils/block-designs";
 
 const props = defineProps<{
-  detail: BlockDesignDetail,
-  blockName: string
-}>()
+  detail: BlockDesignDetail;
+  blockName: string;
+}>();
 
-const block: Ref<HTMLElement | null> = ref(null)
-const { addBlock } = useStore()
+const block: Ref<HTMLElement | null> = ref(null);
+const { addBlock } = useStore();
 const down = () => {
   if (block.value !== null) {
     // todo: throw exception
-    addBlock(new props.detail.blockClass(),
-      [block.value.offsetLeft, block.value.offsetTop + block.value.offsetHeight])
+    addBlock(new props.detail.blockClass(), [
+      block.value.offsetLeft,
+      block.value.offsetTop + block.value.offsetHeight,
+    ]);
   }
-}
+};
 </script>

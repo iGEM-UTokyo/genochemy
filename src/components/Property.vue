@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from '@/store'
-const { run } = useStore()
+import { useStore } from "@/store";
+const { run } = useStore();
 </script>
 
 <style scoped>
