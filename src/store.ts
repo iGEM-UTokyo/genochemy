@@ -131,6 +131,7 @@ export const useStore = defineStore("main", () => {
     }
     return Object.values(proteins);
   });
+  let animationFrame: null | number = null;
   const run = () => {
     const equations = [
       ...operonMessengerRNAs.value.map((mRNA) => mRNA.buildDE()).flat(),
@@ -144,13 +145,25 @@ export const useStore = defineStore("main", () => {
       }
       runner.next();
       runnerOutputs.lightEmission = runner.variables["protein-mCherry"];
-      requestAnimationFrame(tick);
+      animationFrame = requestAnimationFrame(tick);
     };
-    tick();
+    animationFrame = requestAnimationFrame(tick);
   };
-  const runnerOutputs = reactive({
+  const stop = () => {
+    if (animationFrame !== null) {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+
+      runnerOutputs["lightEmission"] = 0;
+      // for (const property of Object.keys(runnerOutputDefaults)) {
+      //   runnerOutputs[property] = runnerOutputDefaults[property]
+      // }
+    }
+  };
+  const runnerOutputDefaults = {
     lightEmission: 0,
-  });
+  };
+  const runnerOutputs = reactive(runnerOutputDefaults);
   const drug = ref(0);
   const updateDrug = (_drug: number) => {
     drug.value = _drug;
@@ -166,6 +179,7 @@ export const useStore = defineStore("main", () => {
     operonMessengerRNAs,
     proteins,
     run,
+    stop,
     runnerOutputs,
     updateDrug,
   };
