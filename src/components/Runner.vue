@@ -1,35 +1,36 @@
 <template>
   <div class="runner">
+    <div class="stage-settings">
+      <component
+        v-for="(setting, index) of stageSettings"
+        :key="index"
+        :is="setting"
+      />
+    </div>
     <img src="/runner/bacterium.svg" class="bacterium" />
-    <div class="light" :style="{ backgroundColor: lightRGBA }" />
-    <input
-      class="drug"
-      type="range"
-      v-model="drug"
-      @change="update"
-      min="0"
-      max="1"
-      step="0.01"
-    />
+    <div class="gui">
+      <component
+        v-for="(guiView, index) of guiViews"
+        :key="index"
+        :is="guiView"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, toRefs } from "vue";
 import { useStore } from "../store";
-const { runnerOutputs, updateDrug } = useStore();
 
-const mCherryColor = [208, 25, 187];
-const lightRGBA = computed(
-  () =>
-    `rgba(${mCherryColor[0]}, ${mCherryColor[1]}, ${
-      mCherryColor[2]
-    }, ${Math.min(runnerOutputs.lightEmission * 0.8, 0.8)})`
+const store = useStore();
+const { runnerOutputs, proteins } = toRefs(store);
+
+const stageSettings = computed(() =>
+  proteins.value.map((protein) => protein.stageSettings).flat()
 );
-const drug = ref(0);
-const update = () => {
-  updateDrug(drug.value);
-};
+const guiViews = computed(() =>
+  proteins.value.map((protein) => protein.guiViews).flat()
+);
 </script>
 
 <style scoped>
@@ -44,18 +45,18 @@ const update = () => {
 .bacterium {
   height: 200px;
 }
-.light {
+.stage-settings {
   position: absolute;
-  width: 50px;
-  height: 100px;
-  top: 60px;
-  /* background-color: red;
-  opacity: 0.5; */
-  border-radius: 50px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
-.drug {
+.gui {
   position: absolute;
-  width: 400px;
+  width: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
   bottom: 10px;
 }
 </style>

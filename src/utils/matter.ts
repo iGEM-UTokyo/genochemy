@@ -1,5 +1,7 @@
 import { CodingBlock } from "./block";
 import { DE, Term } from "./de-term";
+import DrugA from "@/components/on-runner/DrugA.vue";
+import MonomerCherryEmission from "@/components/on-runner/MonomerCherryEmission.vue";
 
 export abstract class Promoter {
   abstract buildDEForMessengerRNA(): Term[];
@@ -31,6 +33,8 @@ export class DrugRepressiblePromoter extends Promoter {
 
 export abstract class Matter {
   abstract get name(): string;
+  guiViews: any[] = []; // todo
+  stageSettings: any[] = [];
   abstract buildDE(): DE[];
 }
 
@@ -106,7 +110,15 @@ export class Protein extends Matter {
   }
 }
 
+export class mCherry extends Protein {
+  stageSettings = [MonomerCherryEmission];
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+}
+
 export class Repressor extends Protein {
+  guiViews = [DrugA];
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
