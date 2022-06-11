@@ -54,7 +54,10 @@ provide(getAbsolutePositionKey, (fixedPos: Vector2) => {
     throw new Error("programRef is null.");
   }
   const boundingRect = programRef.value.getBoundingClientRect();
-  return [fixedPos[0] - boundingRect.x, fixedPos[1] - boundingRect.y];
+  return [
+    fixedPos[0] - boundingRect.x + programRef.value.scrollLeft,
+    fixedPos[1] - boundingRect.y + programRef.value.scrollTop,
+  ];
 });
 </script>
 
