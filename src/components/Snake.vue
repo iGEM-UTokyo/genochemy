@@ -30,13 +30,18 @@ import {
   ComputedRef,
   toRaw,
   watch,
+  inject,
 } from "vue";
 import { BlockWithUUID, Vector2 } from "@/utils/block";
 import { DeepReadonly } from "@/utils/deep-readonly";
+import { getAbsolutePositionKey, getFixedPositionKey } from "./Program.vue";
 
 const props = defineProps<{
   snake: DeepReadonly<Snake>;
 }>();
+
+const getFixedPosition = inject(getFixedPositionKey);
+const getAbsolutePosition = inject(getAbsolutePositionKey);
 
 let currentSnake = ref(Snake.copy(props.snake));
 // props.snake: not working
@@ -70,11 +75,25 @@ const down = (blockUUID: string) => {
 
 const anchorTail = computed(() => currentSnake.value.anchorTail);
 const style: ComputedRef<StyleValue> = computed(() => {
+  const absolutePosition: Vector2 = [
+    anchorTail.value[0],
+    anchorTail.value[1] - (snakeRef.value ? snakeRef.value.clientHeight : 0),
+  ];
+  if (grabbingBlockUUID) {
+    if (!getFixedPosition) {
+      throw new Error("Injected getFixedPosition is undefined.");
+    }
+    const fixedPosition = getFixedPosition(absolutePosition);
+    return {
+      position: "fixed",
+      top: `${fixedPosition[1]}px`,
+      left: `${fixedPosition[0]}px`,
+    };
+  }
   return {
-    top: `${
-      anchorTail.value[1] - (snakeRef.value ? snakeRef.value.clientHeight : 0)
-    }px`,
-    left: `${anchorTail.value[0]}px`,
+    position: "absolute",
+    top: `${absolutePosition[1]}px`,
+    left: `${absolutePosition[0]}px`,
   };
 });
 
@@ -149,6 +168,12 @@ const up = () => {
 };
 
 if (currentSnake.value.fromTray) {
+  if (!getAbsolutePosition) {
+    throw new Error("Injected getAbsolutePosition is undefined.");
+  }
+  currentSnake.value.anchorTail = getAbsolutePosition(
+    currentSnake.value.anchorTail
+  );
   down(currentSnake.value.blocks[0].uuid);
 }
 </script>
