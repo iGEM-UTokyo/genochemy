@@ -1,5 +1,6 @@
 import {
   DrugRepressiblePromoter,
+  mCherry,
   OperonMessengerRNA,
   Promoter,
   Protein,
@@ -88,6 +89,9 @@ export class DrugRepressiblePromoterBlock extends PromoterBlock {
 export class MCherryBlock extends VisibilityBlock {
   name: "mCherry" = "mCherry";
   width = 184;
+  get ProteinClass(): ProteinImpl {
+    return mCherry;
+  }
   constructor() {
     super({});
   }

@@ -182,5 +182,6 @@ export const useStore = defineStore("main", () => {
     stop,
     runnerOutputs,
     updateDrug,
+    drug,
   };
 });
