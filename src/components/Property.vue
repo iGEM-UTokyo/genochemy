@@ -1,38 +1,43 @@
 <template>
-  <div class="tabs">
-    <div class="tab-item">Block</div>
-    <div class="tab-item">RNA</div>
-    <div class="tab-item">Protein</div>
-    <div class="tabs-separator" />
-    <div class="tab-button" @click="run"><font-awesome-icon icon="play" /></div>
-    <div class="tab-button" @click="stop">
-      <font-awesome-icon icon="stop" />
-    </div>
+  <div class="tabs-container">
+    <tabs :tabs="['RNA', 'Protein']" v-model="activeTab">
+      <div class="tab-button" @click="run">
+        <font-awesome-icon icon="play" />
+      </div>
+      <div class="tab-button" @click="stop">
+        <font-awesome-icon icon="stop" />
+      </div>
+    </tabs>
+    <tab-messenger-r-n-a v-if="activeTab === 'RNA'" />
+    <tab-protein v-if="activeTab === 'Protein'" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { useStore } from "@/store";
+import Tabs from "@/components/Tabs.vue";
+import TabMessengerRNA from "@/components/TabMessengerRNA.vue";
+import TabProtein from "@/components/TabProtein.vue";
+
 const { run, stop } = useStore();
+const activeTab = ref("RNA");
+const updateTab = (tabName: string) => {
+  activeTab.value = tabName;
+};
 </script>
 
 <style scoped>
-.tabs {
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-}
-.tab-item {
-  padding: 5px 10px;
-  border: 1px solid #aaa;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border-bottom: none;
-}
-.tabs-separator {
+.tabs-container {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .tab-button {
   padding: 5px 10px;
+}
+.tab-content {
+  flex: 1;
+  padding: 10px 0;
 }
 </style>
