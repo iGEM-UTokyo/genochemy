@@ -183,5 +183,6 @@ if (currentSnake.value.fromTray) {
   position: absolute;
   display: flex;
   align-items: flex-end;
+  z-index: 99;
 }
 </style>
