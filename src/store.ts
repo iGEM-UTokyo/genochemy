@@ -155,6 +155,17 @@ export const useStore = defineStore("main", () => {
       registeredOutputs.splice(index, 1);
     }
   };
+  const registeredInputs: string[] = [];
+  const registerInput = (variable: string) => {
+    // Duplicate inputs are allowed (for the use of unregisteration when unmounted)
+    registeredInputs.push(variable);
+  };
+  const UnregisterInput = (variable: string) => {
+    const index = registeredInputs.indexOf(variable);
+    if (index !== -1) {
+      registeredInputs.splice(index, 1);
+    }
+  };
   let animationFrame: null | number = null;
   const run = () => {
     const equations = [
@@ -167,9 +178,12 @@ export const useStore = defineStore("main", () => {
       runnerOutputs.value[output] = runner.variables[output] || 0;
       runnerOutputDefaults[output] = runner.variables[output] || 0;
     }
+    for (const input of registeredInputs) {
+      runnerInputs.value[input] = runner.variables[input] || 0;
+    }
     const tick = () => {
-      if (typeof runner.variables["drug"] !== "undefined") {
-        runner.variables["drug"] = drug.value;
+      for (const input of registeredInputs) {
+        runner.variables[input] = runnerInputs.value[input];
       }
       runner.next();
       for (const output of registeredOutputs) {
@@ -191,9 +205,9 @@ export const useStore = defineStore("main", () => {
   };
   const runnerOutputs: Ref<Record<string, number>> = ref({});
   const runnerOutputDefaults: Record<string, number> = {};
-  const drug = ref(0);
-  const updateDrug = (_drug: number) => {
-    drug.value = _drug;
+  const runnerInputs: Ref<Record<string, number>> = ref({});
+  const updateRunnerInput = (input: string, value: number) => {
+    runnerInputs.value[input] = value;
   };
   return {
     snakes: readonly(snakes),
@@ -208,10 +222,12 @@ export const useStore = defineStore("main", () => {
     proteins,
     registerOutput,
     UnregisterOutput,
+    registerInput,
+    UnregisterInput,
     run,
     stop,
     runnerOutputs,
-    updateDrug,
-    drug,
+    runnerInputs: readonly(runnerInputs),
+    updateRunnerInput,
   };
 });

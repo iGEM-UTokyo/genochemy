@@ -14,12 +14,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onUnmounted, ref, watch } from "vue";
 import { useStore } from "@/store";
-const { updateDrug, drug: _drug } = useStore();
-const drug = ref(_drug);
+const { registerInput, UnregisterInput, runnerInputs, updateRunnerInput } =
+  useStore();
+const inputName = "drug";
+registerInput(inputName);
+onUnmounted(() => {
+  UnregisterInput(inputName);
+});
+
+const drug = ref(0);
+watch(runnerInputs, () => {
+  drug.value = runnerInputs[inputName];
+});
 const update = () => {
-  updateDrug(drug.value);
+  updateRunnerInput(inputName, drug.value);
 };
 </script>
 
