@@ -22,9 +22,6 @@ import TabProtein from "@/components/TabProtein.vue";
 
 const { run, stop } = useStore();
 const activeTab = ref("Protein");
-const updateTab = (tabName: string) => {
-  activeTab.value = tabName;
-};
 </script>
 
 <style scoped>
