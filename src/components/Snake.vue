@@ -145,6 +145,7 @@ const move = (movementX: number, movementY: number, shiftKey = false) => {
   if (!hasSplitted && grabbingBlockUUID !== null && shiftKey) {
     if (movementX < 0) {
       hasSplitted = true;
+      // updateSnake is needed to update the current position of the snake before splitting.
       updateSnake(Snake.copy(currentSnake.value));
       splitHead(currentSnake.value.uuid, grabbingBlockUUID);
     } else if (movementX > 0) {
