@@ -23,7 +23,7 @@ import { computed, toRefs } from "vue";
 import { useStore } from "../store";
 
 const store = useStore();
-const { runnerOutputs, proteins } = toRefs(store);
+const { proteins } = toRefs(store);
 
 const stageSettings = computed(() =>
   proteins.value.map((protein) => protein.stageSettings).flat()

@@ -1,5 +1,6 @@
 import {
   DrugRepressiblePromoter,
+  GFP,
   mCherry,
   OperonMessengerRNA,
   Promoter,
@@ -13,6 +14,7 @@ export type BlockNames =
   | "T7 promoter"
   | "Drug Repressible Promoter"
   | "mCherry"
+  | "GFP"
   | "RepressorA"
   | "CYC1 Terminator";
 export type BlockWithUUID = Block & { uuid: string };
@@ -91,6 +93,17 @@ export class MCherryBlock extends VisibilityBlock {
   width = 184;
   get ProteinClass(): ProteinImpl {
     return mCherry;
+  }
+  constructor() {
+    super({});
+  }
+}
+
+export class GFPBlock extends VisibilityBlock {
+  name: "GFP" = "GFP";
+  width = 184;
+  get ProteinClass(): ProteinImpl {
+    return GFP;
   }
   constructor() {
     super({});

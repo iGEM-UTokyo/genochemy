@@ -23,6 +23,10 @@ export const blockDesignDetails: {
     imageSrc: "/blocks/visible.svg",
     blockClass: Block.MCherryBlock,
   },
+  GFP: {
+    imageSrc: "/blocks/visible.svg",
+    blockClass: Block.GFPBlock,
+  },
   RepressorA: {
     imageSrc: "/blocks/visible.svg",
     blockClass: Block.RepressorBlock,
