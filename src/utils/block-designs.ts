@@ -19,6 +19,11 @@ export const blockDesignDetails: {
     blockClass: Block.DrugRepressiblePromoterBlock,
     displayName: "リプレッサーA結合",
   },
+  "EL222 Activated Promoter": {
+    imageSrc: "/blocks/promoter.svg",
+    blockClass: Block.EL222ActivatedPromoterBlock,
+    displayName: "青色センサー結合",
+  },
   mCherry: {
     imageSrc: "/blocks/visible.svg",
     blockClass: Block.MCherryBlock,
@@ -28,9 +33,14 @@ export const blockDesignDetails: {
     blockClass: Block.GFPBlock,
   },
   RepressorA: {
-    imageSrc: "/blocks/visible.svg",
+    imageSrc: "/blocks/control.svg",
     blockClass: Block.RepressorBlock,
     displayName: "リプレッサーA",
+  },
+  EL222: {
+    imageSrc: "/blocks/control.svg",
+    blockClass: Block.EL222Block,
+    displayName: "青色センサー",
   },
   "CYC1 Terminator": {
     imageSrc: "/blocks/terminator.svg",

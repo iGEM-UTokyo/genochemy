@@ -1,5 +1,7 @@
 import {
   DrugRepressiblePromoter,
+  EL222,
+  EL222ActivatedPromoter,
   GFP,
   mCherry,
   OperonMessengerRNA,
@@ -13,9 +15,11 @@ export type BlockTypes = "promoter" | "visibility" | "terminator";
 export type BlockNames =
   | "T7 promoter"
   | "Drug Repressible Promoter"
+  | "EL222 Activated Promoter"
   | "mCherry"
   | "GFP"
   | "RepressorA"
+  | "EL222"
   | "CYC1 Terminator";
 export type BlockWithUUID = Block & { uuid: string };
 export type Vector2 = [number, number];
@@ -88,6 +92,15 @@ export class DrugRepressiblePromoterBlock extends PromoterBlock {
   }
 }
 
+export class EL222ActivatedPromoterBlock extends PromoterBlock {
+  name: "EL222 Activated Promoter" = "EL222 Activated Promoter";
+  promoter = new EL222ActivatedPromoter();
+  width = 184;
+  constructor() {
+    super({});
+  }
+}
+
 export class MCherryBlock extends VisibilityBlock {
   name: "mCherry" = "mCherry";
   width = 184;
@@ -115,6 +128,17 @@ export class RepressorBlock extends VisibilityBlock {
   width = 184;
   get ProteinClass(): ProteinImpl {
     return RepressorA;
+  }
+  constructor() {
+    super({});
+  }
+}
+
+export class EL222Block extends VisibilityBlock {
+  name: "EL222" = "EL222";
+  width = 184;
+  get ProteinClass(): ProteinImpl {
+    return EL222;
   }
   constructor() {
     super({});

@@ -1,6 +1,7 @@
 import { CodingBlock } from "./block";
 import { DE, Term } from "./de-term";
 import DrugA from "@/components/on-runner/DrugA.vue";
+import BlueLightSwitch from "@/components/on-runner/BlueLightSwitch.vue";
 import MonomerCherryEmission from "@/components/on-runner/MonomerCherryEmission.vue";
 import GFPEmission from "@/components/on-runner/GFPEmission.vue";
 
@@ -34,6 +35,22 @@ export class DrugRepressiblePromoter extends Promoter {
         deg: { type: "const", value: 1 },
         const: { type: "const", value: 1 },
         value: { type: "variable", name: "protein-Repressor-bound" },
+      },
+    ];
+  }
+}
+
+export class EL222ActivatedPromoter extends Promoter {
+  name = "青色センサー結合性プロモーター";
+  description =
+    "青色センサーの二量体が結合し、それにより下流の転写が促進されます。";
+  buildDEForMessengerRNA(): Term[] {
+    return [
+      {
+        type: "hill",
+        deg: { type: "const", value: 1 },
+        const: { type: "const", value: 1 },
+        value: { type: "variable", name: "protein-dimerized-EL222" },
       },
     ];
   }
@@ -196,6 +213,87 @@ export class RepressorA extends Protein {
               {
                 type: "variable",
                 name: "protein-Repressor-bound",
+              },
+            ],
+          },
+        ],
+      },
+    ];
+  }
+}
+
+export class EL222 extends Protein {
+  guiViews = [BlueLightSwitch];
+  description = "青色光によって二量体を形成します。";
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+  buildDE(): DE[] {
+    const baseTerm = super.buildDE()[0];
+    baseTerm.terms.push({
+      type: "multiply",
+      values: [
+        { type: "const", value: -1 },
+        {
+          type: "multiply",
+          values: [
+            { type: "variable", name: "blue-light" },
+            {
+              type: "multiply",
+              values: [
+                { type: "variable", name: this.name },
+                { type: "variable", name: this.name },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    baseTerm.terms.push({
+      type: "multiply",
+      values: [
+        { type: "const", value: 0.5 },
+        {
+          type: "variable",
+          name: "protein-dimerized-EL222",
+        },
+      ],
+    });
+    return [
+      baseTerm,
+      {
+        target: "blue-light",
+        terms: [],
+      },
+      {
+        target: "protein-dimerized-EL222",
+        terms: [
+          {
+            type: "multiply",
+            values: [
+              { type: "const", value: 1 },
+              {
+                type: "multiply",
+                values: [
+                  { type: "variable", name: "blue-light" },
+                  {
+                    type: "multiply",
+                    values: [
+                      { type: "variable", name: this.name },
+                      { type: "variable", name: this.name },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "multiply",
+            values: [
+              { type: "const", value: -0.5 },
+              {
+                type: "variable",
+                name: "protein-dimerized-EL222",
               },
             ],
           },
