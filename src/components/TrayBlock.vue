@@ -39,9 +39,12 @@ const { addBlock } = useStore();
 const down = () => {
   if (block.value !== null) {
     // todo: throw exception
+    if (!block.value.parentElement) return;
     addBlock(new props.detail.blockClass(), [
-      block.value.offsetLeft,
-      block.value.offsetTop + block.value.offsetHeight,
+      block.value.clientLeft,
+      block.value.offsetTop +
+        block.value.offsetHeight -
+        block.value.parentElement.scrollTop,
     ]);
   }
 };

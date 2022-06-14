@@ -18,6 +18,7 @@ import { blockDesignDetails } from "../utils/block-designs";
 .tray {
   width: 220px;
   height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
