@@ -10,6 +10,11 @@
 </template>
 
 <script lang="ts">
+import { InjectionKey, provide, Ref, ref, computed } from "vue";
+import { useStore } from "../store";
+import Snake from "@/components/Snake.vue";
+import { Vector2 } from "@/utils/block";
+
 export const getFixedPositionKey: InjectionKey<
   (absolutePos: Vector2) => Vector2
 > = Symbol("getFixedPosition");
@@ -19,11 +24,6 @@ export const getAbsolutePositionKey: InjectionKey<
 </script>
 
 <script setup lang="ts">
-import { InjectionKey, provide, Ref, ref, computed } from "vue";
-import { useStore } from "../store";
-import Snake from "@/components/Snake.vue";
-import { Vector2 } from "@/utils/block";
-
 const { snakes } = useStore();
 
 const programRef: Ref<HTMLElement | null> = ref(null);
