@@ -144,6 +144,17 @@ export const useStore = defineStore("main", () => {
     }
     return Object.values(proteins);
   });
+  const registeredOutputs: string[] = [];
+  const registerOutput = (variable: string) => {
+    // Duplicate outputs are allowed (for the use of unregisteration when unmounted)
+    registeredOutputs.push(variable);
+  };
+  const UnregisterOutput = (variable: string) => {
+    const index = registeredOutputs.indexOf(variable);
+    if (index !== -1) {
+      registeredOutputs.splice(index, 1);
+    }
+  };
   let animationFrame: null | number = null;
   const run = () => {
     const equations = [
@@ -152,12 +163,18 @@ export const useStore = defineStore("main", () => {
     ];
     console.log(equations);
     const runner = new Runner(equations, 0.1);
+    for (const output of registeredOutputs) {
+      runnerOutputs.value[output] = runner.variables[output] || 0;
+      runnerOutputDefaults[output] = runner.variables[output] || 0;
+    }
     const tick = () => {
       if (typeof runner.variables["drug"] !== "undefined") {
         runner.variables["drug"] = drug.value;
       }
       runner.next();
-      runnerOutputs.lightEmission = runner.variables["protein-mCherry"];
+      for (const output of registeredOutputs) {
+        runnerOutputs.value[output] = runner.variables[output] || 0;
+      }
       animationFrame = requestAnimationFrame(tick);
     };
     animationFrame = requestAnimationFrame(tick);
@@ -167,16 +184,13 @@ export const useStore = defineStore("main", () => {
       cancelAnimationFrame(animationFrame);
       animationFrame = null;
 
-      runnerOutputs["lightEmission"] = 0;
-      // for (const property of Object.keys(runnerOutputDefaults)) {
-      //   runnerOutputs[property] = runnerOutputDefaults[property]
-      // }
+      for (const output of registeredOutputs) {
+        runnerOutputs.value[output] = runnerOutputDefaults[output];
+      }
     }
   };
-  const runnerOutputDefaults = {
-    lightEmission: 0,
-  };
-  const runnerOutputs = reactive(runnerOutputDefaults);
+  const runnerOutputs: Ref<Record<string, number>> = ref({});
+  const runnerOutputDefaults: Record<string, number> = {};
   const drug = ref(0);
   const updateDrug = (_drug: number) => {
     drug.value = _drug;
@@ -192,6 +206,8 @@ export const useStore = defineStore("main", () => {
     deleteSnake,
     operonMessengerRNAs,
     proteins,
+    registerOutput,
+    UnregisterOutput,
     run,
     stop,
     runnerOutputs,

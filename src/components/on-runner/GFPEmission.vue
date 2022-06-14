@@ -8,18 +8,19 @@ import { useStore } from "@/store";
 
 const { runnerOutputs, registerOutput, UnregisterOutput } = useStore();
 
-const outputName = "protein-mCherry";
+const outputName = "protein-GFP";
 registerOutput(outputName);
 onUnmounted(() => {
   UnregisterOutput(outputName);
 });
 
-const mCherryColor = [208, 25, 187];
+const GFPColor = [0, 255, 0];
 const lightRGBA = computed(
   () =>
-    `rgba(${mCherryColor[0]}, ${mCherryColor[1]}, ${
-      mCherryColor[2]
-    }, ${Math.min(runnerOutputs[outputName] * 0.8, 0.8)})`
+    `rgba(${GFPColor[0]}, ${GFPColor[1]}, ${GFPColor[2]}, ${Math.min(
+      runnerOutputs[outputName] * 0.8,
+      0.8
+    )})`
 );
 </script>
 

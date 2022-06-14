@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useStore } from "@/store";
-const { runnerOutputs, updateDrug, drug: _drug } = useStore();
+const { updateDrug, drug: _drug } = useStore();
 const drug = ref(_drug);
 const update = () => {
   updateDrug(drug.value);

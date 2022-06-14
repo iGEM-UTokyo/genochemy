@@ -2,6 +2,7 @@ import { CodingBlock } from "./block";
 import { DE, Term } from "./de-term";
 import DrugA from "@/components/on-runner/DrugA.vue";
 import MonomerCherryEmission from "@/components/on-runner/MonomerCherryEmission.vue";
+import GFPEmission from "@/components/on-runner/GFPEmission.vue";
 
 export abstract class Promoter {
   abstract buildDEForMessengerRNA(): Term[];
@@ -121,6 +122,14 @@ export class Protein extends Matter {
 export class mCherry extends Protein {
   stageSettings = [MonomerCherryEmission];
   description = "赤色の蛍光を発します。";
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+}
+
+export class GFP extends Protein {
+  stageSettings = [GFPEmission];
+  description = "緑色の蛍光を発します。";
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
