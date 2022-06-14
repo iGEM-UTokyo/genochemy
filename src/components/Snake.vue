@@ -4,6 +4,7 @@
       v-for="block in props.snake.blocks"
       @mousedown="down(block.uuid)"
       @touchstart="down(block.uuid)"
+      @dblclick="doubleclick(block.uuid)"
       :key="block.uuid"
       :block="block"
     />
@@ -187,6 +188,11 @@ const up = () => {
   } else {
     updateSnake(Snake.copy(currentSnake.value));
   }
+};
+
+const doubleclick = (blockUUID: string) => {
+  splitTail(currentSnake.value.uuid, blockUUID, true);
+  splitHead(currentSnake.value.uuid, blockUUID, true);
 };
 
 if (currentSnake.value.fromTray) {
