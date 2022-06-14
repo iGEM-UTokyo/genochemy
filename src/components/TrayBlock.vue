@@ -10,6 +10,7 @@ div {
   position: relative;
   display: flex; /* for height-adjustment */
   touch-action: none;
+  user-select: none;
 }
 img {
   pointer-events: none;
