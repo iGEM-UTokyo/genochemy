@@ -1,6 +1,6 @@
 <template>
   <div class="tabs-container">
-    <tabs :tabs="['RNA', 'Protein']" v-model="activeTab">
+    <tabs :tabs="['Protein', 'RNA']" v-model="activeTab">
       <div class="tab-button" @click="run">
         <font-awesome-icon icon="play" />
       </div>
@@ -21,7 +21,7 @@ import TabMessengerRNA from "@/components/TabMessengerRNA.vue";
 import TabProtein from "@/components/TabProtein.vue";
 
 const { run, stop } = useStore();
-const activeTab = ref("RNA");
+const activeTab = ref("Protein");
 const updateTab = (tabName: string) => {
   activeTab.value = tabName;
 };

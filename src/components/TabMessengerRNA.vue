@@ -7,6 +7,12 @@
     />
     <div class="mRNA-settings" v-if="activeMessengerRNA">
       <h3>{{ activeMessengerRNAName }}</h3>
+      Promoter(s):
+      <list-box :list="promoterNames" v-model="activePromoterName" />
+      <section v-if="activePromoter">
+        <h4>{{ activePromoterName }}</h4>
+        {{ activePromoter.description }}
+      </section>
     </div>
   </div>
 </template>
@@ -18,19 +24,32 @@ import ListBox from "@/components/ListBox.vue";
 
 const store = useStore();
 const mRNANames = computed(() =>
-  store.operonMessengerRNAs.map((mRNA) => mRNA.name.substring("mRNA-".length))
+  store.operonMessengerRNAs.map((mRNA) => mRNA.name)
 );
 const activeMessengerRNAName = ref("");
 const activeMessengerRNA = computed(() => {
   if (activeMessengerRNAName.value === "") return null;
   const mRNA = store.operonMessengerRNAs.filter(
-    (mRNA) => mRNA.name === `mRNA-${activeMessengerRNAName.value}`
+    (mRNA) => mRNA.name === activeMessengerRNAName.value
   );
   if (mRNA.length !== 1) {
     // throw new Error(`Protein: ${activeProteinName.value} does not exist or duplicates.`)
     return null;
   }
   return mRNA[0];
+});
+const promoterNames = computed(() => {
+  if (!activeMessengerRNA.value) return [];
+  return activeMessengerRNA.value.promoters.map((promoter) => promoter.name);
+});
+const activePromoterName = ref("");
+const activePromoter = computed(() => {
+  if (!activeMessengerRNA.value) return [];
+  const promoter = activeMessengerRNA.value.promoters.filter(
+    (promoter) => promoter.name == activePromoterName.value
+  );
+  if (promoter.length !== 1) return null;
+  return promoter[0];
 });
 // const activeProteinMessengerRNAs = computed(() => {
 //   if (activeProtein.value === null) return [];
