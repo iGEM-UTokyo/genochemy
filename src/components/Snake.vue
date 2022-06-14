@@ -3,6 +3,7 @@
     <Block
       v-for="block in props.snake.blocks"
       @mousedown="down(block.uuid)"
+      @touchstart="down(block.uuid)"
       :key="block.uuid"
       :block="block"
     />
@@ -62,8 +63,10 @@ let headAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
 let grabbingBlockUUID: string | null = null;
 let hasSplitted = false;
 const down = (blockUUID: string) => {
-  window.addEventListener("mousemove", move);
+  window.addEventListener("mousemove", mousemove);
+  window.addEventListener("touchmove", touchmove);
   window.addEventListener("mouseup", up);
+  window.addEventListener("touchend", up);
   tailAnchors = [];
   headAnchors = [];
   grabbingBlockUUID = blockUUID;
@@ -102,20 +105,36 @@ const currentBindInfo: Ref<{
   toUUID: string;
   mode: "head" | "tail";
 } | null> = ref(null);
-const move = (event: MouseEvent) => {
-  if (!hasSplitted && grabbingBlockUUID !== null && event.shiftKey) {
-    if (event.movementX < 0) {
+const mousemove = (event: MouseEvent) => {
+  move(event.movementX, event.movementY, event.shiftKey);
+};
+let previousTouch: Touch | null = null;
+const touchmove = (event: TouchEvent) => {
+  event.preventDefault();
+  if (previousTouch) {
+    move(
+      event.touches[0].clientX - previousTouch.clientX,
+      event.touches[0].clientY - previousTouch.clientY,
+      event.shiftKey
+    );
+  }
+  previousTouch = event.touches[0];
+  return false;
+};
+const move = (movementX: number, movementY: number, shiftKey = false) => {
+  if (!hasSplitted && grabbingBlockUUID !== null && shiftKey) {
+    if (movementX < 0) {
       hasSplitted = true;
       updateSnake(Snake.copy(currentSnake.value));
       splitHead(currentSnake.value.uuid, grabbingBlockUUID);
-    } else if (event.movementX > 0) {
+    } else if (movementX > 0) {
       hasSplitted = true;
       updateSnake(Snake.copy(currentSnake.value));
       splitTail(currentSnake.value.uuid, grabbingBlockUUID);
     }
   }
-  currentSnake.value.anchorTail[0] += event.movementX;
-  currentSnake.value.anchorTail[1] += event.movementY;
+  currentSnake.value.anchorTail[0] += movementX;
+  currentSnake.value.anchorTail[1] += movementY;
   let hasSet = false;
   const _head = currentSnake.value.anchorNext;
   for (let tailAnchor of tailAnchors) {
@@ -150,10 +169,13 @@ const move = (event: MouseEvent) => {
   }
 };
 const up = () => {
-  window.removeEventListener("mousemove", move);
+  window.removeEventListener("mousemove", mousemove);
+  window.removeEventListener("touchmove", touchmove);
   window.removeEventListener("mouseup", up);
+  window.removeEventListener("touchend", up);
   grabbingBlockUUID = null;
   hasSplitted = false;
+  previousTouch = null;
 
   if (currentBindInfo.value !== null) {
     if (currentBindInfo.value.mode === "head") {
@@ -184,5 +206,6 @@ if (currentSnake.value.fromTray) {
   display: flex;
   align-items: flex-end;
   z-index: 99;
+  touch-action: none;
 }
 </style>
