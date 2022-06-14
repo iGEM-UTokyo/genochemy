@@ -1,5 +1,5 @@
 <template>
-  <div @mousedown="down" ref="block">
+  <div @mousedown="down" @touchstart="down" ref="block">
     <img :src="props.detail.imageSrc" />
     <span>{{ props.detail.displayName || props.blockName }}</span>
   </div>
@@ -9,6 +9,7 @@
 div {
   position: relative;
   display: flex; /* for height-adjustment */
+  touch-action: none;
 }
 img {
   pointer-events: none;
