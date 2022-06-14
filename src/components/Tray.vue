@@ -24,5 +24,6 @@ import { blockDesignDetails } from "../utils/block-designs";
   padding: 10px;
   box-sizing: border-box;
   border-right: 1px solid #aaa;
+  position: relative;
 }
 </style>

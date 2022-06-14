@@ -21,6 +21,8 @@ export const getFixedPositionKey: InjectionKey<
 export const getAbsolutePositionKey: InjectionKey<
   (fixedPos: Vector2) => Vector2
 > = Symbol("getAbsolutePosition");
+export const willBeDeletedKey: InjectionKey<(fixedPos: Vector2) => boolean> =
+  Symbol("wellBeDeleted");
 </script>
 
 <script setup lang="ts">
@@ -58,6 +60,14 @@ provide(getAbsolutePositionKey, (fixedPos: Vector2) => {
     fixedPos[0] - boundingRect.x + programRef.value.scrollLeft,
     fixedPos[1] - boundingRect.y + programRef.value.scrollTop,
   ];
+});
+
+provide(willBeDeletedKey, (fixedPos: Vector2) => {
+  if (programRef.value === null) {
+    throw new Error("programRef is null.");
+  }
+  const boundingRect = programRef.value.getBoundingClientRect();
+  return fixedPos[0] <= boundingRect.x;
 });
 </script>
 

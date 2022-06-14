@@ -87,6 +87,13 @@ export const useStore = defineStore("main", () => {
       snakes[newSnake.uuid] = newSnake;
     }
   };
+  const deleteSnake = (snakeUUID: string) => {
+    if (!snakes[snakeUUID]) {
+      console.error(`snake uuid is invalid: ${snakeUUID}`);
+      return;
+    }
+    delete snakes[snakeUUID];
+  };
   const grabStart = (grabbingBlock: BlockWithUUID) => {
     grabbing.value = true;
   };
@@ -182,6 +189,7 @@ export const useStore = defineStore("main", () => {
     mergeToHead,
     splitHead,
     splitTail,
+    deleteSnake,
     operonMessengerRNAs,
     proteins,
     run,

@@ -14,6 +14,11 @@
         :positions="currentBindInfo.bindGuide"
       />
     </teleport>
+    <teleport to=".tray">
+      <div class="delete-zone" v-if="showDeleteZone">
+        <font-awesome-icon icon="trash" />
+      </div>
+    </teleport>
   </div>
 </template>
 
@@ -36,7 +41,11 @@ import {
 } from "vue";
 import { BlockWithUUID, Vector2 } from "@/utils/block";
 import { DeepReadonly } from "@/utils/deep-readonly";
-import { getAbsolutePositionKey, getFixedPositionKey } from "./Program.vue";
+import {
+  getAbsolutePositionKey,
+  getFixedPositionKey,
+  willBeDeletedKey,
+} from "./Program.vue";
 
 const props = defineProps<{
   snake: DeepReadonly<Snake>;
@@ -44,6 +53,9 @@ const props = defineProps<{
 
 const getFixedPosition = inject(getFixedPositionKey);
 const getAbsolutePosition = inject(getAbsolutePositionKey);
+const willBeDeleted = inject(willBeDeletedKey);
+
+let showDeleteZone = ref(false);
 
 let currentSnake = ref(Snake.copy(props.snake));
 // props.snake: not working
@@ -55,8 +67,15 @@ watch(
   { flush: "post" }
 );
 const snakeRef: Ref<HTMLElement | null> = ref(null);
-const { updateSnake, snakes, mergeToTail, mergeToHead, splitHead, splitTail } =
-  useStore();
+const {
+  updateSnake,
+  snakes,
+  mergeToTail,
+  mergeToHead,
+  splitHead,
+  splitTail,
+  deleteSnake,
+} = useStore();
 // non-reactive. updated on mousedown
 let tailAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
 // non-reactive. updated on mousedown
@@ -151,7 +170,7 @@ const move = (movementX: number, movementY: number, shiftKey = false) => {
       hasSet = true;
     }
   }
-  const _tail = anchorTail.value;
+  const _tail: Vector2 = anchorTail.value;
   for (let headAnchor of headAnchors) {
     if (headAnchor.uuid === currentSnake.value.uuid) continue;
     const distance =
@@ -168,6 +187,11 @@ const move = (movementX: number, movementY: number, shiftKey = false) => {
   if (!hasSet) {
     currentBindInfo.value = null;
   }
+  if (!willBeDeleted || !getFixedPosition) {
+    throw new Error("Injected willBeDeleted or getFixedPosition is undefined.");
+  }
+  showDeleteZone.value =
+    !currentSnake.value.fromTray && willBeDeleted(getFixedPosition(_tail));
 };
 const up = () => {
   window.removeEventListener("mousemove", mousemove);
@@ -178,6 +202,10 @@ const up = () => {
   hasSplitted = false;
   previousTouch = null;
 
+  if (showDeleteZone.value) {
+    deleteSnake(currentSnake.value.uuid);
+    return;
+  }
   if (currentBindInfo.value !== null) {
     if (currentBindInfo.value.mode === "head") {
       mergeToHead(currentSnake.value.uuid, currentBindInfo.value.toUUID);
@@ -186,7 +214,9 @@ const up = () => {
     }
     currentBindInfo.value = null;
   } else {
-    updateSnake(Snake.copy(currentSnake.value));
+    const newSnake = Snake.copy(currentSnake.value);
+    newSnake.fromTray = false;
+    updateSnake(newSnake);
   }
 };
 
@@ -213,5 +243,17 @@ if (currentSnake.value.fromTray) {
   align-items: flex-end;
   z-index: 99;
   touch-action: none;
+}
+.delete-zone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #d5000055;
+  font-size: 30px;
 }
 </style>
