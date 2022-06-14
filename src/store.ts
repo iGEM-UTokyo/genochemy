@@ -167,7 +167,11 @@ export const useStore = defineStore("main", () => {
     }
   };
   let animationFrame: null | number = null;
+  let isRunning = false;
   const run = () => {
+    if (isRunning) {
+      stop()
+    }
     const equations = [
       ...operonMessengerRNAs.value.map((mRNA) => mRNA.buildDE()).flat(),
       ...proteins.value.map((protein) => protein.buildDE()).flat(),
@@ -192,6 +196,7 @@ export const useStore = defineStore("main", () => {
       animationFrame = requestAnimationFrame(tick);
     };
     animationFrame = requestAnimationFrame(tick);
+    isRunning = true
   };
   const stop = () => {
     if (animationFrame !== null) {
