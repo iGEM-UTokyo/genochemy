@@ -4,6 +4,7 @@ import DrugA from "@/components/on-runner/DrugA.vue";
 import BlueLightSwitch from "@/components/on-runner/BlueLightSwitch.vue";
 import MonomerCherryEmission from "@/components/on-runner/MonomerCherryEmission.vue";
 import GFPEmission from "@/components/on-runner/GFPEmission.vue";
+import Light from "@/components/on-runner/Light.vue";
 
 export abstract class Promoter {
   abstract buildDEForMessengerRNA(): Term[];
@@ -223,6 +224,7 @@ export class RepressorA extends Protein {
 }
 
 export class EL222 extends Protein {
+  stageSettings = [Light];
   guiViews = [BlueLightSwitch];
   description = "青色光によって二量体を形成します。";
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
