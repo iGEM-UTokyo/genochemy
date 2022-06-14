@@ -19,7 +19,7 @@ span {
   color: white;
   position: absolute;
   left: 20px;
-  bottom: 3px;
+  bottom: 5px;
   font-size: 16px;
 }
 </style>

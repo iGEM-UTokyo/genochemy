@@ -20,6 +20,7 @@ import Property from "@/components/Property.vue";
 main {
   height: 100%;
   display: flex;
+  font-family: "Zen Maru Gothic", sans-serif;
 }
 .right {
   width: 500px;
