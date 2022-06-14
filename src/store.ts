@@ -61,23 +61,29 @@ export const useStore = defineStore("main", () => {
     snakes[toUUID].appendToHead(snakes[snakeUUID]);
     delete snakes[snakeUUID];
   };
-  const splitHead = (snakeUUID: string, blockUUID: string) => {
+  const splitHead = (snakeUUID: string, blockUUID: string, shift = false) => {
     if (!snakes[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
       return;
     }
     const newSnake = snakes[snakeUUID].splitHead(blockUUID);
     if (newSnake) {
+      if (shift) {
+        newSnake.anchorTail[0] += 5;
+      }
       snakes[newSnake.uuid] = newSnake;
     }
   };
-  const splitTail = (snakeUUID: string, blockUUID: string) => {
+  const splitTail = (snakeUUID: string, blockUUID: string, shift = false) => {
     if (!snakes[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
       return;
     }
     const newSnake = snakes[snakeUUID].splitTail(blockUUID);
     if (newSnake) {
+      if (shift) {
+        newSnake.anchorTail[0] -= 5;
+      }
       snakes[newSnake.uuid] = newSnake;
     }
   };
