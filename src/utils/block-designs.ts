@@ -23,7 +23,7 @@ export const blockDesignDetails: {
     imageSrc: "/blocks/visible.svg",
     blockClass: Block.MCherryBlock,
   },
-  Repressor: {
+  RepressorA: {
     imageSrc: "/blocks/visible.svg",
     blockClass: Block.RepressorBlock,
     displayName: "リプレッサーA",

@@ -7,6 +7,7 @@
     />
     <div class="protein-settings" v-if="activeProtein">
       <h3>{{ activeProteinName }}</h3>
+      {{ activeProtein.description }}<br />
       mRNA(s):<br />
       <list-box :list="activeProteinMessengerRNAs" />
     </div>

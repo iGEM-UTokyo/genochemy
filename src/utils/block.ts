@@ -4,7 +4,7 @@ import {
   OperonMessengerRNA,
   Promoter,
   Protein,
-  Repressor,
+  RepressorA,
   T7Promoter,
 } from "./matter";
 
@@ -13,7 +13,7 @@ export type BlockNames =
   | "T7 promoter"
   | "Drug Repressible Promoter"
   | "mCherry"
-  | "Repressor"
+  | "RepressorA"
   | "CYC1 Terminator";
 export type BlockWithUUID = Block & { uuid: string };
 export type Vector2 = [number, number];
@@ -98,10 +98,10 @@ export class MCherryBlock extends VisibilityBlock {
 }
 
 export class RepressorBlock extends VisibilityBlock {
-  name: "Repressor" = "Repressor";
+  name: "RepressorA" = "RepressorA";
   width = 184;
   get ProteinClass(): ProteinImpl {
-    return Repressor;
+    return RepressorA;
   }
   constructor() {
     super({});

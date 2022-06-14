@@ -5,9 +5,13 @@ import MonomerCherryEmission from "@/components/on-runner/MonomerCherryEmission.
 
 export abstract class Promoter {
   abstract buildDEForMessengerRNA(): Term[];
+  name = "";
+  description = "";
 }
 
 export class T7Promoter extends Promoter {
+  name = "常時発現";
+  description = "常に一定の割合で下流を転写します。";
   buildDEForMessengerRNA(): Term[] {
     return [
       {
@@ -19,6 +23,9 @@ export class T7Promoter extends Promoter {
 }
 
 export class DrugRepressiblePromoter extends Promoter {
+  name = "リプレッサーA結合性プロモーター";
+  description =
+    "活性化されたリプレッサーAが結合すると下流の転写が抑制されます。";
   buildDEForMessengerRNA(): Term[] {
     return [
       {
@@ -35,6 +42,7 @@ export abstract class Matter {
   abstract get name(): string;
   guiViews: any[] = []; // todo
   stageSettings: any[] = [];
+  description = "";
   abstract buildDE(): DE[];
 }
 
@@ -112,13 +120,16 @@ export class Protein extends Matter {
 
 export class mCherry extends Protein {
   stageSettings = [MonomerCherryEmission];
+  description = "赤色の蛍光を発します。";
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
 }
 
-export class Repressor extends Protein {
+export class RepressorA extends Protein {
   guiViews = [DrugA];
+  description =
+    "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。";
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
