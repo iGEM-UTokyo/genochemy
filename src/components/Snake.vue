@@ -15,9 +15,14 @@
       />
     </teleport>
     <teleport to=".tray">
-      <div class="delete-zone" v-if="showDeleteZone">
-        <font-awesome-icon icon="trash" />
-      </div>
+      <transition name="delete-zone-transition" :appear="true">
+        <div
+          :class="{ 'delete-zone': true, active: isActiveDeleteZone }"
+          v-if="showDeleteZone"
+        >
+          <font-awesome-icon icon="trash" />
+        </div>
+      </transition>
     </teleport>
   </div>
 </template>
@@ -55,7 +60,10 @@ const getFixedPosition = inject(getFixedPositionKey);
 const getAbsolutePosition = inject(getAbsolutePositionKey);
 const willBeDeleted = inject(willBeDeletedKey);
 
-let showDeleteZone = ref(false);
+const isActiveDeleteZone = ref(false);
+const showDeleteZone = computed(
+  () => !currentSnake.value.fromTray && grabbingBlockUUID.value
+);
 
 let currentSnake = ref(Snake.copy(props.snake));
 // props.snake: not working
@@ -80,7 +88,7 @@ const {
 let tailAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
 // non-reactive. updated on mousedown
 let headAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
-let grabbingBlockUUID: string | null = null;
+const grabbingBlockUUID: Ref<string | null> = ref(null);
 let hasSplitted = false;
 const down = (blockUUID: string) => {
   window.addEventListener("mousemove", mousemove);
@@ -89,7 +97,7 @@ const down = (blockUUID: string) => {
   window.addEventListener("touchend", up);
   tailAnchors = [];
   headAnchors = [];
-  grabbingBlockUUID = blockUUID;
+  grabbingBlockUUID.value = blockUUID;
   for (let snake of Object.values(snakes)) {
     tailAnchors.push({ pos: snake.anchorTail, uuid: snake.uuid });
     headAnchors.push({ pos: snake.anchorNext, uuid: snake.uuid });
@@ -102,7 +110,7 @@ const style: ComputedRef<StyleValue> = computed(() => {
     anchorTail.value[0],
     anchorTail.value[1] - (snakeRef.value ? snakeRef.value.clientHeight : 0),
   ];
-  if (grabbingBlockUUID) {
+  if (grabbingBlockUUID.value) {
     if (!getFixedPosition) {
       throw new Error("Injected getFixedPosition is undefined.");
     }
@@ -142,16 +150,16 @@ const touchmove = (event: TouchEvent) => {
   return false;
 };
 const move = (movementX: number, movementY: number, shiftKey = false) => {
-  if (!hasSplitted && grabbingBlockUUID !== null && shiftKey) {
+  if (!hasSplitted && grabbingBlockUUID.value !== null && shiftKey) {
     if (movementX < 0) {
       hasSplitted = true;
       // updateSnake is needed to update the current position of the snake before splitting.
       updateSnake(Snake.copy(currentSnake.value));
-      splitHead(currentSnake.value.uuid, grabbingBlockUUID);
+      splitHead(currentSnake.value.uuid, grabbingBlockUUID.value);
     } else if (movementX > 0) {
       hasSplitted = true;
       updateSnake(Snake.copy(currentSnake.value));
-      splitTail(currentSnake.value.uuid, grabbingBlockUUID);
+      splitTail(currentSnake.value.uuid, grabbingBlockUUID.value);
     }
   }
   currentSnake.value.anchorTail[0] += movementX;
@@ -191,7 +199,7 @@ const move = (movementX: number, movementY: number, shiftKey = false) => {
   if (!willBeDeleted || !getFixedPosition) {
     throw new Error("Injected willBeDeleted or getFixedPosition is undefined.");
   }
-  showDeleteZone.value =
+  isActiveDeleteZone.value =
     !currentSnake.value.fromTray && willBeDeleted(getFixedPosition(_tail));
 };
 const up = () => {
@@ -199,11 +207,15 @@ const up = () => {
   window.removeEventListener("touchmove", touchmove);
   window.removeEventListener("mouseup", up);
   window.removeEventListener("touchend", up);
-  grabbingBlockUUID = null;
+  grabbingBlockUUID.value = null;
   hasSplitted = false;
   previousTouch = null;
 
-  if (showDeleteZone.value) {
+  if (
+    willBeDeleted &&
+    getFixedPosition &&
+    willBeDeleted(getFixedPosition(currentSnake.value.anchorTail))
+  ) {
     deleteSnake(currentSnake.value.uuid);
     return;
   }
@@ -246,6 +258,7 @@ if (currentSnake.value.fromTray) {
   touch-action: none;
 }
 .delete-zone {
+  transition: all 0.3s;
   position: absolute;
   top: 0;
   left: 0;
@@ -254,7 +267,18 @@ if (currentSnake.value.fromTray) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #d5000055;
+  background-color: #aaaaaa55;
   font-size: 30px;
+}
+.delete-zone.active {
+  background-color: #d5000055;
+}
+.delete-zone-transition-enter-from,
+.delete-zone-transition-leave-to {
+  opacity: 0;
+}
+.delete-zone-transition-enter-to,
+.delete-zone-transition-leave-from {
+  opacity: 1;
 }
 </style>
