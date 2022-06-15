@@ -22,7 +22,7 @@ export const blockDesignDetails: {
   "EL222 Activated Promoter": {
     imageSrc: "/blocks/promoter.svg",
     blockClass: Block.EL222ActivatedPromoterBlock,
-    displayName: "青色センサー結合",
+    displayName: "青アクチベータ結合",
   },
   mCherry: {
     imageSrc: "/blocks/visible.svg",
@@ -40,7 +40,7 @@ export const blockDesignDetails: {
   EL222: {
     imageSrc: "/blocks/control.svg",
     blockClass: Block.EL222Block,
-    displayName: "青色センサー",
+    displayName: "青色アクチベーター",
   },
   "CYC1 Terminator": {
     imageSrc: "/blocks/terminator.svg",
