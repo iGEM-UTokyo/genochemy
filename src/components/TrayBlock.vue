@@ -41,7 +41,7 @@ const down = () => {
     // todo: throw exception
     if (!block.value.parentElement) return;
     addBlock(new props.detail.blockClass(), [
-      block.value.clientLeft,
+      block.value.offsetLeft,
       block.value.offsetTop +
         block.value.offsetHeight -
         block.value.parentElement.scrollTop,
