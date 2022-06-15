@@ -1,11 +1,13 @@
 <template>
   <div class="tray">
-    <TrayBlock
-      v-for="(detail, name) in blockDesignDetails"
-      :key="name"
-      :blockName="name"
-      :detail="detail"
-    />
+    <div class="tray-inner">
+      <TrayBlock
+        v-for="(detail, name) in blockDesignDetails"
+        :key="name"
+        :blockName="name"
+        :detail="detail"
+      />
+    </div>
   </div>
 </template>
 
@@ -18,6 +20,11 @@ import { blockDesignDetails } from "../utils/block-designs";
 .tray {
   width: 220px;
   height: 100%;
+  position: relative;
+}
+.tray-inner {
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -25,6 +32,5 @@ import { blockDesignDetails } from "../utils/block-designs";
   padding: 10px;
   box-sizing: border-box;
   border-right: 1px solid #aaa;
-  position: relative;
 }
 </style>
