@@ -183,12 +183,19 @@ export const useStore = defineStore("main", () => {
       runnerOutputDefaults[output] = runner.variables[output] || 0;
     }
     for (const input of registeredInputs) {
-      runnerInputs.value[input] = runner.variables[input] || 0;
-      if (!runner.variables[input]) {
+      if (typeof runnerInputs.value[input] !== "undefined") {
         runner.variables[input] = runnerInputs.value[input];
         if (!runner.equations[input]) {
           runner.equations[input] = factoryEmptyFunction();
         }
+      } else {
+        if (typeof runner.variables[input] === "undefined") {
+          runner.variables[input] = 0;
+          if (!runner.equations[input]) {
+            runner.equations[input] = factoryEmptyFunction();
+          }
+        }
+        runnerInputs.value[input] = runner.variables[input];
       }
     }
     const tick = () => {
