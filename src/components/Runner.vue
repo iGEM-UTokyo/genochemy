@@ -19,18 +19,46 @@
 </template>
 
 <script setup lang="ts">
+import { RunnerComponent } from "@/utils/matter";
 import { computed, toRefs } from "vue";
 import { useStore } from "../store";
+import BlueLightSwitchVue from "./on-runner/BlueLightSwitch.vue";
+import DrugAVue from "./on-runner/DrugA.vue";
+import LightVue from "./on-runner/Light.vue";
 
 const store = useStore();
 const { proteins } = toRefs(store);
 
-const stageSettings = computed(() =>
-  proteins.value.map((protein) => protein.stageSettings).flat()
-);
-const guiViews = computed(() =>
-  proteins.value.map((protein) => protein.guiViews).flat()
-);
+const defaultStageSettings: Record<string, RunnerComponent> = {
+  [LightVue.name]: LightVue,
+};
+const defaultGUIViews: Record<string, RunnerComponent> = {
+  [DrugAVue.name]: DrugAVue,
+  [BlueLightSwitchVue.name]: BlueLightSwitchVue,
+};
+
+const stageSettings = computed(() => {
+  const _stageSettings: Record<string, RunnerComponent> = defaultStageSettings;
+  for (const protein of proteins.value) {
+    for (const stageSetting of protein.stageSettings) {
+      if (!_stageSettings[stageSetting.name]) {
+        _stageSettings[stageSetting.name] = stageSetting;
+      }
+    }
+  }
+  return Object.values(_stageSettings);
+});
+const guiViews = computed(() => {
+  const _guiViews: Record<string, RunnerComponent> = defaultGUIViews;
+  for (const protein of proteins.value) {
+    for (const guiView of protein.guiViews) {
+      if (!_guiViews[guiView.name]) {
+        _guiViews[guiView.name] = guiView;
+      }
+    }
+  }
+  return Object.values(_guiViews);
+});
 </script>
 
 <style scoped>
