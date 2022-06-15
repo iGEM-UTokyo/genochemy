@@ -42,9 +42,9 @@ export class DrugRepressiblePromoter extends Promoter {
 }
 
 export class EL222ActivatedPromoter extends Promoter {
-  name = "青色センサー結合性プロモーター";
+  name = "青色アクチベーター結合性プロモーター";
   description =
-    "青色センサーの二量体が結合し、それにより下流の転写が促進されます。";
+    "青色アクチベーターの二量体が結合し、それにより下流の転写が促進されます。";
   buildDEForMessengerRNA(): Term[] {
     return [
       {

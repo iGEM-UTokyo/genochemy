@@ -18,7 +18,7 @@ img {
 span {
   color: white;
   position: absolute;
-  left: 20px;
+  left: 15px;
   bottom: 5px;
   font-size: 16px;
 }
