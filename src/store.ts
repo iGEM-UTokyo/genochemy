@@ -167,9 +167,9 @@ export const useStore = defineStore("main", () => {
     }
   };
   let animationFrame: null | number = null;
-  let isRunning = false;
+  const isRunning = ref(false);
   const run = () => {
-    if (isRunning) {
+    if (isRunning.value) {
       stop();
     }
     const equations = [
@@ -209,7 +209,7 @@ export const useStore = defineStore("main", () => {
       animationFrame = requestAnimationFrame(tick);
     };
     animationFrame = requestAnimationFrame(tick);
-    isRunning = true;
+    isRunning.value = true;
   };
   const stop = () => {
     if (animationFrame !== null) {
@@ -220,6 +220,7 @@ export const useStore = defineStore("main", () => {
         runnerOutputs.value[output] = runnerOutputDefaults[output];
       }
     }
+    isRunning.value = false;
   };
   const runnerOutputs: Ref<Record<string, number>> = ref({});
   const runnerOutputDefaults: Record<string, number> = {};
@@ -244,6 +245,7 @@ export const useStore = defineStore("main", () => {
     UnregisterInput,
     run,
     stop,
+    isRunning,
     runnerOutputs,
     runnerInputs: readonly(runnerInputs),
     updateRunnerInput,

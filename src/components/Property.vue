@@ -2,9 +2,9 @@
   <div class="tabs-container">
     <tabs :tabs="['Protein', 'RNA']" v-model="activeTab">
       <div class="tab-button" @click="run">
-        <font-awesome-icon icon="play" />
+        <font-awesome-icon :icon="store.isRunning ? 'rotate-left' : 'play'" />
       </div>
-      <div class="tab-button" @click="stop">
+      <div class="tab-button" @click="stop" v-if="store.isRunning">
         <font-awesome-icon icon="stop" />
       </div>
     </tabs>
@@ -20,7 +20,8 @@ import Tabs from "@/components/Tabs.vue";
 import TabMessengerRNA from "@/components/TabMessengerRNA.vue";
 import TabProtein from "@/components/TabProtein.vue";
 
-const { run, stop } = useStore();
+const store = useStore();
+const { run, stop } = store;
 const activeTab = ref("Protein");
 </script>
 
