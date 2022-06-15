@@ -2,6 +2,13 @@
   <img class="light" width="70" :src="src" />
 </template>
 
+<script lang="ts">
+export default {
+  name: "Light",
+  customOptions: {},
+};
+</script>
+
 <script setup lang="ts">
 import { computed, onUnmounted } from "vue";
 import { useStore } from "@/store";

@@ -6,6 +6,10 @@ import MonomerCherryEmission from "@/components/on-runner/MonomerCherryEmission.
 import GFPEmission from "@/components/on-runner/GFPEmission.vue";
 import Light from "@/components/on-runner/Light.vue";
 
+export interface RunnerComponent {
+  name: string;
+}
+
 export abstract class Promoter {
   abstract buildDEForMessengerRNA(): Term[];
   name = "";
@@ -59,8 +63,8 @@ export class EL222ActivatedPromoter extends Promoter {
 
 export abstract class Matter {
   abstract get name(): string;
-  guiViews: any[] = []; // todo
-  stageSettings: any[] = [];
+  guiViews: RunnerComponent[] = [];
+  stageSettings: RunnerComponent[] = [];
   description = "";
   abstract buildDE(): DE[];
 }

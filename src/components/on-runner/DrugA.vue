@@ -13,6 +13,13 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+  name: "DrugA",
+  customOptions: {},
+};
+</script>
+
 <script setup lang="ts">
 import { onUnmounted, ref, watch } from "vue";
 import { useStore } from "@/store";

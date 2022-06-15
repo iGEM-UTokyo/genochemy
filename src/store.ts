@@ -11,7 +11,7 @@ import {
 import { Snake } from "./utils/snake";
 import { v4 as uuidv4 } from "uuid";
 import { OperonMessengerRNA, Promoter, Protein } from "./utils/matter";
-import Runner from "./utils/runner";
+import Runner, { factoryEmptyFunction } from "./utils/runner";
 
 function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
   block.uuid = uuid;
@@ -170,7 +170,7 @@ export const useStore = defineStore("main", () => {
   let isRunning = false;
   const run = () => {
     if (isRunning) {
-      stop()
+      stop();
     }
     const equations = [
       ...operonMessengerRNAs.value.map((mRNA) => mRNA.buildDE()).flat(),
@@ -184,6 +184,12 @@ export const useStore = defineStore("main", () => {
     }
     for (const input of registeredInputs) {
       runnerInputs.value[input] = runner.variables[input] || 0;
+      if (!runner.variables[input]) {
+        runner.variables[input] = runnerInputs.value[input];
+        if (!runner.equations[input]) {
+          runner.equations[input] = factoryEmptyFunction();
+        }
+      }
     }
     const tick = () => {
       for (const input of registeredInputs) {
@@ -196,7 +202,7 @@ export const useStore = defineStore("main", () => {
       animationFrame = requestAnimationFrame(tick);
     };
     animationFrame = requestAnimationFrame(tick);
-    isRunning = true
+    isRunning = true;
   };
   const stop = () => {
     if (animationFrame !== null) {

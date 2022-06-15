@@ -2,6 +2,13 @@
   <div class="light" :style="{ backgroundColor: lightRGBA }" />
 </template>
 
+<script lang="ts">
+export default {
+  name: "MonomerCherryEmission",
+  customOptions: {},
+};
+</script>
+
 <script setup lang="ts">
 import { computed, onUnmounted } from "vue";
 import { useStore } from "@/store";

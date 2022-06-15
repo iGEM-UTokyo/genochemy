@@ -40,6 +40,9 @@ export function factoryFunction(terms: Term[]): DecodeFunction {
   return (args: DecodeFunctionArgs) =>
     terms.map(factoryTerm).reduce((a, b) => a + b(args), 0);
 }
+export function factoryEmptyFunction(): DecodeFunction {
+  return () => 0;
+}
 
 export default class Runner {
   variables: Record<string, number> = {};
