@@ -290,6 +290,9 @@ export const useStore = defineStore("main", () => {
     }
     return Object.values(proteins);
   });
+
+  const time = ref(0);
+
   const registeredOutputs: string[] = [];
   const registerOutput = (variable: string) => {
     // Duplicate outputs are allowed (for the use of unregisteration when unmounted)
@@ -337,6 +340,7 @@ export const useStore = defineStore("main", () => {
     }
     console.log(matterEquations);
     currentRunner.value = new Runner(matterEquations, 0.1);
+    time.value = 0;
     for (const output of registeredOutputs) {
       runnerOutputs.value[output] = currentRunner.value.variables[output] || 0;
       runnerOutputDefaults[output] = currentRunner.value.variables[output] || 0;
@@ -363,6 +367,7 @@ export const useStore = defineStore("main", () => {
         currentRunner.value.variables[input] = runnerInputs.value[input];
       }
       currentRunner.value.next();
+      time.value = currentRunner.value.time;
       for (const output of registeredOutputs) {
         runnerOutputs.value[output] =
           currentRunner.value.variables[output] || 0;
@@ -441,6 +446,7 @@ export const useStore = defineStore("main", () => {
     setGrabbing,
     operonMessengerRNAs,
     proteins,
+    time,
     registerOutput,
     UnregisterOutput,
     registerInput,

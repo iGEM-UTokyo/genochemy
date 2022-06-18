@@ -47,6 +47,7 @@ export function factoryEmptyFunction(): DecodeFunction {
 export default class Runner {
   variables: Record<string, number> = {};
   equations: Record<string, DecodeFunction> = {};
+  time = 0;
   constructor(equations: MatterEquations, public interval: number) {
     for (const target of Object.keys(equations)) {
       this.variables[target] = 0; // todo
@@ -66,6 +67,7 @@ export default class Runner {
   }
   next() {
     const h = this.interval;
+    this.time += h;
     const vars1: Record<string, number> = {};
     for (const varName in this.variables) {
       vars1[varName] = h * this.equations[varName](this.variables);
