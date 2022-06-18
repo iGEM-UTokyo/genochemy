@@ -20,6 +20,7 @@ import { useStore } from "@/store";
 import ListBox from "@/components/ListBox.vue";
 
 const store = useStore();
+
 const proteinNames = computed(() =>
   store.proteins.map((protein) => protein.name.substring("protein-".length))
 );
