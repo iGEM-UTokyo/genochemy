@@ -13,7 +13,7 @@ export function factoryTerm(term: Term): DecodeFunction {
           .map((value) => factoryTerm(value)(args))
           .reduce((a, b) => a * b, 1);
     case "variable":
-      return (args: DecodeFunctionArgs) => args[term.name];
+      return (args: DecodeFunctionArgs) => args[term.name] || 0;
     case "hill":
       return (args: DecodeFunctionArgs) => {
         const computedConst = factoryTerm(term.const)(args);
