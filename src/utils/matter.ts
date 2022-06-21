@@ -52,6 +52,10 @@ export class EL222ActivatedPromoter extends Promoter {
   buildDEForMessengerRNA(): Term[] {
     return [
       {
+        type: "const",
+        value: 0.05,
+      },
+      {
         type: "hill",
         deg: { type: "const", value: 1 },
         const: { type: "const", value: 1 },
