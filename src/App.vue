@@ -1,7 +1,9 @@
 <template>
   <main>
-    <Tray />
-    <Program />
+    <div class="left">
+      <Program />
+      <Tray />
+    </div>
     <div class="right">
       <Runner />
       <Property />
@@ -21,6 +23,11 @@ main {
   height: 100%;
   display: flex;
   font-family: "Zen Maru Gothic", sans-serif;
+}
+.left {
+  width: calc(100vw - 500px);
+  display: flex;
+  flex-direction: column;
 }
 .right {
   width: 500px;

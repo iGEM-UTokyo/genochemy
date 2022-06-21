@@ -67,14 +67,14 @@ provide(willBeDeletedKey, (fixedPos: Vector2) => {
     throw new Error("programRef is null.");
   }
   const boundingRect = programRef.value.getBoundingClientRect();
-  return fixedPos[0] <= boundingRect.x;
+  return fixedPos[1] >= boundingRect.y + boundingRect.height;
 });
 </script>
 
 <style scoped>
 .program {
   flex: 1;
-  overflow: scroll;
+  overflow: auto;
   position: relative;
 }
 </style>

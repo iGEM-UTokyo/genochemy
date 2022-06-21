@@ -18,19 +18,19 @@ import { blockDesignDetails } from "../utils/block-designs";
 
 <style scoped>
 .tray {
-  width: 220px;
-  height: 100%;
+  height: 200px;
   position: relative;
+  border-top: 1px solid #aaa;
 }
 .tray-inner {
   width: 100%;
   height: 100%;
   overflow-y: auto;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-end;
   gap: 20px;
   padding: 10px;
   box-sizing: border-box;
-  border-right: 1px solid #aaa;
 }
 </style>
