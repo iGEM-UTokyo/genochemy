@@ -36,6 +36,7 @@ const update = (tab: string) => {
   margin-top: 5px;
   display: flex;
   align-items: center;
+  user-select: none;
 }
 .tab-item {
   padding: 5px 10px;

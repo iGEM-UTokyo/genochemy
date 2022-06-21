@@ -34,5 +34,6 @@ const src = computed(() => {
   position: absolute;
   top: 50px;
   left: 50px;
+  pointer-events: none;
 }
 </style>

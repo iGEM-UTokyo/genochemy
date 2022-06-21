@@ -69,9 +69,11 @@ const guiViews = computed(() => {
   align-items: center;
   justify-content: center;
   position: relative;
+  user-select: none;
 }
 .bacterium {
   height: 200px;
+  pointer-events: none;
 }
 .stage-settings {
   position: absolute;
