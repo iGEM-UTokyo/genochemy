@@ -2,8 +2,8 @@
   <div class="snake" ref="snakeRef" :style="style">
     <Block
       v-for="block in props.snake.blocks"
-      @mousedown="down(block.uuid)"
-      @touchstart="down(block.uuid)"
+      @mousedown="mousedown(block.uuid)"
+      @touchstart="touchstart(block.uuid)"
       @dblclick="doubleclick(block.uuid)"
       :key="block.uuid"
       :block="block"
@@ -90,11 +90,27 @@ let tailAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
 let headAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
 const grabbingBlockUUID: Ref<string | null> = ref(null);
 let hasSplitted = false;
+const mousedown = (blockUUID: string) => {
+  down(blockUUID);
+};
+let touchingBlockUUID: string | null = null;
+const touchstart = (blockUUID: string) => {
+  if (touchingBlockUUID !== null) {
+    touchingBlockUUID = null;
+    doubleclick(blockUUID);
+  } else {
+    touchingBlockUUID = blockUUID;
+    setTimeout(() => {
+      touchingBlockUUID = null;
+    }, 350);
+  }
+  down(blockUUID);
+};
 const down = (blockUUID: string) => {
   window.addEventListener("mousemove", mousemove);
+  window.addEventListener("mouseup", mouseup);
   window.addEventListener("touchmove", touchmove);
-  window.addEventListener("mouseup", up);
-  window.addEventListener("touchend", up);
+  window.addEventListener("touchend", touchend);
   tailAnchors = [];
   headAnchors = [];
   grabbingBlockUUID.value = blockUUID;
@@ -202,11 +218,17 @@ const move = (movementX: number, movementY: number, shiftKey = false) => {
   isActiveDeleteZone.value =
     !currentSnake.value.fromTray && willBeDeleted(getFixedPosition(_tail));
 };
+const mouseup = () => {
+  up();
+};
+const touchend = () => {
+  up();
+};
 const up = () => {
   window.removeEventListener("mousemove", mousemove);
+  window.removeEventListener("mouseup", mouseup);
   window.removeEventListener("touchmove", touchmove);
-  window.removeEventListener("mouseup", up);
-  window.removeEventListener("touchend", up);
+  window.removeEventListener("touchend", touchend);
   grabbingBlockUUID.value = null;
   hasSplitted = false;
   previousTouch = null;
@@ -245,7 +267,7 @@ if (currentSnake.value.fromTray) {
   currentSnake.value.anchorTail = getAbsolutePosition(
     currentSnake.value.anchorTail
   );
-  down(currentSnake.value.blocks[0].uuid);
+  mousedown(currentSnake.value.blocks[0].uuid);
 }
 </script>
 
