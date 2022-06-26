@@ -16,7 +16,7 @@ import {
   Plugin,
 } from "chart.js";
 import { useStore } from "@/store";
-import { ref, defineProps } from "vue";
+import { ref, defineProps, watch, toRefs, onUnmounted } from "vue";
 
 ChartJS.register(
   Title,
@@ -36,19 +36,21 @@ const props = defineProps<{
   cssClasses?: string;
 }>();
 const store = useStore();
-let i = 1;
-setInterval(() => {
-  chartData.value.datasets[0].data[i] = Math.random() * 50;
-  i += 1;
-}, 50);
+const { time } = toRefs(store);
+store.registerOutput("protein-mCherry");
+onUnmounted(() => {
+  store.UnregisterOutput("protein-mCherry");
+});
+
+watch(time, () => {
+  chartData.value.datasets[0].data[time.value] =
+    store.runnerOutputs["protein-mCherry"];
+});
 
 const chartData = ref({
   datasets: [
     {
-      data: {
-        [0]: 1,
-        [1]: 10,
-      },
+      data: {},
     },
   ],
 });
