@@ -18,6 +18,7 @@ specifiers:
   '@vue/test-utils': ^2.0.0-0
   '@vue/vue3-jest': ^27.0.0-alpha.1
   babel-jest: ^27.0.6
+  chart.js: ^3.8.0
   core-js: ^3.8.3
   eslint: ^7.32.0
   eslint-config-prettier: ^8.3.0
@@ -31,16 +32,19 @@ specifiers:
   typescript: ~4.5.5
   uuid: ^8.3.2
   vue: ^3.2.13
+  vue-chartjs: ^4.1.1
 
 dependencies:
   '@fortawesome/fontawesome-svg-core': 6.1.2
   '@fortawesome/free-solid-svg-icons': 6.1.2
   '@fortawesome/vue-fontawesome': 3.0.1_sqiqa7hvpgqdakjrbqzbqxvzme
   '@vue/shared': 3.2.37
+  chart.js: 3.9.1
   core-js: 3.24.1
   pinia: 2.0.19_khqcrm3nbfs7aq4aok36jjwtje
   uuid: 8.3.2
   vue: 3.2.37
+  vue-chartjs: 4.1.1_chart.js@3.9.1+vue@3.2.37
 
 devDependencies:
   '@types/jest': 27.5.2
@@ -3532,6 +3536,10 @@ packages:
     resolution: {integrity: sha512-oSvEeo6ZUD7NepqAat3RqoucZ5SeqLJgOvVIwkafu6IP3V0pO38s/ypdVUmDDK6qIIHNlYHJAKX9E7R7HoKElw==}
     engines: {node: '>=12.20'}
     dev: true
+
+  /chart.js/3.9.1:
+    resolution: {integrity: sha512-Ro2JbLmvg83gXF5F4sniaQ+lTbSv18E+TIf2cOeiH1Iqd2PGFOtem+DUufMZsCJwFE7ywPOpfXFBwRTGq7dh6w==}
+    dev: false
 
   /chokidar/3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
@@ -8884,6 +8892,16 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
     dev: true
+
+  /vue-chartjs/4.1.1_chart.js@3.9.1+vue@3.2.37:
+    resolution: {integrity: sha512-rKIQ3jPrjhwxjKdNJppnYxRuBSrx4QeM3nNHsfIxEqjX6QS4Jq6e6vnZBxh2MDpURDC2uvuI2N0eIt1cWXbBVA==}
+    peerDependencies:
+      chart.js: ^3.7.0
+      vue: ^3.0.0-0 || ^2.6.0
+    dependencies:
+      chart.js: 3.9.1
+      vue: 3.2.37
+    dev: false
 
   /vue-demi/0.13.8_vue@3.2.37:
     resolution: {integrity: sha512-Vy1zbZhCOdsmvGR6tJhAvO5vhP7eiS8xkbYQSoVa7o6KlIy3W8Rc53ED4qI4qpeRDjv3mLfXSEpYU6Yq4pgXRg==}

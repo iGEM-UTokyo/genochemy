@@ -18,6 +18,7 @@
 import { computed, watch, ref } from "vue";
 import { useStore } from "@/store";
 import ListBox from "@/components/ListBox.vue";
+import LineChart from "@/components/Logger.vue";
 
 const store = useStore();
 

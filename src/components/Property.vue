@@ -13,6 +13,7 @@
       <tab-protein v-if="activeTab === 'Protein'" />
       <tab-questions v-if="activeTab === 'Questions'" />
       <tab-load v-if="activeTab === 'Load'" />
+      <logger />
     </div>
   </div>
 </template>
@@ -25,6 +26,7 @@ import TabMessengerRNA from "@/components/TabMessengerRNA.vue";
 import TabProtein from "@/components/TabProtein.vue";
 import TabQuestions from "@/components/TabQuestions.vue";
 import TabLoad from "@/components/TabLoad.vue";
+import Logger from "./Logger.vue";
 
 const store = useStore();
 const { run, stop } = store;
