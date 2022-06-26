@@ -13,10 +13,12 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "@vue/shared": "^3.2.37",
+    "chart.js": "^3.8.0",
     "core-js": "^3.8.3",
     "pinia": "^2.0.12",
     "uuid": "^8.3.2",
-    "vue": "^3.2.13"
+    "vue": "^3.2.13",
+    "vue-chartjs": "^4.1.1"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
