@@ -34,17 +34,24 @@ const props = defineProps<{
   width?: number;
   height?: number;
   cssClasses?: string;
+  target?: string;
 }>();
+
 const store = useStore();
 const { time } = toRefs(store);
-store.registerOutput("protein-mCherry");
+const { target } = toRefs(props);
+
+console.log("TARGET:" + target.value);
+
+store.registerOutput(target.value);
 onUnmounted(() => {
-  store.UnregisterOutput("protein-mCherry");
+  store.UnregisterOutput(target.value);
 });
 
 watch(time, () => {
   chartData.value.datasets[0].data[time.value] =
-    store.runnerOutputs["protein-mCherry"];
+    store.runnerOutputs[target.value];
+  console.log(store.runnerOutputs[target.value]);
 });
 
 const chartData = ref({
