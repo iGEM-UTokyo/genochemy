@@ -7,6 +7,7 @@
     />
     <div class="mRNA-settings" v-if="activeMessengerRNA">
       <h3>{{ activeMessengerRNAName }}</h3>
+      <Logger :target="activeMessengerRNAName" />
       Promoter(s):
       <list-box :list="promoterNames" v-model="activePromoterName" />
       <section v-if="activePromoter">
@@ -21,6 +22,7 @@
 import { computed, watch, ref } from "vue";
 import { useStore } from "@/store";
 import ListBox from "@/components/ListBox.vue";
+import Logger from "./Logger.vue";
 
 const store = useStore();
 const mRNANames = computed(() =>

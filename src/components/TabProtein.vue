@@ -8,6 +8,7 @@
     <div class="protein-settings" v-if="activeProtein">
       <h3>{{ activeProteinName }}</h3>
       {{ activeProtein.description }}<br />
+      <Logger :target="activeProteinName" />
       mRNA(s):<br />
       <list-box :list="activeProteinMessengerRNAs" />
     </div>
@@ -19,6 +20,7 @@ import { computed, watch, ref } from "vue";
 import { useStore } from "@/store";
 import ListBox from "@/components/ListBox.vue";
 import LineChart from "@/components/Logger.vue";
+import Logger from "./Logger.vue";
 
 const store = useStore();
 
