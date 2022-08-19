@@ -1,5 +1,16 @@
 <template>
-  <img class="light" width="70" :src="src" />
+  <img
+    class="light"
+    width="70"
+    src="/runner/light-off.svg"
+    :class="{ active: !light }"
+  />
+  <img
+    class="light"
+    width="70"
+    src="/runner/light-on-blue.svg"
+    :class="{ active: light }"
+  />
 </template>
 
 <script lang="ts">
@@ -21,12 +32,7 @@ onUnmounted(() => {
   UnregisterOutput(outputName);
 });
 
-const src = computed(() => {
-  if (runnerOutputs[outputName] === 1) {
-    return "/runner/light-on-blue.svg";
-  }
-  return "/runner/light-off.svg";
-});
+const light = computed(() => runnerOutputs[outputName] === 1);
 </script>
 
 <style scoped>
@@ -34,5 +40,10 @@ const src = computed(() => {
   position: absolute;
   top: 50px;
   left: 50px;
+  pointer-events: none;
+  display: none;
+}
+.active {
+  display: block;
 }
 </style>

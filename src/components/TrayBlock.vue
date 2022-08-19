@@ -38,13 +38,10 @@ const block: Ref<HTMLElement | null> = ref(null);
 const { addBlock } = useStore();
 const down = () => {
   if (block.value !== null) {
-    // todo: throw exception
-    if (!block.value.parentElement) return;
+    const boundingRect = block.value.getBoundingClientRect();
     addBlock(new props.detail.blockClass(), [
-      block.value.offsetLeft,
-      block.value.offsetTop +
-        block.value.offsetHeight -
-        block.value.parentElement.scrollTop,
+      boundingRect.x,
+      boundingRect.y + boundingRect.height,
     ]);
   }
 };

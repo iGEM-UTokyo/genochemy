@@ -2,8 +2,7 @@ import { CodingBlock } from "./block";
 import { DE, Term } from "./de-term";
 import DrugA from "@/components/on-runner/DrugA.vue";
 import BlueLightSwitch from "@/components/on-runner/BlueLightSwitch.vue";
-import MonomerCherryEmission from "@/components/on-runner/MonomerCherryEmission.vue";
-import GFPEmission from "@/components/on-runner/GFPEmission.vue";
+import Fluorescence from "@/components/on-runner/Fluorescence.vue";
 import Light from "@/components/on-runner/Light.vue";
 
 export interface RunnerComponent {
@@ -51,6 +50,10 @@ export class EL222ActivatedPromoter extends Promoter {
     "青色アクチベーターの二量体が結合し、それにより下流の転写が促進されます。";
   buildDEForMessengerRNA(): Term[] {
     return [
+      {
+        type: "const",
+        value: 0.05,
+      },
       {
         type: "hill",
         deg: { type: "const", value: 1 },
@@ -142,7 +145,7 @@ export class Protein extends Matter {
 }
 
 export class mCherry extends Protein {
-  stageSettings = [MonomerCherryEmission];
+  stageSettings = [Fluorescence];
   description = "赤色の蛍光を発します。";
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
@@ -150,7 +153,7 @@ export class mCherry extends Protein {
 }
 
 export class GFP extends Protein {
-  stageSettings = [GFPEmission];
+  stageSettings = [Fluorescence];
   description = "緑色の蛍光を発します。";
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
