@@ -5,7 +5,7 @@
       :href="src"
       :width="props.block.design.width"
       :x="x"
-      :y="props.anchorTopLeft ? 0 : -props.block.design.height"
+      :y="(props.anchorTopLeft ? 0 : -props.block.design.height) + props.y"
     />
     <text
       :x="props.x + 10"
