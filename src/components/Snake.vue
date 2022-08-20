@@ -62,7 +62,7 @@ const blockWithPosition = computed<[number, BlockWithUUID][]>(() => {
   let accumulatedX = 0;
   return props.snake.blocks.map((block) => {
     const result: [number, BlockWithUUID] = [accumulatedX, block];
-    accumulatedX += block.width - overlap;
+    accumulatedX += block.design.width - overlap;
     return result;
   });
 });
@@ -298,7 +298,7 @@ const click = (event: MouseEvent) => {
     let accumulatedWidth = 0;
     let beforeDistance = x - 0;
     for (const block of Object.values(props.snake.blocks)) {
-      accumulatedWidth += block.width;
+      accumulatedWidth += block.design.width - overlap;
       const newDistance = Math.abs(x - accumulatedWidth);
       if (beforeDistance < newDistance) {
         break;

@@ -31,10 +31,16 @@ export type BlockNames =
   | "Wrap Tail";
 export type BlockWithUUID = Block & { uuid: string };
 export type Vector2 = [number, number];
+export type BlockDesign = {
+  width: number;
+  height: number;
+  imageSrc: string;
+  displayName: string;
+};
 export abstract class Block {
   abstract type: BlockTypes;
   abstract name: BlockNames;
-  abstract width: number;
+  abstract design: BlockDesign;
   uuid?: string;
   constructor(args: Pick<Block, "uuid">) {
     this.uuid = args.uuid;
@@ -42,7 +48,7 @@ export abstract class Block {
 }
 
 export abstract class PromoterBlock extends Block {
-  type: "promoter" = "promoter";
+  type = "promoter" as const;
   abstract get promoter(): Promoter;
   constructor(args: Pick<Block, "uuid">) {
     super({
@@ -57,7 +63,7 @@ export abstract class CodingBlock extends Block {
   }
 }
 export abstract class VisibilityBlock extends CodingBlock {
-  type: "visibility" = "visibility";
+  type = "visibility" as const;
   constructor(args: Pick<Block, "uuid">) {
     super({
       uuid: args.uuid,
@@ -66,7 +72,7 @@ export abstract class VisibilityBlock extends CodingBlock {
 }
 
 export abstract class TerminatorBlock extends Block {
-  type: "terminator" = "terminator";
+  type = "terminator" as const;
   constructor(args: Pick<Block, "uuid">) {
     super({
       uuid: args.uuid,
@@ -83,35 +89,55 @@ export type ProteinImpl = {
 };
 
 export class T7PromoterBlock extends PromoterBlock {
-  name: "T7 promoter" = "T7 promoter";
+  name = "T7 promoter" as const;
+  design = {
+    width: 184,
+    height: 82.65,
+    imageSrc: "/blocks/promoter.svg",
+    displayName: "常時発現",
+  };
   promoter = new T7Promoter();
-  width = 184;
   constructor() {
     super({});
   }
 }
 
 export class DrugRepressiblePromoterBlock extends PromoterBlock {
-  name: "Drug Repressible Promoter" = "Drug Repressible Promoter";
+  name = "Drug Repressible Promoter" as const;
+  design = {
+    width: 184,
+    height: 82.65,
+    imageSrc: "/blocks/promoter.svg",
+    displayName: "リプレッサーA結合",
+  };
   promoter = new DrugRepressiblePromoter();
-  width = 184;
   constructor() {
     super({});
   }
 }
 
 export class EL222ActivatedPromoterBlock extends PromoterBlock {
-  name: "EL222 Activated Promoter" = "EL222 Activated Promoter";
+  name = "EL222 Activated Promoter" as const;
+  design = {
+    width: 184,
+    height: 82.65,
+    imageSrc: "/blocks/promoter.svg",
+    displayName: "青アクチベータ結合",
+  };
   promoter = new EL222ActivatedPromoter();
-  width = 184;
   constructor() {
     super({});
   }
 }
 
 export class MCherryBlock extends VisibilityBlock {
-  name: "mCherry" = "mCherry";
-  width = 184;
+  name = "mCherry" as const;
+  design = {
+    width: 184,
+    height: 30,
+    imageSrc: "/blocks/vidible.svg",
+    displayName: "mCherry",
+  };
   get ProteinClass(): ProteinImpl {
     return mCherry;
   }
@@ -121,8 +147,13 @@ export class MCherryBlock extends VisibilityBlock {
 }
 
 export class GFPBlock extends VisibilityBlock {
-  name: "GFP" = "GFP";
-  width = 184;
+  name = "GFP" as const;
+  design = {
+    width: 184,
+    height: 30,
+    imageSrc: "/blocks/visible.svg",
+    displayName: "GFP",
+  };
   get ProteinClass(): ProteinImpl {
     return GFP;
   }
@@ -132,8 +163,13 @@ export class GFPBlock extends VisibilityBlock {
 }
 
 export class RepressorBlock extends VisibilityBlock {
-  name: "RepressorA" = "RepressorA";
-  width = 184;
+  name = "RepressorA" as const;
+  design = {
+    width: 184,
+    height: 30,
+    imageSrc: "/blocks/control.svg",
+    displayName: "リプレッサーA",
+  };
   get ProteinClass(): ProteinImpl {
     return RepressorA;
   }
@@ -143,8 +179,13 @@ export class RepressorBlock extends VisibilityBlock {
 }
 
 export class EL222Block extends VisibilityBlock {
-  name: "EL222" = "EL222";
-  width = 184;
+  name = "EL222" as const;
+  design = {
+    width: 184,
+    height: 30,
+    imageSrc: "/blocks/control.svg",
+    displayName: "青色アクチベーター",
+  };
   get ProteinClass(): ProteinImpl {
     return EL222;
   }
@@ -154,17 +195,27 @@ export class EL222Block extends VisibilityBlock {
 }
 
 export class CYC1TerminatorBlock extends TerminatorBlock {
-  name: "CYC1 Terminator" = "CYC1 Terminator";
-  width = 184;
+  name = "CYC1 Terminator" as const;
+  design = {
+    width: 184,
+    height: 77.65,
+    imageSrc: "/blocks/terminator.svg",
+    displayName: "ターミネーター",
+  };
   constructor() {
     super({});
   }
 }
 
 export class WrapHeadBlock extends Block {
-  type: "wrap-head" = "wrap-head";
-  name: "Wrap Head" = "Wrap Head";
-  width = 27;
+  type = "wrap-head" as const;
+  name = "Wrap Head" as const;
+  design = {
+    width: 27,
+    height: 30,
+    imageSrc: "/blocks/wrap-head.svg",
+    displayName: "",
+  };
   uuid = uuidv4(); // todo
   constructor(public connectTo: string) {
     super({});
@@ -172,9 +223,14 @@ export class WrapHeadBlock extends Block {
 }
 
 export class WrapTailBlock extends Block {
-  type: "wrap-tail" = "wrap-tail";
-  name: "Wrap Tail" = "Wrap Tail";
-  width = 20;
+  type = "wrap-tail" as const;
+  name = "Wrap Tail" as const;
+  design = {
+    width: 20,
+    height: 30,
+    imageSrc: "/blocks/wrap-tail.svg",
+    displayName: "",
+  };
   uuid = uuidv4(); // todo
   constructor(public connectTo: string) {
     super({});
