@@ -34,7 +34,7 @@ const props = defineProps<{
 }>();
 const src = computed(() => blockDesignDetails[props.block.name].imageSrc);
 const displayName = computed(
-  () => blockDesignDetails[props.block.name].displayName || props.block.name
+  () => blockDesignDetails[props.block.name].displayName ?? props.block.name
 );
 
 const divStyle: ComputedRef<StyleValue> = computed(() => ({

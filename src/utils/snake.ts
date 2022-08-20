@@ -1,4 +1,4 @@
-import { BlockWithUUID, Vector2 } from "./block";
+import { BlockWithUUID, Vector2, WrapHeadBlock, WrapTailBlock } from "./block";
 import { v4 as uuidv4 } from "uuid";
 import { DeepReadonly } from "@/utils/deep-readonly";
 
@@ -75,5 +75,14 @@ export class Snake {
       }
       anchorX += block.width - overlap;
     }
+  }
+  wrap(border: { before: string }) {
+    const head = this.splitHead(border.before);
+    if (!head) return;
+    head.anchorTail[0] += 20;
+    head.anchorTail[1] += 30;
+    this.blocks.push(new WrapTailBlock(head.uuid));
+    head.blocks = [new WrapHeadBlock(this.uuid), ...head.blocks];
+    return head;
   }
 }

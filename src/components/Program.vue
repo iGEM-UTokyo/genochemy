@@ -4,8 +4,14 @@
       class="inner-program"
       :style="{ width: `${size[0]}px`, height: `${size[1]}px` }"
     >
-      <Snake v-for="snake in snakes" :key="snake.uuid" :snake="snake" />
+      <Snake
+        v-for="snake in snakes"
+        :key="snake.uuid"
+        :snake="snake"
+        :cursor-mode="cursorMode"
+      />
     </div>
+    <CursorMode v-model="cursorMode" />
   </div>
 </template>
 
@@ -26,6 +32,10 @@ export const willBeDeletedKey: InjectionKey<(fixedPos: Vector2) => boolean> =
 </script>
 
 <script setup lang="ts">
+import CursorMode, {
+  CursorMode as CursorModeType,
+} from "@/components/CursorMode.vue";
+
 const { snakes } = useStore();
 
 const programRef: Ref<HTMLElement | null> = ref(null);
@@ -39,6 +49,8 @@ const size = computed(() => {
     [0, 0]
   );
 });
+
+const cursorMode = ref<CursorModeType>("move");
 
 provide(getFixedPositionKey, (absolutePos: Vector2) => {
   if (programRef.value === null) {

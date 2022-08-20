@@ -6,6 +6,8 @@ import {
   faStop,
   faRotateLeft,
   faTrash,
+  faWaveSquare,
+  faArrowsUpDownLeftRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -17,6 +19,8 @@ library.add(faPlay);
 library.add(faStop);
 library.add(faRotateLeft);
 library.add(faTrash);
+library.add(faArrowsUpDownLeftRight);
+library.add(faWaveSquare);
 app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(createPinia());
