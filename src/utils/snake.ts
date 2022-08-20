@@ -29,10 +29,15 @@ export class Snake {
   get width() {
     return this.blocks.reduce((prev, current) => {
       if (prev === 0) {
-        return prev + current.width;
+        return prev + current.design.width;
       }
       // consider overlaps
-      return prev + current.width - overlap;
+      return prev + current.design.width - overlap;
+    }, 0);
+  }
+  get height() {
+    return this.blocks.reduce((prev, current) => {
+      return Math.max(prev, current.design.height);
     }, 0);
   }
   get anchorNext(): Vector2 {
@@ -48,7 +53,7 @@ export class Snake {
   splitHead(blockUUID: string) {
     let anchorX = this.anchorTail[0];
     for (const [index, block] of this.blocks.entries()) {
-      anchorX += block.width - overlap;
+      anchorX += block.design.width - overlap;
       if (block.uuid === blockUUID) {
         if (index === this.blocks.length - 1) return;
         const newSnake = new Snake({
@@ -73,7 +78,7 @@ export class Snake {
         this.anchorTail = [anchorX, this.anchorTail[1]];
         return newSnake;
       }
-      anchorX += block.width - overlap;
+      anchorX += block.design.width - overlap;
     }
   }
   wrap(border: { before: string }) {

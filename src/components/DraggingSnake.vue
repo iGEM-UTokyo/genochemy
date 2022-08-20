@@ -76,7 +76,7 @@ const anchorTail = computed(() => currentSnake.value.anchorTail);
 const style: ComputedRef<StyleValue> = computed(() => {
   const absolutePosition: Vector2 = [
     anchorTail.value[0],
-    anchorTail.value[1] - (snakeRef.value ? snakeRef.value.clientHeight : 0),
+    anchorTail.value[1] - currentSnake.value.height,
   ];
   if (isGrabbing.value) {
     if (!getFixedPosition) {
@@ -211,7 +211,6 @@ down();
   align-items: flex-end;
   z-index: 99;
   touch-action: none;
-  transform: translateY(50%);
 }
 
 .delete-zone {

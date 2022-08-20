@@ -33,7 +33,7 @@
         :cursor-mode="cursorMode"
       />
     </div> -->
-    <NewSnake v-if="newSnake !== null" :snake="newSnake" />
+    <DraggingSnake v-if="draggingSnake !== null" :snake="draggingSnake" />
     <CursorMode v-model="cursorMode" />
   </div>
 </template>
@@ -42,7 +42,7 @@
 import { InjectionKey, provide, Ref, ref, computed, toRefs } from "vue";
 import { useStore } from "../store";
 import Snake from "@/components/Snake.vue";
-import NewSnake from "@/components/NewSnake.vue";
+import DraggingSnake from "@/components/DraggingSnake.vue";
 import { Vector2 } from "@/utils/block";
 
 export const getFixedPositionKey: InjectionKey<
@@ -60,7 +60,7 @@ import CursorMode, {
   CursorMode as CursorModeType,
 } from "@/components/CursorMode.vue";
 
-const { snakes, newSnake } = toRefs(useStore());
+const { snakes, draggingSnake } = toRefs(useStore());
 
 const programRef: Ref<HTMLElement | null> = ref(null);
 
