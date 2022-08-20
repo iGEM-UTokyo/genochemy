@@ -19,16 +19,23 @@ function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
 export type Snakes = Record<string, Snake>;
 export const useStore = defineStore("main", () => {
   const snakes: Snakes = reactive({});
+  const newSnake = ref<Snake | null>(null);
   const grabbing = ref(false);
-  const addBlock = (block: Block, anchorTail: Vector2) => {
+  const addTempBlock = (block: Block, anchorTail: Vector2) => {
     setUUID(block, uuidv4());
     const snakeUUID = uuidv4();
-    snakes[snakeUUID] = new Snake({
+    newSnake.value = new Snake({
       uuid: snakeUUID,
       blocks: [block],
       anchorTail,
       fromTray: true,
     });
+  };
+  const clearTempBlock = () => {
+    newSnake.value = null;
+  };
+  const addSnake = (snake: Snake) => {
+    snakes[snake.uuid] = snake;
   };
   const updateSnake = (snake: Snake) => {
     if (!snakes[snake.uuid]) {
@@ -239,7 +246,10 @@ export const useStore = defineStore("main", () => {
   };
   return {
     snakes: readonly(snakes),
-    addBlock,
+    newSnake,
+    addTempBlock,
+    clearTempBlock,
+    addSnake,
     updateSnake,
     mergeToTail,
     mergeToHead,
