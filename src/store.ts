@@ -20,7 +20,6 @@ export type Snakes = Record<string, Snake>;
 export const useStore = defineStore("main", () => {
   const snakes: Snakes = reactive({});
   const draggingSnake = ref<Snake | null>(null);
-  const grabbing = ref(false);
   const addTempBlock = (block: Block, anchorTail: Vector2) => {
     setUUID(block, uuidv4());
     const snakeUUID = uuidv4();
@@ -31,7 +30,7 @@ export const useStore = defineStore("main", () => {
       fromTray: true,
     });
   };
-  const clearTempBlock = () => {
+  const clearDraggingSnake = () => {
     draggingSnake.value = null;
   };
   const addSnake = (snake: Snake) => {
@@ -44,29 +43,29 @@ export const useStore = defineStore("main", () => {
     }
     snakes[snake.uuid] = snake;
   };
-  const mergeToTail = (snakeUUID: string, toUUID: string) => {
-    if (!snakes[snakeUUID]) {
-      console.error(`snake uuid is invalid: ${snakeUUID}`);
+  const mergeToTail = (toUUID: string) => {
+    if (!draggingSnake.value) {
+      console.error("draggingSnake is null");
       return;
     }
     if (!snakes[toUUID]) {
       console.error(`snake uuid is invalid: ${toUUID}`);
       return;
     }
-    snakes[toUUID].appendToTail(snakes[snakeUUID]);
-    delete snakes[snakeUUID];
+    snakes[toUUID].appendToTail(draggingSnake.value);
+    draggingSnake.value = null;
   };
-  const mergeToHead = (snakeUUID: string, toUUID: string) => {
-    if (!snakes[snakeUUID]) {
-      console.error(`snake uuid is invalid: ${snakeUUID}`);
+  const mergeToHead = (toUUID: string) => {
+    if (!draggingSnake.value) {
+      console.error("draggingSnake is null");
       return;
     }
     if (!snakes[toUUID]) {
       console.error(`snake uuid is invalid: ${toUUID}`);
       return;
     }
-    snakes[toUUID].appendToHead(snakes[snakeUUID]);
-    delete snakes[snakeUUID];
+    snakes[toUUID].appendToHead(draggingSnake.value);
+    draggingSnake.value = null;
   };
   const splitHead = (snakeUUID: string, blockUUID: string, shift = false) => {
     if (!snakes[snakeUUID]) {
@@ -110,11 +109,13 @@ export const useStore = defineStore("main", () => {
     if (!head) return;
     snakes[head.uuid] = head;
   };
-  const grabStart = (grabbingBlock: BlockWithUUID) => {
-    grabbing.value = true;
-  };
-  const grabEnd = () => {
-    grabbing.value = false;
+  const setGrabbing = (snakeUUID: string) => {
+    if (!snakes[snakeUUID]) {
+      console.error(`snake uuid is invalid: ${snakeUUID}`);
+      return;
+    }
+    draggingSnake.value = snakes[snakeUUID];
+    delete snakes[snakeUUID];
   };
   const operonMessengerRNAs = computed(() => {
     const mRNAs: Record<string, OperonMessengerRNA> = {};
@@ -248,7 +249,7 @@ export const useStore = defineStore("main", () => {
     snakes: readonly(snakes),
     draggingSnake,
     addTempBlock,
-    clearTempBlock,
+    clearDraggingSnake,
     addSnake,
     updateSnake,
     mergeToTail,
@@ -257,6 +258,7 @@ export const useStore = defineStore("main", () => {
     splitTail,
     deleteSnake,
     wrapSnake,
+    setGrabbing,
     operonMessengerRNAs,
     proteins,
     registerOutput,

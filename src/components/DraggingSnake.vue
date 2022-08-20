@@ -1,16 +1,39 @@
 <template>
-  <div class="snake" ref="snakeRef" :style="style">
-    <svg>
-      <Block :key="block.uuid" :x="0" :y="0" :block="block" anchor-top-left />
+  <div class="snake" :style="style">
+    <svg :width="currentSnake.width" :height="currentSnake.height">
+      <Block
+        v-for="[x, block] in blockWithPosition"
+        :key="block.uuid"
+        :block="block"
+        :x="x"
+        :y="currentSnake.height - block.design.height"
+        anchor-top-left
+      />
     </svg>
-    <!-- v-for="block in props.snake.blocks" -->
+    <teleport to=".program-inner">
+      <BindGuide
+        v-if="currentBindInfo !== null"
+        :positions="currentBindInfo.bindGuide"
+      />
+    </teleport>
+    <teleport to=".tray">
+      <transition name="delete-zone-transition" :appear="true">
+        <div
+          :class="{ 'delete-zone': true, active: isActiveDeleteZone }"
+          v-if="showDeleteZone"
+        >
+          <font-awesome-icon icon="trash" />
+        </div>
+      </transition>
+    </teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Snake } from "@/utils/snake";
+import { overlap, Snake } from "@/utils/snake";
 import { useStore } from "../store";
 import Block from "@/components/Block.vue";
+import BindGuide from "@/components/BindGuide.vue";
 import {
   Ref,
   ref,
@@ -21,7 +44,7 @@ import {
   watch,
   inject,
 } from "vue";
-import { Vector2 } from "@/utils/block";
+import { BlockWithUUID, Vector2 } from "@/utils/block";
 import { DeepReadonly } from "@/utils/deep-readonly";
 import {
   getAbsolutePositionKey,
@@ -29,19 +52,30 @@ import {
   willBeDeletedKey,
 } from "./Program.vue";
 
+const { addSnake, mergeToHead, mergeToTail, clearDraggingSnake, snakes } =
+  useStore();
+
 const props = defineProps<{
   snake: DeepReadonly<Snake>;
 }>();
 
-const block = computed(() => props.snake.blocks[0]);
+const blockWithPosition = computed<[number, BlockWithUUID][]>(() => {
+  let accumulatedX = 0;
+  return props.snake.blocks.map((block) => {
+    const result: [number, BlockWithUUID] = [accumulatedX, block];
+    accumulatedX += block.design.width - overlap;
+    return result;
+  });
+});
 
 const getFixedPosition = inject(getFixedPositionKey);
 const getAbsolutePosition = inject(getAbsolutePositionKey);
 const willBeDeleted = inject(willBeDeletedKey);
 
 const isActiveDeleteZone = ref(false);
+const showDeleteZone = computed(() => !currentSnake.value.fromTray);
 
-let currentSnake = ref(Snake.copy(props.snake));
+let currentSnake = ref<Snake>(Snake.copy(props.snake));
 // props.snake: not working
 watch(
   props,
@@ -50,14 +84,10 @@ watch(
   },
   { flush: "post" }
 );
-const snakeRef: Ref<HTMLElement | null> = ref(null);
-const { addSnake, snakes, mergeToTail, mergeToHead, clearTempBlock } =
-  useStore();
 // non-reactive. updated on mousedown
 let tailAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
 // non-reactive. updated on mousedown
 let headAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
-const isGrabbing = ref(false);
 const down = () => {
   window.addEventListener("mousemove", mousemove);
   window.addEventListener("mouseup", mouseup);
@@ -65,34 +95,26 @@ const down = () => {
   window.addEventListener("touchend", touchend);
   tailAnchors = [];
   headAnchors = [];
-  isGrabbing.value = true;
   for (let snake of Object.values(snakes)) {
     tailAnchors.push({ pos: snake.anchorTail, uuid: snake.uuid });
     headAnchors.push({ pos: snake.anchorNext, uuid: snake.uuid });
   }
 };
 
-const anchorTail = computed(() => currentSnake.value.anchorTail);
+const anchorTail = computed(() => currentSnake.value?.anchorTail ?? 0);
 const style: ComputedRef<StyleValue> = computed(() => {
   const absolutePosition: Vector2 = [
     anchorTail.value[0],
     anchorTail.value[1] - currentSnake.value.height,
   ];
-  if (isGrabbing.value) {
-    if (!getFixedPosition) {
-      throw new Error("Injected getFixedPosition is undefined.");
-    }
-    const fixedPosition = getFixedPosition(absolutePosition);
-    return {
-      position: "fixed",
-      top: `${fixedPosition[1]}px`,
-      left: `${fixedPosition[0]}px`,
-    };
+  if (!getFixedPosition) {
+    throw new Error("Injected getFixedPosition is undefined.");
   }
+  const fixedPosition = getFixedPosition(absolutePosition);
   return {
-    position: "absolute",
-    top: `${absolutePosition[1]}px`,
-    left: `${absolutePosition[0]}px`,
+    position: "fixed",
+    top: `${fixedPosition[1]}px`,
+    left: `${fixedPosition[0]}px`,
   };
 });
 
@@ -169,7 +191,6 @@ const up = () => {
   window.removeEventListener("mouseup", mouseup);
   window.removeEventListener("touchmove", touchmove);
   window.removeEventListener("touchend", touchend);
-  isGrabbing.value = false;
   previousTouch = null;
 
   if (
@@ -177,22 +198,22 @@ const up = () => {
     getFixedPosition &&
     willBeDeleted(getFixedPosition(currentSnake.value.anchorTail))
   ) {
-    clearTempBlock();
+    clearDraggingSnake();
     return;
   }
   if (currentBindInfo.value !== null) {
     if (currentBindInfo.value.mode === "head") {
-      mergeToHead(currentSnake.value.uuid, currentBindInfo.value.toUUID);
+      mergeToHead(currentBindInfo.value.toUUID);
     } else {
-      mergeToTail(currentSnake.value.uuid, currentBindInfo.value.toUUID);
+      mergeToTail(currentBindInfo.value.toUUID);
     }
     currentBindInfo.value = null;
   } else {
     const newSnake = Snake.copy(currentSnake.value);
     newSnake.fromTray = false;
     addSnake(newSnake);
+    clearDraggingSnake();
   }
-  clearTempBlock();
 };
 
 if (!getAbsolutePosition) {
