@@ -1,5 +1,5 @@
 <template>
-  <div class="snake" ref="snakeRef" :style="style">
+  <div class="snake" ref="snakeRef" :style="style" @click="click">
     <Block
       v-for="block in props.snake.blocks"
       @mousedown="mousedown(block.uuid)"
@@ -35,12 +35,10 @@ import BindGuide from "@/components/BindGuide.vue";
 import {
   Ref,
   ref,
-  reactive,
   defineProps,
   computed,
   StyleValue,
   ComputedRef,
-  toRaw,
   watch,
   inject,
 } from "vue";
@@ -51,9 +49,11 @@ import {
   getFixedPositionKey,
   willBeDeletedKey,
 } from "./Program.vue";
+import CursorModeVue, { CursorMode } from "./CursorMode.vue";
 
 const props = defineProps<{
   snake: DeepReadonly<Snake>;
+  cursorMode: CursorMode;
 }>();
 
 const getFixedPosition = inject(getFixedPositionKey);
@@ -83,6 +83,7 @@ const {
   splitHead,
   splitTail,
   deleteSnake,
+  wrapSnake,
 } = useStore();
 // non-reactive. updated on mousedown
 let tailAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
@@ -107,16 +108,18 @@ const touchstart = (blockUUID: string) => {
   down(blockUUID);
 };
 const down = (blockUUID: string) => {
-  window.addEventListener("mousemove", mousemove);
-  window.addEventListener("mouseup", mouseup);
-  window.addEventListener("touchmove", touchmove);
-  window.addEventListener("touchend", touchend);
-  tailAnchors = [];
-  headAnchors = [];
-  grabbingBlockUUID.value = blockUUID;
-  for (let snake of Object.values(snakes)) {
-    tailAnchors.push({ pos: snake.anchorTail, uuid: snake.uuid });
-    headAnchors.push({ pos: snake.anchorNext, uuid: snake.uuid });
+  if (props.cursorMode === "move") {
+    window.addEventListener("mousemove", mousemove);
+    window.addEventListener("mouseup", mouseup);
+    window.addEventListener("touchmove", touchmove);
+    window.addEventListener("touchend", touchend);
+    tailAnchors = [];
+    headAnchors = [];
+    grabbingBlockUUID.value = blockUUID;
+    for (let snake of Object.values(snakes)) {
+      tailAnchors.push({ pos: snake.anchorTail, uuid: snake.uuid });
+      headAnchors.push({ pos: snake.anchorNext, uuid: snake.uuid });
+    }
   }
 };
 
@@ -166,57 +169,63 @@ const touchmove = (event: TouchEvent) => {
   return false;
 };
 const move = (movementX: number, movementY: number, shiftKey = false) => {
-  if (!hasSplitted && grabbingBlockUUID.value !== null && shiftKey) {
-    if (movementX < 0) {
-      hasSplitted = true;
-      // updateSnake is needed to update the current position of the snake before splitting.
-      updateSnake(Snake.copy(currentSnake.value));
-      splitHead(currentSnake.value.uuid, grabbingBlockUUID.value);
-    } else if (movementX > 0) {
-      hasSplitted = true;
-      updateSnake(Snake.copy(currentSnake.value));
-      splitTail(currentSnake.value.uuid, grabbingBlockUUID.value);
+  if (props.cursorMode === "move") {
+    if (!hasSplitted && grabbingBlockUUID.value !== null && shiftKey) {
+      if (movementX < 0) {
+        hasSplitted = true;
+        // updateSnake is needed to update the current position of the snake before splitting.
+        updateSnake(Snake.copy(currentSnake.value));
+        splitHead(currentSnake.value.uuid, grabbingBlockUUID.value);
+      } else if (movementX > 0) {
+        hasSplitted = true;
+        updateSnake(Snake.copy(currentSnake.value));
+        splitTail(currentSnake.value.uuid, grabbingBlockUUID.value);
+      }
     }
-  }
-  currentSnake.value.anchorTail[0] += movementX;
-  currentSnake.value.anchorTail[1] += movementY;
-  let hasSet = false;
-  const _head = currentSnake.value.anchorNext;
-  for (let tailAnchor of tailAnchors) {
-    if (tailAnchor.uuid === currentSnake.value.uuid) continue;
-    const distance =
-      (tailAnchor.pos[0] - _head[0]) ** 2 + (tailAnchor.pos[1] - _head[1]) ** 2;
-    if (distance <= 50 ** 2) {
-      currentBindInfo.value = {
-        bindGuide: [tailAnchor.pos, _head],
-        toUUID: tailAnchor.uuid,
-        mode: "tail",
-      };
-      hasSet = true;
+    currentSnake.value.anchorTail[0] += movementX;
+    currentSnake.value.anchorTail[1] += movementY;
+    let hasSet = false;
+    const _head = currentSnake.value.anchorNext;
+    for (let tailAnchor of tailAnchors) {
+      if (tailAnchor.uuid === currentSnake.value.uuid) continue;
+      const distance =
+        (tailAnchor.pos[0] - _head[0]) ** 2 +
+        (tailAnchor.pos[1] - _head[1]) ** 2;
+      if (distance <= 50 ** 2) {
+        currentBindInfo.value = {
+          bindGuide: [tailAnchor.pos, _head],
+          toUUID: tailAnchor.uuid,
+          mode: "tail",
+        };
+        hasSet = true;
+      }
     }
-  }
-  const _tail: Vector2 = anchorTail.value;
-  for (let headAnchor of headAnchors) {
-    if (headAnchor.uuid === currentSnake.value.uuid) continue;
-    const distance =
-      (headAnchor.pos[0] - _tail[0]) ** 2 + (headAnchor.pos[1] - _tail[1]) ** 2;
-    if (distance <= 50 ** 2) {
-      currentBindInfo.value = {
-        bindGuide: [headAnchor.pos, _tail],
-        toUUID: headAnchor.uuid,
-        mode: "head",
-      };
-      hasSet = true;
+    const _tail: Vector2 = anchorTail.value;
+    for (let headAnchor of headAnchors) {
+      if (headAnchor.uuid === currentSnake.value.uuid) continue;
+      const distance =
+        (headAnchor.pos[0] - _tail[0]) ** 2 +
+        (headAnchor.pos[1] - _tail[1]) ** 2;
+      if (distance <= 50 ** 2) {
+        currentBindInfo.value = {
+          bindGuide: [headAnchor.pos, _tail],
+          toUUID: headAnchor.uuid,
+          mode: "head",
+        };
+        hasSet = true;
+      }
     }
+    if (!hasSet) {
+      currentBindInfo.value = null;
+    }
+    if (!willBeDeleted || !getFixedPosition) {
+      throw new Error(
+        "Injected willBeDeleted or getFixedPosition is undefined."
+      );
+    }
+    isActiveDeleteZone.value =
+      !currentSnake.value.fromTray && willBeDeleted(getFixedPosition(_tail));
   }
-  if (!hasSet) {
-    currentBindInfo.value = null;
-  }
-  if (!willBeDeleted || !getFixedPosition) {
-    throw new Error("Injected willBeDeleted or getFixedPosition is undefined.");
-  }
-  isActiveDeleteZone.value =
-    !currentSnake.value.fromTray && willBeDeleted(getFixedPosition(_tail));
 };
 const mouseup = () => {
   up();
@@ -225,39 +234,73 @@ const touchend = () => {
   up();
 };
 const up = () => {
-  window.removeEventListener("mousemove", mousemove);
-  window.removeEventListener("mouseup", mouseup);
-  window.removeEventListener("touchmove", touchmove);
-  window.removeEventListener("touchend", touchend);
-  grabbingBlockUUID.value = null;
-  hasSplitted = false;
-  previousTouch = null;
+  if (props.cursorMode === "move") {
+    window.removeEventListener("mousemove", mousemove);
+    window.removeEventListener("mouseup", mouseup);
+    window.removeEventListener("touchmove", touchmove);
+    window.removeEventListener("touchend", touchend);
+    grabbingBlockUUID.value = null;
+    hasSplitted = false;
+    previousTouch = null;
 
-  if (
-    willBeDeleted &&
-    getFixedPosition &&
-    willBeDeleted(getFixedPosition(currentSnake.value.anchorTail))
-  ) {
-    deleteSnake(currentSnake.value.uuid);
-    return;
-  }
-  if (currentBindInfo.value !== null) {
-    if (currentBindInfo.value.mode === "head") {
-      mergeToHead(currentSnake.value.uuid, currentBindInfo.value.toUUID);
-    } else {
-      mergeToTail(currentSnake.value.uuid, currentBindInfo.value.toUUID);
+    if (
+      willBeDeleted &&
+      getFixedPosition &&
+      willBeDeleted(getFixedPosition(currentSnake.value.anchorTail))
+    ) {
+      deleteSnake(currentSnake.value.uuid);
+      return;
     }
-    currentBindInfo.value = null;
-  } else {
-    const newSnake = Snake.copy(currentSnake.value);
-    newSnake.fromTray = false;
-    updateSnake(newSnake);
+    if (currentBindInfo.value !== null) {
+      if (currentBindInfo.value.mode === "head") {
+        mergeToHead(currentSnake.value.uuid, currentBindInfo.value.toUUID);
+      } else {
+        mergeToTail(currentSnake.value.uuid, currentBindInfo.value.toUUID);
+      }
+      currentBindInfo.value = null;
+    } else {
+      const newSnake = Snake.copy(currentSnake.value);
+      newSnake.fromTray = false;
+      updateSnake(newSnake);
+    }
   }
 };
 
 const doubleclick = (blockUUID: string) => {
   splitTail(currentSnake.value.uuid, blockUUID, true);
   splitHead(currentSnake.value.uuid, blockUUID, true);
+};
+
+const click = (event: MouseEvent) => {
+  if (props.cursorMode === "wrap") {
+    if (!getAbsolutePosition) {
+      throw new Error("Injected getAbsolutePosition is undefined.");
+    }
+    const x =
+      getAbsolutePosition([event.pageX, event.pageY])[0] -
+      props.snake.anchorTail[0];
+    let closestBlock: BlockWithUUID | null = null;
+    let accumulatedWidth = 0;
+    let beforeDistance = x - 0;
+    for (const block of Object.values(props.snake.blocks)) {
+      accumulatedWidth += block.width;
+      const newDistance = Math.abs(x - accumulatedWidth);
+      if (beforeDistance < newDistance) {
+        break;
+      }
+      beforeDistance = newDistance;
+      closestBlock = block;
+    }
+    if (
+      closestBlock?.uuid ===
+      props.snake.blocks[props.snake.blocks.length - 1].uuid
+    ) {
+      closestBlock === null;
+    }
+    if (closestBlock) {
+      wrapSnake(currentSnake.value.uuid, { before: closestBlock.uuid });
+    }
+  }
 };
 
 if (currentSnake.value.fromTray) {

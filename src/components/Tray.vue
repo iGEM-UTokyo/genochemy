@@ -2,7 +2,7 @@
   <div class="tray">
     <div class="tray-inner">
       <TrayBlock
-        v-for="(detail, name) in blockDesignDetails"
+        v-for="[name, detail] in filteredBlockDesignDetails"
         :key="name"
         :blockName="name"
         :detail="detail"
@@ -14,6 +14,12 @@
 <script setup lang="ts">
 import TrayBlock from "./TrayBlock.vue";
 import { blockDesignDetails } from "../utils/block-designs";
+import { computed } from "vue";
+const filteredBlockDesignDetails = computed(() =>
+  Object.entries(blockDesignDetails).filter(
+    ([_, detail]) => !detail.invisibleInTray
+  )
+);
 </script>
 
 <style scoped>

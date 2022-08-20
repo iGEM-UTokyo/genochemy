@@ -1,11 +1,19 @@
 import * as Block from "./block";
 
-export interface BlockDesignDetail {
+export type BlockDesignDetail = {
   imageSrc: string;
-  blockClass: Block.FinalBlock;
   displayName?: string;
   // 接続場所など
-}
+} & (
+  | {
+      blockClass: Block.FinalBlock;
+      invisibleInTray?: false;
+    }
+  | {
+      blockClass: { new (...args: any[]): Block.Block };
+      invisibleInTray: true;
+    }
+);
 export const blockDesignDetails: {
   [K in Block.BlockNames]: BlockDesignDetail;
 } = {
@@ -46,5 +54,17 @@ export const blockDesignDetails: {
     imageSrc: "/blocks/terminator.svg",
     blockClass: Block.CYC1TerminatorBlock,
     displayName: "ターミネーター",
+  },
+  "Wrap Head": {
+    imageSrc: "/blocks/wrap-head.svg",
+    blockClass: Block.WrapHeadBlock,
+    displayName: "",
+    invisibleInTray: true,
+  },
+  "Wrap Tail": {
+    imageSrc: "/blocks/wrap-tail.svg",
+    blockClass: Block.WrapTailBlock,
+    displayName: "",
+    invisibleInTray: true,
   },
 };

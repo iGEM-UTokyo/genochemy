@@ -10,8 +10,14 @@ import {
   RepressorA,
   T7Promoter,
 } from "./matter";
+import { v4 as uuidv4 } from "uuid";
 
-export type BlockTypes = "promoter" | "visibility" | "terminator";
+export type BlockTypes =
+  | "promoter"
+  | "visibility"
+  | "terminator"
+  | "wrap-head"
+  | "wrap-tail";
 export type BlockNames =
   | "T7 promoter"
   | "Drug Repressible Promoter"
@@ -20,7 +26,9 @@ export type BlockNames =
   | "GFP"
   | "RepressorA"
   | "EL222"
-  | "CYC1 Terminator";
+  | "CYC1 Terminator"
+  | "Wrap Head"
+  | "Wrap Tail";
 export type BlockWithUUID = Block & { uuid: string };
 export type Vector2 = [number, number];
 export abstract class Block {
@@ -149,6 +157,26 @@ export class CYC1TerminatorBlock extends TerminatorBlock {
   name: "CYC1 Terminator" = "CYC1 Terminator";
   width = 184;
   constructor() {
+    super({});
+  }
+}
+
+export class WrapHeadBlock extends Block {
+  type: "wrap-head" = "wrap-head";
+  name: "Wrap Head" = "Wrap Head";
+  width = 27;
+  uuid = uuidv4(); // todo
+  constructor(public connectTo: string) {
+    super({});
+  }
+}
+
+export class WrapTailBlock extends Block {
+  type: "wrap-tail" = "wrap-tail";
+  name: "Wrap Tail" = "Wrap Tail";
+  width = 20;
+  uuid = uuidv4(); // todo
+  constructor(public connectTo: string) {
     super({});
   }
 }
