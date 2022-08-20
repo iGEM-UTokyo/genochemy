@@ -135,7 +135,7 @@ export class MCherryBlock extends VisibilityBlock {
   design = {
     width: 184,
     height: 30,
-    imageSrc: "/blocks/vidible.svg",
+    imageSrc: "/blocks/visible.svg",
     displayName: "mCherry",
   };
   get ProteinClass(): ProteinImpl {

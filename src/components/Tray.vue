@@ -1,25 +1,25 @@
 <template>
   <div class="tray">
     <div class="tray-inner">
-      <TrayBlock
-        v-for="[name, detail] in filteredBlockDesignDetails"
-        :key="name"
-        :blockName="name"
-        :detail="detail"
-      />
+      <TrayBlock v-for="block in blocks" :key="block.name" :block="block" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import TrayBlock from "./TrayBlock.vue";
-import { blockDesignDetails } from "../utils/block-designs";
-import { computed } from "vue";
-const filteredBlockDesignDetails = computed(() =>
-  Object.entries(blockDesignDetails).filter(
-    ([_, detail]) => !detail.invisibleInTray
-  )
-);
+import * as block from "@/utils/block";
+
+const blocks = [
+  new block.T7PromoterBlock(),
+  new block.DrugRepressiblePromoterBlock(),
+  new block.EL222ActivatedPromoterBlock(),
+  new block.MCherryBlock(),
+  new block.GFPBlock(),
+  new block.RepressorBlock(),
+  new block.EL222Block(),
+  new block.CYC1TerminatorBlock(),
+];
 </script>
 
 <style scoped>

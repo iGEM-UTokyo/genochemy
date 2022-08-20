@@ -37,7 +37,6 @@ span {
 <script setup lang="ts">
 import { Block } from "../utils/block";
 import { defineProps, computed } from "vue";
-import { blockDesignDetails } from "@/utils/block-designs";
 
 const props = defineProps<{
   x: number;
@@ -45,10 +44,8 @@ const props = defineProps<{
   block: Block;
   anchorTopLeft?: boolean;
 }>();
-const src = computed(() => blockDesignDetails[props.block.name].imageSrc);
-const displayName = computed(
-  () => blockDesignDetails[props.block.name].displayName ?? props.block.name
-);
+const src = computed(() => props.block.design.imageSrc);
+const displayName = computed(() => props.block.design.displayName);
 </script>
 
 <style scoped>
