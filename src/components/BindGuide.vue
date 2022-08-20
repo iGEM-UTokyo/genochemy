@@ -1,13 +1,12 @@
 <template>
-  <div :style="style" class="bind-guide">
-    <svg
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="none"
-    >
-      <line x1="0" y1="0" x2="100" y2="100" stroke="black" stroke-width="2" />
-    </svg>
-  </div>
+  <line
+    :x1="props.positions[0][0]"
+    :y1="props.positions[0][1] - 15"
+    :x2="props.positions[1][0] + 7"
+    :y2="props.positions[1][1] - 15"
+    stroke="gray"
+    stroke-width="2"
+  />
 </template>
 
 <script setup lang="ts">

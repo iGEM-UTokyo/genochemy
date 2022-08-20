@@ -1,14 +1,16 @@
 <template>
-  <div class="snake" ref="snakeRef" :style="style" @click="click">
+  <g ref="snakeRef" :transform="`translate(${x}, ${y})`" @click="click">
     <Block
-      v-for="block in props.snake.blocks"
+      v-for="[x, block] in blockWithPosition"
       @mousedown="mousedown(block.uuid)"
       @touchstart="touchstart(block.uuid)"
       @dblclick="doubleclick(block.uuid)"
       :key="block.uuid"
       :block="block"
+      :x="x"
+      :y="0"
     />
-    <teleport to=".program">
+    <teleport to=".program-inner">
       <BindGuide
         v-if="currentBindInfo !== null"
         :positions="currentBindInfo.bindGuide"
@@ -24,11 +26,11 @@
         </div>
       </transition>
     </teleport>
-  </div>
+  </g>
 </template>
 
 <script setup lang="ts">
-import { Snake } from "@/utils/snake";
+import { overlap, Snake } from "@/utils/snake";
 import { useStore } from "../store";
 import Block from "@/components/Block.vue";
 import BindGuide from "@/components/BindGuide.vue";
@@ -55,6 +57,15 @@ const props = defineProps<{
   snake: DeepReadonly<Snake>;
   cursorMode: CursorMode;
 }>();
+
+const blockWithPosition = computed<[number, BlockWithUUID][]>(() => {
+  let accumulatedX = 0;
+  return props.snake.blocks.map((block) => {
+    const result: [number, BlockWithUUID] = [accumulatedX, block];
+    accumulatedX += block.width - overlap;
+    return result;
+  });
+});
 
 const getFixedPosition = inject(getFixedPositionKey);
 const getAbsolutePosition = inject(getAbsolutePositionKey);
@@ -124,22 +135,26 @@ const down = (blockUUID: string) => {
 };
 
 const anchorTail = computed(() => currentSnake.value.anchorTail);
+const x = computed(() => anchorTail.value[0]);
+const y = computed(
+  () => anchorTail.value[1] - (snakeRef.value ? snakeRef.value.clientHeight : 0)
+);
 const style: ComputedRef<StyleValue> = computed(() => {
   const absolutePosition: Vector2 = [
     anchorTail.value[0],
     anchorTail.value[1] - (snakeRef.value ? snakeRef.value.clientHeight : 0),
   ];
-  if (grabbingBlockUUID.value) {
-    if (!getFixedPosition) {
-      throw new Error("Injected getFixedPosition is undefined.");
-    }
-    const fixedPosition = getFixedPosition(absolutePosition);
-    return {
-      position: "fixed",
-      top: `${fixedPosition[1]}px`,
-      left: `${fixedPosition[0]}px`,
-    };
-  }
+  // if (grabbingBlockUUID.value) {
+  //   if (!getFixedPosition) {
+  //     throw new Error("Injected getFixedPosition is undefined.");
+  //   }
+  //   const fixedPosition = getFixedPosition(absolutePosition);
+  //   return {
+  //     position: "fixed",
+  //     top: `${fixedPosition[1]}px`,
+  //     left: `${fixedPosition[0]}px`,
+  //   };
+  // }
   return {
     position: "absolute",
     top: `${absolutePosition[1]}px`,

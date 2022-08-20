@@ -1,7 +1,7 @@
 <template>
   <div @mousedown="down" @touchstart="down" ref="block">
     <img :src="props.detail.imageSrc" />
-    <span>{{ props.detail.displayName || props.blockName }}</span>
+    <span>{{ props.detail.displayName ?? props.blockName }}</span>
   </div>
 </template>
 
@@ -35,11 +35,11 @@ const props = defineProps<{
 }>();
 
 const block: Ref<HTMLElement | null> = ref(null);
-const { addBlock } = useStore();
+const { addTempBlock } = useStore();
 const down = () => {
   if (block.value !== null) {
     const boundingRect = block.value.getBoundingClientRect();
-    addBlock(new props.detail.blockClass(), [
+    addTempBlock(new props.detail.blockClass(), [
       boundingRect.x,
       boundingRect.y + boundingRect.height,
     ]);

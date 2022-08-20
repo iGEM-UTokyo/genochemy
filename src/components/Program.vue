@@ -1,6 +1,28 @@
 <template>
   <div class="program" ref="programRef">
-    <div
+    <svg style="width: 100%; height: 100%">
+      <g>
+        <rect x="0" y="0" width="100" height="100" fill="red" />
+        <rect
+          x="0"
+          y="0"
+          width="50"
+          height="50"
+          transform="translate(100%, 100%)"
+          fill="green"
+        />
+        <text x="0" y="50">hoge</text>
+      </g>
+      <g class="program-inner">
+        <Snake
+          v-for="snake in snakes"
+          :key="snake.uuid"
+          :snake="snake"
+          :cursor-mode="cursorMode"
+        />
+      </g>
+    </svg>
+    <!-- <div
       class="inner-program"
       :style="{ width: `${size[0]}px`, height: `${size[1]}px` }"
     >
@@ -10,15 +32,17 @@
         :snake="snake"
         :cursor-mode="cursorMode"
       />
-    </div>
+    </div> -->
+    <NewSnake v-if="newSnake !== null" :snake="newSnake" />
     <CursorMode v-model="cursorMode" />
   </div>
 </template>
 
 <script lang="ts">
-import { InjectionKey, provide, Ref, ref, computed } from "vue";
+import { InjectionKey, provide, Ref, ref, computed, toRefs } from "vue";
 import { useStore } from "../store";
 import Snake from "@/components/Snake.vue";
+import NewSnake from "@/components/NewSnake.vue";
 import { Vector2 } from "@/utils/block";
 
 export const getFixedPositionKey: InjectionKey<
@@ -36,7 +60,7 @@ import CursorMode, {
   CursorMode as CursorModeType,
 } from "@/components/CursorMode.vue";
 
-const { snakes } = useStore();
+const { snakes, newSnake } = toRefs(useStore());
 
 const programRef: Ref<HTMLElement | null> = ref(null);
 
