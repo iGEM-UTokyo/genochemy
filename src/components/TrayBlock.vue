@@ -1,7 +1,8 @@
 <template>
-  <div @mousedown="down" @touchstart="down" ref="block">
-    <img :src="props.detail.imageSrc" />
-    <span>{{ props.detail.displayName ?? props.blockName }}</span>
+  <div @mousedown="down" @touchstart="down" ref="blockElem">
+    <svg :width="props.block.design.width" :height="props.block.design.height">
+      <BlockVue :x="0" :y="0" :block="props.block" anchor-top-left />
+    </svg>
   </div>
 </template>
 
@@ -27,19 +28,19 @@ span {
 <script setup lang="ts">
 import { useStore } from "../store";
 import { Ref, ref, defineProps } from "vue";
-import { BlockDesignDetail } from "@/utils/block-designs";
+import BlockVue from "@/components/Block.vue";
+import type { Block } from "@/utils/block";
 
 const props = defineProps<{
-  detail: BlockDesignDetail;
-  blockName: string;
+  block: Block;
 }>();
 
-const block: Ref<HTMLElement | null> = ref(null);
+const blockElem: Ref<HTMLElement | null> = ref(null);
 const { addTempBlock } = useStore();
 const down = () => {
-  if (block.value !== null) {
-    const boundingRect = block.value.getBoundingClientRect();
-    addTempBlock(new props.detail.blockClass(), [
+  if (blockElem.value !== null) {
+    const boundingRect = blockElem.value.getBoundingClientRect();
+    addTempBlock(props.block, [
       boundingRect.x,
       boundingRect.y + boundingRect.height,
     ]);
