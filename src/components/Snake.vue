@@ -1,15 +1,20 @@
 <template>
-  <g :transform="`translate(${x}, ${y})`" @click="click">
-    <Block
-      v-for="[x, block] in blockWithPosition"
-      @mousedown="mousedown(block.uuid)"
-      @touchstart="mousedown(block.uuid)"
-      @mousemove="mousemove(block.uuid)"
-      :key="block.uuid"
-      :block="block"
-      :x="x"
-      :y="0"
-    />
+  <g>
+    <g :transform="`translate(${x}, ${y})`" @click="click">
+      <Block
+        v-for="[x, block] in blockWithPosition"
+        @mousedown="mousedown(block.uuid)"
+        @touchstart="mousedown(block.uuid)"
+        @mousemove="mousemove(block.uuid)"
+        :key="block.uuid"
+        :block="block"
+        :x="x"
+        :y="0"
+      />
+    </g>
+    <teleport to=".program-inner-back">
+      <WrapConnector v-if="wrapInfo !== null" :positions="wrapInfo" />
+    </teleport>
   </g>
 </template>
 
@@ -18,10 +23,11 @@ import { overlap, Snake } from "@/utils/snake";
 import { useStore } from "../store";
 import Block from "@/components/Block.vue";
 import { ref, defineProps, computed, watch, inject } from "vue";
-import { BlockWithUUID } from "@/utils/block";
+import { BlockWithUUID, Vector2, WrapTailBlock } from "@/utils/block";
 import { DeepReadonly } from "@/utils/deep-readonly";
 import { getAbsolutePositionKey } from "./Program.vue";
 import { CursorMode } from "./CursorMode.vue";
+import WrapConnector from "./WrapConnector.vue";
 
 const props = defineProps<{
   snake: DeepReadonly<Snake>;
@@ -48,7 +54,17 @@ watch(
   },
   { flush: "post" }
 );
-const { splitHead, splitTail, wrapSnake, setGrabbing } = useStore();
+
+const { splitHead, splitTail, wrapSnake, setGrabbing, snakes } = useStore();
+const wrapInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
+  const head = currentSnake.value.blocks[currentSnake.value.blocks.length - 1];
+  if (head instanceof WrapTailBlock) {
+    if (snakes[head.connectTo]) {
+      return [currentSnake.value.anchorNext, snakes[head.connectTo].anchorTail];
+    }
+  }
+  return null;
+});
 let touchingBlockUUID: string | null = null;
 let timeoutId: number | null = null;
 const mousedown = (blockUUID: string) => {
