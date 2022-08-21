@@ -7,6 +7,7 @@ import {
   PromoterBlock,
   TerminatorBlock,
   Vector2,
+  WrapHeadBlock,
   WrapTailBlock,
 } from "./utils/block";
 import { Snake } from "./utils/snake";
@@ -53,6 +54,17 @@ export const useStore = defineStore("main", () => {
       console.error(`snake uuid is invalid: ${toUUID}`);
       return;
     }
+    if (draggingSnake.value.isTailCovered) {
+      for (const snake of Object.values(snakes)) {
+        const head = snake.blocks[snake.blocks.length - 1];
+        if (
+          head instanceof WrapTailBlock &&
+          head.connectTo === draggingSnake.value.uuid
+        ) {
+          head.connectTo = toUUID;
+        }
+      }
+    }
     snakes[toUUID].appendToTail(draggingSnake.value);
     delete snakes[draggingSnake.value.uuid];
     draggingSnake.value = null;
@@ -66,6 +78,17 @@ export const useStore = defineStore("main", () => {
       console.error(`snake uuid is invalid: ${toUUID}`);
       return;
     }
+    if (draggingSnake.value.isHeadCovered) {
+      for (const snake of Object.values(snakes)) {
+        const tail = snake.blocks[0];
+        if (
+          tail instanceof WrapHeadBlock &&
+          tail.connectTo === draggingSnake.value.uuid
+        ) {
+          tail.connectTo = toUUID;
+        }
+      }
+    }
     snakes[toUUID].appendToHead(draggingSnake.value);
     delete snakes[draggingSnake.value.uuid];
     draggingSnake.value = null;
@@ -77,6 +100,14 @@ export const useStore = defineStore("main", () => {
     }
     const newSnake = snakes[snakeUUID].splitHead(blockUUID);
     if (newSnake) {
+      if (newSnake.isHeadCovered) {
+        for (const snake of Object.values(snakes)) {
+          const tail = snake.blocks[0];
+          if (tail instanceof WrapHeadBlock && tail.connectTo === snakeUUID) {
+            tail.connectTo = newSnake.uuid;
+          }
+        }
+      }
       if (shift) {
         newSnake.anchorTail[0] += 5;
       }
@@ -90,6 +121,14 @@ export const useStore = defineStore("main", () => {
     }
     const newSnake = snakes[snakeUUID].splitTail(blockUUID);
     if (newSnake) {
+      if (newSnake.isTailCovered) {
+        for (const snake of Object.values(snakes)) {
+          const head = snake.blocks[snake.blocks.length - 1];
+          if (head instanceof WrapTailBlock && head.connectTo === snakeUUID) {
+            head.connectTo = newSnake.uuid;
+          }
+        }
+      }
       if (shift) {
         newSnake.anchorTail[0] -= 5;
       }

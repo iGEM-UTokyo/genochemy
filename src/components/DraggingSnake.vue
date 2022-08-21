@@ -122,7 +122,10 @@ const down = () => {
 const tailWrapInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
   const tail = currentSnake.value.blocks[0];
   if (tail instanceof WrapHeadBlock) {
-    if (snakes[tail.connectTo]) {
+    if (tail.connectTo === currentSnake.value.uuid) {
+      return [currentSnake.value.anchorNext, currentSnake.value.anchorTail];
+    }
+    if (snakes[tail.connectTo]?.visible) {
       return [snakes[tail.connectTo].anchorNext, currentSnake.value.anchorTail];
     }
   }
@@ -132,7 +135,7 @@ const tailWrapInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
 const tailHeadInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
   const head = currentSnake.value.blocks[currentSnake.value.blocks.length - 1];
   if (head instanceof WrapTailBlock) {
-    if (snakes[head.connectTo]) {
+    if (snakes[head.connectTo]?.visible) {
       return [currentSnake.value.anchorNext, snakes[head.connectTo].anchorTail];
     }
   }
