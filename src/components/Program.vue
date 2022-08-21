@@ -1,18 +1,7 @@
 <template>
   <div class="program" ref="programRef">
     <svg style="width: 100%; height: 100%">
-      <!-- <g>
-        <rect x="0" y="0" width="100" height="100" fill="red" />
-        <rect
-          x="0"
-          y="0"
-          width="50"
-          height="50"
-          transform="translate(100%, 100%)"
-          fill="green"
-        />
-        <text x="0" y="50">hoge</text>
-      </g> -->
+      <g class="program-inner-back" />
       <g class="program-inner">
         <Snake
           v-for="snake in snakes"
@@ -22,17 +11,6 @@
         />
       </g>
     </svg>
-    <!-- <div
-      class="inner-program"
-      :style="{ width: `${size[0]}px`, height: `${size[1]}px` }"
-    >
-      <Snake
-        v-for="snake in snakes"
-        :key="snake.uuid"
-        :snake="snake"
-        :cursor-mode="cursorMode"
-      />
-    </div> -->
     <DraggingSnake v-if="draggingSnake !== null" :snake="draggingSnake" />
     <CursorMode v-model="cursorMode" />
   </div>

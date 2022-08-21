@@ -90,4 +90,10 @@ export class Snake {
     head.blocks = [new WrapHeadBlock(this.uuid), ...head.blocks];
     return head;
   }
+  get isHeadCovered() {
+    return this.blocks[this.blocks.length - 1] instanceof WrapTailBlock;
+  }
+  get isTailCovered() {
+    return this.blocks[0] instanceof WrapHeadBlock;
+  }
 }

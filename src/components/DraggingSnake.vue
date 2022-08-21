@@ -10,11 +10,13 @@
         anchor-top-left
       />
     </svg>
-    <teleport to=".program-inner">
+    <teleport to=".program-inner-back">
       <BindGuide
         v-if="currentBindInfo !== null"
         :positions="currentBindInfo.bindGuide"
       />
+      <WrapConnector v-if="tailWrapInfo !== null" :positions="tailWrapInfo" />
+      <WrapConnector v-if="tailHeadInfo !== null" :positions="tailHeadInfo" />
     </teleport>
     <teleport to=".tray">
       <transition name="delete-zone-transition" :appear="true">
@@ -34,6 +36,7 @@ import { overlap, Snake } from "@/utils/snake";
 import { useStore } from "../store";
 import Block from "@/components/Block.vue";
 import BindGuide from "@/components/BindGuide.vue";
+import WrapConnector from "./WrapConnector.vue";
 import {
   Ref,
   ref,
@@ -44,7 +47,12 @@ import {
   watch,
   inject,
 } from "vue";
-import { BlockWithUUID, Vector2 } from "@/utils/block";
+import {
+  BlockWithUUID,
+  Vector2,
+  WrapHeadBlock,
+  WrapTailBlock,
+} from "@/utils/block";
 import { DeepReadonly } from "@/utils/deep-readonly";
 import {
   getAbsolutePositionKey,
@@ -96,10 +104,40 @@ const down = () => {
   tailAnchors = [];
   headAnchors = [];
   for (let snake of Object.values(snakes)) {
-    tailAnchors.push({ pos: snake.anchorTail, uuid: snake.uuid });
-    headAnchors.push({ pos: snake.anchorNext, uuid: snake.uuid });
+    if (!snake.isTailCovered) {
+      tailAnchors.push({ pos: snake.anchorTail, uuid: snake.uuid });
+    }
+    if (!snake.isHeadCovered) {
+      headAnchors.push({ pos: snake.anchorNext, uuid: snake.uuid });
+    }
+  }
+  if (currentSnake.value.isTailCovered) {
+    headAnchors = [];
+  }
+  if (currentSnake.value.isHeadCovered) {
+    tailAnchors = [];
   }
 };
+
+const tailWrapInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
+  const tail = currentSnake.value.blocks[0];
+  if (tail instanceof WrapHeadBlock) {
+    if (snakes[tail.connectTo]) {
+      return [currentSnake.value.anchorTail, snakes[tail.connectTo].anchorNext];
+    }
+  }
+  return null;
+});
+
+const tailHeadInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
+  const head = currentSnake.value.blocks[currentSnake.value.blocks.length - 1];
+  if (head instanceof WrapTailBlock) {
+    if (snakes[head.connectTo]) {
+      return [currentSnake.value.anchorNext, snakes[head.connectTo].anchorTail];
+    }
+  }
+  return null;
+});
 
 const anchorTail = computed(() => currentSnake.value?.anchorTail ?? 0);
 const style: ComputedRef<StyleValue> = computed(() => {
@@ -150,7 +188,7 @@ const move = (movementX: number, movementY: number, shiftKey = false) => {
       (tailAnchor.pos[0] - _head[0]) ** 2 + (tailAnchor.pos[1] - _head[1]) ** 2;
     if (distance <= 50 ** 2) {
       currentBindInfo.value = {
-        bindGuide: [tailAnchor.pos, _head],
+        bindGuide: [_head, tailAnchor.pos],
         toUUID: tailAnchor.uuid,
         mode: "tail",
       };
