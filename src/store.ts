@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, isReadonly, reactive, readonly, Ref, ref, watch } from "vue";
+import { computed, reactive, readonly, Ref, ref } from "vue";
 import {
   Block,
   BlockWithUUID,
@@ -7,10 +7,11 @@ import {
   PromoterBlock,
   TerminatorBlock,
   Vector2,
+  WrapTailBlock,
 } from "./utils/block";
 import { Snake } from "./utils/snake";
 import { v4 as uuidv4 } from "uuid";
-import { OperonMessengerRNA, Promoter, Protein } from "./utils/matter";
+import { OperonMessengerRNA, Protein } from "./utils/matter";
 import Runner, { factoryEmptyFunction } from "./utils/runner";
 
 function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
@@ -53,6 +54,7 @@ export const useStore = defineStore("main", () => {
       return;
     }
     snakes[toUUID].appendToTail(draggingSnake.value);
+    delete snakes[draggingSnake.value.uuid];
     draggingSnake.value = null;
   };
   const mergeToHead = (toUUID: string) => {
@@ -65,6 +67,7 @@ export const useStore = defineStore("main", () => {
       return;
     }
     snakes[toUUID].appendToHead(draggingSnake.value);
+    delete snakes[draggingSnake.value.uuid];
     draggingSnake.value = null;
   };
   const splitHead = (snakeUUID: string, blockUUID: string, shift = false) => {
@@ -114,15 +117,24 @@ export const useStore = defineStore("main", () => {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
       return;
     }
-    draggingSnake.value = snakes[snakeUUID];
-    delete snakes[snakeUUID];
+    draggingSnake.value = Snake.copy(snakes[snakeUUID]);
+    snakes[snakeUUID].visible = false;
   };
   const operonMessengerRNAs = computed(() => {
     const mRNAs: Record<string, OperonMessengerRNA> = {};
     for (const snake of Object.values(snakes)) {
+      if (snake.isTailCovered) continue;
       let promoterBlock: PromoterBlock | null = null;
       let codingBlocks: CodingBlock[] = [];
-      for (const block of snake.blocks) {
+      const blocks = [...snake.blocks];
+      let currentSnake = snake;
+      let headBlock = currentSnake.blocks[currentSnake.blocks.length - 1];
+      while (headBlock instanceof WrapTailBlock) {
+        currentSnake = snakes[headBlock.connectTo];
+        blocks.push(...currentSnake.blocks);
+        headBlock = currentSnake.blocks[currentSnake.blocks.length - 1];
+      }
+      for (const block of blocks) {
         if (block instanceof PromoterBlock) {
           promoterBlock = block;
           codingBlocks = []; // todo
