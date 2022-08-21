@@ -4,7 +4,7 @@
       <g class="program-inner-back" />
       <g class="program-inner">
         <Snake
-          v-for="snake in snakes"
+          v-for="snake in filteredSnakes"
           :key="snake.uuid"
           :snake="snake"
           :cursor-mode="cursorMode"
@@ -39,6 +39,10 @@ import CursorMode, {
 } from "@/components/CursorMode.vue";
 
 const { snakes, draggingSnake } = toRefs(useStore());
+
+const filteredSnakes = computed(() =>
+  Object.values(snakes.value).filter((snake) => snake.visible)
+);
 
 const programRef: Ref<HTMLElement | null> = ref(null);
 

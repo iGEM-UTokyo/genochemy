@@ -9,14 +9,16 @@ export class Snake {
   blocks: BlockWithUUID[];
   anchorTail: Vector2;
   fromTray: boolean;
+  visible: boolean;
   constructor(
     args: Pick<Snake, "uuid" | "blocks" | "anchorTail"> &
-      Partial<Pick<Snake, "fromTray">>
+      Partial<Pick<Snake, "fromTray" | "visible">>
   ) {
     this.uuid = args.uuid;
     this.blocks = args.blocks;
     this.anchorTail = args.anchorTail;
-    this.fromTray = args.fromTray || false;
+    this.fromTray = args.fromTray ?? false;
+    this.visible = args.visible ?? true;
   }
   static copy(snake: DeepReadonly<Snake>) {
     return new Snake({

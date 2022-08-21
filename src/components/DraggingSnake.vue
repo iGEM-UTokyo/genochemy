@@ -123,7 +123,7 @@ const tailWrapInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
   const tail = currentSnake.value.blocks[0];
   if (tail instanceof WrapHeadBlock) {
     if (snakes[tail.connectTo]) {
-      return [currentSnake.value.anchorTail, snakes[tail.connectTo].anchorNext];
+      return [snakes[tail.connectTo].anchorNext, currentSnake.value.anchorTail];
     }
   }
   return null;
