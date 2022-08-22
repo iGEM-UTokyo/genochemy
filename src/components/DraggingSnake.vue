@@ -260,9 +260,11 @@ const up = () => {
 if (!getAbsolutePosition) {
   throw new Error("Injected getAbsolutePosition is undefined.");
 }
-currentSnake.value.anchorTail = getAbsolutePosition(
-  currentSnake.value.anchorTail
-);
+if (currentSnake.value.fromTray) {
+  currentSnake.value.anchorTail = getAbsolutePosition(
+    currentSnake.value.anchorTail
+  );
+}
 down();
 </script>
 

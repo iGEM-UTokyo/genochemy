@@ -91,6 +91,7 @@ const mousemove = (blockUUID: string) => {
     down(blockUUID);
   }
 };
+
 const down = (blockUUID: string) => {
   // blockUUID was used for splitting.
   if (props.cursorMode === "move") {
