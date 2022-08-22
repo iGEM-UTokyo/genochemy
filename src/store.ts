@@ -36,7 +36,6 @@ export const useStore = defineStore("main", () => {
     draggingSnake.value = null;
   };
   const addSnake = (snake: Snake) => {
-    console.log(snake.anchorTail);
     snakes[snake.uuid] = snake;
   };
   const updateSnake = (snake: Snake) => {
