@@ -25,6 +25,7 @@ const emit = defineEmits<{
   border: 1px solid #aaa;
   text-align: center;
   line-height: 50px;
+  background-color: white;
 }
 .active {
   background-color: #0097a7;
