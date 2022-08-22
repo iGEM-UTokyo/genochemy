@@ -1,12 +1,12 @@
 <template>
   <div class="snake" :style="style">
-    <svg :width="currentSnake.width" :height="currentSnake.height">
+    <svg :width="props.modelValue.width" :height="props.modelValue.height">
       <Block
         v-for="[x, block] in blockWithPosition"
         :key="block.uuid"
         :block="block"
         :x="x"
-        :y="currentSnake.height - block.design.height"
+        :y="props.modelValue.height - block.design.height"
         anchor-top-left
       />
     </svg>
@@ -41,10 +41,10 @@ import {
   Ref,
   ref,
   defineProps,
+  defineEmits,
   computed,
   StyleValue,
   ComputedRef,
-  watch,
   inject,
 } from "vue";
 import {
@@ -64,12 +64,15 @@ const { addSnake, mergeToHead, mergeToTail, clearDraggingSnake, snakes } =
   useStore();
 
 const props = defineProps<{
-  snake: DeepReadonly<Snake>;
+  modelValue: DeepReadonly<Snake>;
+}>();
+const emit = defineEmits<{
+  (e: "update:modelValue", value: DeepReadonly<Snake>): void;
 }>();
 
 const blockWithPosition = computed<[number, BlockWithUUID][]>(() => {
   let accumulatedX = 0;
-  return props.snake.blocks.map((block) => {
+  return props.modelValue.blocks.map((block) => {
     const result: [number, BlockWithUUID] = [accumulatedX, block];
     accumulatedX += block.design.width - overlap;
     return result;
@@ -81,17 +84,8 @@ const getAbsolutePosition = inject(getAbsolutePositionKey);
 const willBeDeleted = inject(willBeDeletedKey);
 
 const isActiveDeleteZone = ref(false);
-const showDeleteZone = computed(() => !currentSnake.value.fromTray);
+const showDeleteZone = computed(() => !props.modelValue.fromTray);
 
-let currentSnake = ref<Snake>(Snake.copy(props.snake));
-// props.snake: not working
-watch(
-  props,
-  () => {
-    currentSnake.value = Snake.copy(props.snake);
-  },
-  { flush: "post" }
-);
 // non-reactive. updated on mousedown
 let tailAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
 // non-reactive. updated on mousedown
@@ -111,42 +105,42 @@ const down = () => {
       headAnchors.push({ pos: snake.anchorNext, uuid: snake.uuid });
     }
   }
-  if (currentSnake.value.isTailCovered) {
+  if (props.modelValue.isTailCovered) {
     headAnchors = [];
   }
-  if (currentSnake.value.isHeadCovered) {
+  if (props.modelValue.isHeadCovered) {
     tailAnchors = [];
   }
 };
 
 const tailWrapInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
-  const tail = currentSnake.value.blocks[0];
+  const tail = props.modelValue.blocks[0];
   if (tail instanceof WrapHeadBlock) {
-    if (tail.connectTo === currentSnake.value.uuid) {
-      return [currentSnake.value.anchorNext, currentSnake.value.anchorTail];
+    if (tail.connectTo === props.modelValue.uuid) {
+      return [props.modelValue.anchorNext, props.modelValue.anchorTail];
     }
     if (snakes[tail.connectTo]?.visible) {
-      return [snakes[tail.connectTo].anchorNext, currentSnake.value.anchorTail];
+      return [snakes[tail.connectTo].anchorNext, props.modelValue.anchorTail];
     }
   }
   return null;
 });
 
 const tailHeadInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
-  const head = currentSnake.value.blocks[currentSnake.value.blocks.length - 1];
+  const head = props.modelValue.blocks[props.modelValue.blocks.length - 1];
   if (head instanceof WrapTailBlock) {
     if (snakes[head.connectTo]?.visible) {
-      return [currentSnake.value.anchorNext, snakes[head.connectTo].anchorTail];
+      return [props.modelValue.anchorNext, snakes[head.connectTo].anchorTail];
     }
   }
   return null;
 });
 
-const anchorTail = computed(() => currentSnake.value?.anchorTail ?? 0);
+const anchorTail = computed(() => props.modelValue.anchorTail ?? 0);
 const style: ComputedRef<StyleValue> = computed(() => {
   const absolutePosition: Vector2 = [
     anchorTail.value[0],
-    anchorTail.value[1] - currentSnake.value.height,
+    anchorTail.value[1] - props.modelValue.height,
   ];
   if (!getFixedPosition) {
     throw new Error("Injected getFixedPosition is undefined.");
@@ -181,12 +175,14 @@ const touchmove = (event: TouchEvent) => {
   return false;
 };
 const move = (movementX: number, movementY: number, shiftKey = false) => {
-  currentSnake.value.anchorTail[0] += movementX;
-  currentSnake.value.anchorTail[1] += movementY;
+  const newSnake = Snake.copy(props.modelValue);
+  newSnake.anchorTail[0] += movementX;
+  newSnake.anchorTail[1] += movementY;
+  emit("update:modelValue", newSnake);
   let hasSet = false;
-  const _head = currentSnake.value.anchorNext;
+  const _head = props.modelValue.anchorNext;
   for (let tailAnchor of tailAnchors) {
-    if (tailAnchor.uuid === currentSnake.value.uuid) continue;
+    if (tailAnchor.uuid === props.modelValue.uuid) continue;
     const distance =
       (tailAnchor.pos[0] - _head[0]) ** 2 + (tailAnchor.pos[1] - _head[1]) ** 2;
     if (distance <= 50 ** 2) {
@@ -198,9 +194,9 @@ const move = (movementX: number, movementY: number, shiftKey = false) => {
       hasSet = true;
     }
   }
-  const _tail: Vector2 = anchorTail.value;
+  const _tail: DeepReadonly<Vector2> = anchorTail.value;
   for (let headAnchor of headAnchors) {
-    if (headAnchor.uuid === currentSnake.value.uuid) continue;
+    if (headAnchor.uuid === props.modelValue.uuid) continue;
     const distance =
       (headAnchor.pos[0] - _tail[0]) ** 2 + (headAnchor.pos[1] - _tail[1]) ** 2;
     if (distance <= 50 ** 2) {
@@ -219,7 +215,7 @@ const move = (movementX: number, movementY: number, shiftKey = false) => {
     throw new Error("Injected willBeDeleted or getFixedPosition is undefined.");
   }
   isActiveDeleteZone.value =
-    !currentSnake.value.fromTray && willBeDeleted(getFixedPosition(_tail));
+    !props.modelValue.fromTray && willBeDeleted(getFixedPosition(_tail));
 };
 const mouseup = () => {
   up();
@@ -237,7 +233,7 @@ const up = () => {
   if (
     willBeDeleted &&
     getFixedPosition &&
-    willBeDeleted(getFixedPosition(currentSnake.value.anchorTail))
+    willBeDeleted(getFixedPosition(props.modelValue.anchorTail))
   ) {
     clearDraggingSnake();
     return;
@@ -250,7 +246,7 @@ const up = () => {
     }
     currentBindInfo.value = null;
   } else {
-    const newSnake = Snake.copy(currentSnake.value);
+    const newSnake = Snake.copy(props.modelValue);
     newSnake.fromTray = false;
     addSnake(newSnake);
     clearDraggingSnake();
@@ -260,10 +256,10 @@ const up = () => {
 if (!getAbsolutePosition) {
   throw new Error("Injected getAbsolutePosition is undefined.");
 }
-if (currentSnake.value.fromTray) {
-  currentSnake.value.anchorTail = getAbsolutePosition(
-    currentSnake.value.anchorTail
-  );
+if (props.modelValue.fromTray) {
+  const newSnake = Snake.copy(props.modelValue);
+  newSnake.anchorTail = getAbsolutePosition(props.modelValue.anchorTail);
+  emit("update:modelValue", newSnake);
 }
 down();
 </script>
