@@ -34,7 +34,7 @@ let requestAnimationFrameId: number | null = null;
 function tick() {
   requestAnimationFrameId = null;
   if (!isRunning.value) return;
-  const p1 = 1 - Math.exp(-runnerOutputs["protein-RecombinaseA"] * 0.001);
+  const p1 = 1 - Math.exp(-runnerOutputs["protein-RecombinaseA"] * 0.002);
   const p2 = 1 - Math.exp(-runnerOutputs["protein-RecombinaseA"] * 0.005);
   const rand = Math.random();
   if (rand <= p1) {
@@ -95,23 +95,25 @@ function tick() {
       }
     }
     const snakeUUIDs = Object.keys(recogSeqUUIDs);
-    const targetSnakeUUID =
-      snakeUUIDs[Math.floor(Math.random() * snakeUUIDs.length)];
-    const targetSnakeIndices = recogSeqUUIDs[targetSnakeUUID];
-    const firstRecogSeq = targetSnakeIndices.splice(
-      Math.floor(Math.random() * targetSnakeIndices.length),
-      1
-    )[0];
-    const secondRecogSeq = targetSnakeIndices.splice(
-      Math.floor(Math.random() * targetSnakeIndices.length),
-      1
-    )[0];
-    cutSnake(
-      targetSnakeUUID,
-      Math.min(firstRecogSeq, secondRecogSeq),
-      Math.max(firstRecogSeq, secondRecogSeq)
-    );
-    updateRunner();
+    if (snakeUUIDs.length !== 0) {
+      const targetSnakeUUID =
+        snakeUUIDs[Math.floor(Math.random() * snakeUUIDs.length)];
+      const targetSnakeIndices = recogSeqUUIDs[targetSnakeUUID];
+      const firstRecogSeq = targetSnakeIndices.splice(
+        Math.floor(Math.random() * targetSnakeIndices.length),
+        1
+      )[0];
+      const secondRecogSeq = targetSnakeIndices.splice(
+        Math.floor(Math.random() * targetSnakeIndices.length),
+        1
+      )[0];
+      cutSnake(
+        targetSnakeUUID,
+        Math.min(firstRecogSeq, secondRecogSeq),
+        Math.max(firstRecogSeq, secondRecogSeq)
+      );
+      updateRunner();
+    }
   }
   requestAnimationFrameId = requestAnimationFrame(tick);
 }
