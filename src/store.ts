@@ -152,6 +152,27 @@ export const useStore = defineStore("main", () => {
     if (!head) return;
     snakes[head.uuid] = head;
   };
+  const cutSnake = (snakeUUID: string, cutFrom: number, cutTo: number) => {
+    if (!snakes[snakeUUID]) {
+      console.error(`snake uuid is invalid: ${snakeUUID}`);
+      return;
+    }
+    const currentSnake = snakes[snakeUUID];
+    const anchorTail: Vector2 = [
+      currentSnake.getBlockBoundary(currentSnake.blocks[cutFrom].uuid)?.tailX ??
+        0,
+      currentSnake.anchorTail[1] + 100,
+    ];
+    const cutBlocks = snakes[snakeUUID].blocks.splice(cutFrom, cutTo - cutFrom);
+    const newSnakeUUID = uuidv4();
+    const tail = new WrapHeadBlock(newSnakeUUID);
+    const head = new WrapTailBlock(newSnakeUUID);
+    snakes[newSnakeUUID] = new Snake({
+      uuid: newSnakeUUID,
+      blocks: [tail, ...cutBlocks, head],
+      anchorTail,
+    });
+  };
   const setGrabbing = (snakeUUID: string, blockUUID: string) => {
     if (!snakes[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
@@ -311,6 +332,7 @@ export const useStore = defineStore("main", () => {
     splitTail,
     deleteSnake,
     wrapSnake,
+    cutSnake,
     setGrabbing,
     operonMessengerRNAs,
     proteins,

@@ -7,6 +7,7 @@ import {
   OperonMessengerRNA,
   Promoter,
   Protein,
+  RecombinaseA,
   RepressorA,
   T7Promoter,
 } from "./matter";
@@ -102,7 +103,7 @@ export abstract class TerminatorBlock extends Block {
   }
 }
 
-export abstract class MetaModifierBlock extends Block {
+export abstract class MetaModifierBlock extends CodingBlock {
   type = "meta" as const;
   constructor(args: Pick<Block, "uuid">) {
     super({
@@ -284,7 +285,7 @@ export class RecombinaseABlock extends MetaModifierBlock {
     displayName: "リコンビナーゼA",
   });
   get ProteinClass(): ProteinImpl {
-    return RepressorA;
+    return RecombinaseA;
   }
   constructor() {
     super({});
@@ -297,7 +298,7 @@ export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
     width: 131,
     height: 90,
     imageSrc: "/blocks/recombinase-recognition-seq.svg",
-    displayName: "認識配列",
+    displayName: "認識配列A",
     bottomAnchor: 30,
   });
   get ProteinClass(): ProteinImpl {
