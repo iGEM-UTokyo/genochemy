@@ -95,7 +95,7 @@ const mousemove = (blockUUID: string) => {
 const down = (blockUUID: string) => {
   // blockUUID was used for splitting.
   if (props.cursorMode === "move") {
-    setGrabbing(currentSnake.value.uuid);
+    setGrabbing(currentSnake.value.uuid, blockUUID);
   }
 };
 

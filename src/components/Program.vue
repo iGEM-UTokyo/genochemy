@@ -75,6 +75,11 @@ const programRef: Ref<HTMLElement | null> = ref(null);
 const scrollX = ref(0);
 
 const limits = computed(() => {
+  if (!programRef.value)
+    return [
+      [0, 0],
+      [0, 0],
+    ];
   return [
     ...Object.values(snakes.value).flatMap<
       DeepReadonly<{ tail: Vector2; head: Vector2 }>
@@ -95,8 +100,11 @@ const limits = computed(() => {
       [Math.max(a[1][0], b.head[0] + 20), Math.max(a[1][1], b.head[1] + 20)],
     ],
     [
-      [0, 0],
-      [programRef.value?.clientWidth ?? 0, programRef.value?.clientHeight ?? 0],
+      [Math.min(0, scrollX.value), 0],
+      [
+        Math.max(0, scrollX.value) + programRef.value.clientWidth,
+        programRef.value.clientHeight,
+      ],
     ]
   );
 });
@@ -110,6 +118,34 @@ function normalizeScrollX(newScrollX: number) {
 
 watch(limits, () => {
   scrollX.value = normalizeScrollX(scrollX.value);
+});
+
+const scrollRate = 0.3;
+let requestAnimationFrameId: number | null = null;
+function checkBorder() {
+  requestAnimationFrameId = null;
+  if (!programRef.value) return;
+  if (!draggingSnake.value || !draggingSnake.value.grabbingBlockUUID) return;
+  const blockBoundary = draggingSnake.value.getBlockBoundary(
+    draggingSnake.value.grabbingBlockUUID
+  );
+  if (!blockBoundary) return;
+  const positiveX =
+    blockBoundary.headX - (scrollX.value + programRef.value.clientWidth + 5);
+  const negativeX = scrollX.value - 5 - blockBoundary.tailX;
+  if (positiveX > 0) {
+    scrollX.value += positiveX * scrollRate;
+    draggingSnake.value.anchorTail[0] += positiveX * scrollRate;
+  } else if (negativeX > 0) {
+    scrollX.value -= negativeX * scrollRate;
+    draggingSnake.value.anchorTail[0] -= negativeX * scrollRate;
+  }
+  requestAnimationFrameId = requestAnimationFrame(checkBorder);
+}
+watch(draggingSnake, () => {
+  if (requestAnimationFrameId === null && draggingSnake.value !== null) {
+    checkBorder();
+  }
 });
 
 const cursorMode = ref<CursorModeType>("move");

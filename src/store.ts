@@ -30,6 +30,7 @@ export const useStore = defineStore("main", () => {
       blocks: [block],
       anchorTail,
       fromTray: true,
+      grabbingBlockUUID: block.uuid,
     });
   };
   const clearDraggingSnake = () => {
@@ -151,12 +152,13 @@ export const useStore = defineStore("main", () => {
     if (!head) return;
     snakes[head.uuid] = head;
   };
-  const setGrabbing = (snakeUUID: string) => {
+  const setGrabbing = (snakeUUID: string, blockUUID: string) => {
     if (!snakes[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
       return;
     }
     draggingSnake.value = Snake.copy(snakes[snakeUUID]);
+    draggingSnake.value.grabbingBlockUUID = blockUUID;
     snakes[snakeUUID].visible = false;
   };
   const operonMessengerRNAs = computed(() => {
