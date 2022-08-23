@@ -1,4 +1,3 @@
-import { stringifyStyle } from "@vue/shared";
 import { DE, Term } from "./de-term";
 
 export type DecodeFunctionArgs = Record<string, number>;
@@ -50,6 +49,14 @@ export default class Runner {
   constructor(equations: DE[], public interval: number) {
     for (const equation of equations) {
       this.variables[equation.target] = 0; // todo
+      this.equations[equation.target] = factoryFunction(equation.terms);
+    }
+  }
+  updateEquations(equations: DE[]) {
+    for (const equation of equations) {
+      if (!this.variables[equation.target]) {
+        this.variables[equation.target] = 0; // todo
+      }
       this.equations[equation.target] = factoryFunction(equation.terms);
     }
   }

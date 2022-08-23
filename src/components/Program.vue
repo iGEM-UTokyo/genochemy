@@ -20,6 +20,7 @@
     </svg>
     <DraggingSnake v-if="draggingSnake !== null" v-model="draggingSnake" />
     <CursorMode v-model="cursorMode" />
+    <div class="running" v-if="isRunning" />
   </div>
 </template>
 
@@ -56,7 +57,7 @@ import CursorMode, {
   CursorMode as CursorModeType,
 } from "@/components/CursorMode.vue";
 
-const { snakes, draggingSnake: _draggingSnake } = toRefs(useStore());
+const { snakes, draggingSnake: _draggingSnake, isRunning } = toRefs(useStore());
 const draggingSnake = ref<Snake | null>(null);
 watch(_draggingSnake, () => {
   if (_draggingSnake.value !== null) {
@@ -193,5 +194,14 @@ function wheel(e: WheelEvent) {
   flex: 1;
   overflow: hidden;
   position: relative;
+}
+.running {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 5px solid #1de9b6;
+  box-sizing: border-box;
 }
 </style>
