@@ -3,16 +3,14 @@
     @mousedown="down"
     @touchstart="down"
     ref="blockElem"
-    :style="{ transform: `translateY(${props.block.design.bottomAnchor}px)` }"
+    :style="{ transform: `translateY(${block.design.bottomAnchor}px)` }"
   >
     <svg
-      :width="props.block.design.width"
-      :height="
-        props.block.design.height + (props.block.design.bottomAnchor ?? 0)
-      "
+      :width="block.design.width"
+      :height="block.design.height + block.design.bottomAnchor"
     >
-      <g :transform="`translate(0, ${props.block.design.height})`">
-        <BlockVue :x="0" :y="0" :block="props.block" />
+      <g :transform="`translate(0, ${block.design.height})`">
+        <BlockVue :x="0" :y="0" :block="block" />
       </g>
     </svg>
   </div>
@@ -41,21 +39,23 @@ span {
 import { useStore } from "../store";
 import { Ref, ref, defineProps } from "vue";
 import BlockVue from "@/components/Block.vue";
-import type { Block } from "@/utils/block";
+import type { FinalBlock } from "@/utils/block";
 
 const props = defineProps<{
-  block: Block;
+  blockClass: FinalBlock;
 }>();
 
 const blockElem: Ref<HTMLElement | null> = ref(null);
+const block = ref(new props.blockClass());
 const { addTempBlock } = useStore();
 const down = () => {
   if (blockElem.value !== null) {
     const boundingRect = blockElem.value.getBoundingClientRect();
-    addTempBlock(props.block, [
+    addTempBlock(block.value, [
       boundingRect.x,
-      boundingRect.y + boundingRect.height - props.block.design.bottomAnchor,
+      boundingRect.y + boundingRect.height - block.value.design.bottomAnchor,
     ]);
+    block.value = new props.blockClass();
   }
 };
 </script>

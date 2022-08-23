@@ -1,7 +1,11 @@
 <template>
   <div class="tray">
     <div class="tray-inner">
-      <TrayBlock v-for="block in blocks" :key="block.name" :block="block" />
+      <TrayBlock
+        v-for="(blockClass, index) in blockClasses"
+        :key="index"
+        :block-class="blockClass"
+      />
     </div>
   </div>
 </template>
@@ -10,17 +14,17 @@
 import TrayBlock from "./TrayBlock.vue";
 import * as block from "@/utils/block";
 
-const blocks = [
-  new block.T7PromoterBlock(),
-  new block.DrugRepressiblePromoterBlock(),
-  new block.EL222ActivatedPromoterBlock(),
-  new block.MCherryBlock(),
-  new block.GFPBlock(),
-  new block.RepressorBlock(),
-  new block.EL222Block(),
-  new block.CYC1TerminatorBlock(),
-  new block.RecombinaseABlock(),
-  new block.RecombinaseARecognitionSeqBlock(),
+const blockClasses = [
+  block.T7PromoterBlock,
+  block.DrugRepressiblePromoterBlock,
+  block.EL222ActivatedPromoterBlock,
+  block.MCherryBlock,
+  block.GFPBlock,
+  block.RepressorBlock,
+  block.EL222Block,
+  block.CYC1TerminatorBlock,
+  block.RecombinaseABlock,
+  block.RecombinaseARecognitionSeqBlock,
 ];
 </script>
 
