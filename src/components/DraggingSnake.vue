@@ -64,8 +64,14 @@ import {
   willBeDeletedKey,
 } from "./Program.vue";
 
-const { addSnake, mergeToHead, mergeToTail, clearDraggingSnake, snakes } =
-  useStore();
+const {
+  addSnake,
+  mergeToHead,
+  mergeToTail,
+  clearDraggingSnake,
+  snakes,
+  deleteSnake,
+} = useStore();
 
 const props = defineProps<{
   modelValue: DeepReadonly<Snake>;
@@ -239,6 +245,9 @@ const up = () => {
     getFixedPosition &&
     willBeDeleted(getFixedPosition(props.modelValue.anchorTail))
   ) {
+    if (!props.modelValue.fromTray) {
+      deleteSnake(props.modelValue.uuid);
+    }
     clearDraggingSnake();
     return;
   }
