@@ -20,6 +20,7 @@ const {
   registerOutput,
   UnregisterOutput,
   cutSnake,
+  recombineTwoSnakes,
   updateRunner,
 } = store;
 const { isRunning, snakes } = toRefs(store);
@@ -33,20 +34,20 @@ let requestAnimationFrameId: number | null = null;
 function tick() {
   requestAnimationFrameId = null;
   if (!isRunning.value) return;
-  const p = 1 - Math.exp(-runnerOutputs["protein-RecombinaseA"] * 0.1); // * 0.001);
-  if (Math.random() <= p) {
-    console.log("recombine!");
+  const p1 = 1 - Math.exp(-runnerOutputs["protein-RecombinaseA"] * 0.001);
+  const p2 = 1 - Math.exp(-runnerOutputs["protein-RecombinaseA"] * 0.005);
+  const rand = Math.random();
+  if (rand <= p1) {
     const recogSeqUUIDs: {
       snakeUUID: string;
-      blockUUID: string;
       index: number;
     }[] = [];
     for (const snake of Object.values(snakes.value)) {
+      if (snake.isLoop) continue;
       for (let i = 0; i < snake.blocks.length; i++) {
         if (snake.blocks[i] instanceof RecombinaseARecognitionSeqBlock) {
           recogSeqUUIDs.push({
             snakeUUID: snake.uuid,
-            blockUUID: snake.blocks[i].uuid,
             index: i,
           });
         }
@@ -67,9 +68,50 @@ function tick() {
           Math.min(firstRecogSeq.index, secondRecogSeq.index),
           Math.max(firstRecogSeq.index, secondRecogSeq.index)
         );
-        updateRunner();
+      } else {
+        recombineTwoSnakes(
+          firstRecogSeq.snakeUUID,
+          secondRecogSeq.snakeUUID,
+          firstRecogSeq.index,
+          secondRecogSeq.index
+        );
+      }
+      updateRunner();
+    }
+  } else if (rand <= p2) {
+    const recogSeqUUIDs: { [snakeUUID: string]: number[] } = {};
+    for (const snake of Object.values(snakes.value)) {
+      if (snake.isLoop) continue;
+      for (let i = 0; i < snake.blocks.length; i++) {
+        if (snake.blocks[i] instanceof RecombinaseARecognitionSeqBlock) {
+          if (!recogSeqUUIDs[snake.uuid]) {
+            recogSeqUUIDs[snake.uuid] = [];
+          }
+          recogSeqUUIDs[snake.uuid].push(i);
+        }
+      }
+      if (recogSeqUUIDs[snake.uuid] && recogSeqUUIDs[snake.uuid].length < 2) {
+        delete recogSeqUUIDs[snake.uuid];
       }
     }
+    const snakeUUIDs = Object.keys(recogSeqUUIDs);
+    const targetSnakeUUID =
+      snakeUUIDs[Math.floor(Math.random() * snakeUUIDs.length)];
+    const targetSnakeIndices = recogSeqUUIDs[targetSnakeUUID];
+    const firstRecogSeq = targetSnakeIndices.splice(
+      Math.floor(Math.random() * targetSnakeIndices.length),
+      1
+    )[0];
+    const secondRecogSeq = targetSnakeIndices.splice(
+      Math.floor(Math.random() * targetSnakeIndices.length),
+      1
+    )[0];
+    cutSnake(
+      targetSnakeUUID,
+      Math.min(firstRecogSeq, secondRecogSeq),
+      Math.max(firstRecogSeq, secondRecogSeq)
+    );
+    updateRunner();
   }
   requestAnimationFrameId = requestAnimationFrame(tick);
 }

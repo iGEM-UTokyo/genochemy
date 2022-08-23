@@ -114,6 +114,14 @@ export class Snake {
   get isTailCovered() {
     return this.blocks[0] instanceof WrapHeadBlock;
   }
+  get isLoop() {
+    const head = this.blocks[this.blocks.length - 1];
+    const tail = this.blocks[0];
+    if (head instanceof WrapTailBlock && tail instanceof WrapHeadBlock) {
+      return head.connectTo === this.uuid && tail.connectTo === this.uuid; //todo
+    }
+    return false;
+  }
   getBlockBoundary(blockUUID: string): { tailX: number; headX: number } | null {
     let tailX = this.anchorTail[0];
     let headX = this.anchorTail[0];

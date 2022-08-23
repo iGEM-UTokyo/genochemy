@@ -185,6 +185,25 @@ export const useStore = defineStore("main", () => {
       anchorTail,
     });
   };
+  const recombineTwoSnakes = (
+    snakeUUID1: string,
+    snakeUUID2: string,
+    cutIndex1: number,
+    cutIndex2: number
+  ) => {
+    if (!snakes.value[snakeUUID1]) {
+      console.error(`snake uuid is invalid: ${snakeUUID1}`);
+      return;
+    }
+    if (!snakes.value[snakeUUID2]) {
+      console.error(`snake uuid is invalid: ${snakeUUID2}`);
+      return;
+    }
+    const tail1 = snakes.value[snakeUUID1].blocks.splice(cutIndex1);
+    const tail2 = snakes.value[snakeUUID2].blocks.splice(cutIndex2);
+    snakes.value[snakeUUID1].blocks.push(...tail2);
+    snakes.value[snakeUUID2].blocks.push(...tail1);
+  };
   const setGrabbing = (snakeUUID: string, blockUUID: string) => {
     if (!snakes.value[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
@@ -388,6 +407,7 @@ export const useStore = defineStore("main", () => {
     deleteSnake,
     wrapSnake,
     cutSnake,
+    recombineTwoSnakes,
     setGrabbing,
     operonMessengerRNAs,
     proteins,
