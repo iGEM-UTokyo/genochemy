@@ -4,6 +4,7 @@ import DrugA from "@/components/on-runner/DrugA.vue";
 import BlueLightSwitch from "@/components/on-runner/BlueLightSwitch.vue";
 import Fluorescence from "@/components/on-runner/Fluorescence.vue";
 import Light from "@/components/on-runner/Light.vue";
+import RecombinaseModifier from "@/components/on-runner/RecombinaseModifier.vue";
 
 export interface RunnerComponent {
   name: string;
@@ -309,5 +310,13 @@ export class EL222 extends Protein {
         ],
       },
     ];
+  }
+}
+
+export class RecombinaseA extends Protein {
+  stageSettings = [RecombinaseModifier];
+  description = "認識配列Aに挟まれた配列を切り出します。";
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
   }
 }

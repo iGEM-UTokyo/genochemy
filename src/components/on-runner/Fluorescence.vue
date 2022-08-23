@@ -10,7 +10,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { computed, onUnmounted, toRefs } from "vue";
+import { computed, onUnmounted } from "vue";
 import { useStore } from "@/store";
 
 const { runnerOutputs, registerOutput, UnregisterOutput } = useStore();
