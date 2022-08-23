@@ -10,15 +10,17 @@ export class Snake {
   anchorTail: Vector2;
   fromTray: boolean;
   visible: boolean;
+  grabbingBlockUUID: string | null;
   constructor(
     args: Pick<Snake, "uuid" | "blocks" | "anchorTail"> &
-      Partial<Pick<Snake, "fromTray" | "visible">>
+      Partial<Pick<Snake, "fromTray" | "visible" | "grabbingBlockUUID">>
   ) {
     this.uuid = args.uuid;
     this.blocks = args.blocks;
     this.anchorTail = args.anchorTail;
     this.fromTray = args.fromTray ?? false;
     this.visible = args.visible ?? true;
+    this.grabbingBlockUUID = args.grabbingBlockUUID ?? null;
   }
   static copy(snake: DeepReadonly<Snake>) {
     return new Snake({
@@ -26,6 +28,7 @@ export class Snake {
       blocks: snake.blocks.slice(0),
       anchorTail: [snake.anchorTail[0], snake.anchorTail[1]],
       fromTray: snake.fromTray,
+      grabbingBlockUUID: snake.grabbingBlockUUID,
     });
   }
   get width() {
@@ -97,5 +100,20 @@ export class Snake {
   }
   get isTailCovered() {
     return this.blocks[0] instanceof WrapHeadBlock;
+  }
+  getBlockBoundary(blockUUID: string): { tailX: number; headX: number } | null {
+    let tailX = this.anchorTail[0];
+    let headX = this.anchorTail[0];
+    let foundFlag = false;
+    for (const block of this.blocks) {
+      headX += block.design.width - overlap;
+      if ((block.uuid = blockUUID)) {
+        foundFlag = true;
+        break;
+      }
+      tailX += block.design.width - overlap;
+    }
+    if (!foundFlag) return null;
+    return { tailX, headX };
   }
 }
