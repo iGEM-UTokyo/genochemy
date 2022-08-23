@@ -1,18 +1,10 @@
 <template>
   <!-- <div :style="divStyle"> -->
   <g>
-    <image
-      :href="src"
-      :width="props.block.design.width"
-      :x="x"
-      :y="(props.anchorTopLeft ? 0 : -props.block.design.height) + props.y"
-    />
-    <text
-      :x="props.x + 10"
-      :y="(props.anchorTopLeft ? props.block.design.height : 0) + props.y - 9"
-      fill="white"
-      >{{ displayName }}</text
-    >
+    <image :href="src" :width="props.block.design.width" :x="props.x" :y="_y" />
+    <text :x="props.x + 10" :y="props.y - 9" fill="white">{{
+      displayName
+    }}</text>
   </g>
 </template>
 
@@ -42,10 +34,12 @@ const props = defineProps<{
   x: number;
   y: number;
   block: Block;
-  anchorTopLeft?: boolean;
 }>();
 const src = computed(() => props.block.design.imageSrc);
 const displayName = computed(() => props.block.design.displayName);
+const _y = computed(
+  () => -props.block.design.height + props.y + props.block.design.bottomAnchor
+);
 </script>
 
 <style scoped>

@@ -1,7 +1,19 @@
 <template>
-  <div @mousedown="down" @touchstart="down" ref="blockElem">
-    <svg :width="props.block.design.width" :height="props.block.design.height">
-      <BlockVue :x="0" :y="0" :block="props.block" anchor-top-left />
+  <div
+    @mousedown="down"
+    @touchstart="down"
+    ref="blockElem"
+    :style="{ transform: `translateY(${props.block.design.bottomAnchor}px)` }"
+  >
+    <svg
+      :width="props.block.design.width"
+      :height="
+        props.block.design.height + (props.block.design.bottomAnchor ?? 0)
+      "
+    >
+      <g :transform="`translate(0, ${props.block.design.height})`">
+        <BlockVue :x="0" :y="0" :block="props.block" />
+      </g>
     </svg>
   </div>
 </template>
@@ -42,7 +54,7 @@ const down = () => {
     const boundingRect = blockElem.value.getBoundingClientRect();
     addTempBlock(props.block, [
       boundingRect.x,
-      boundingRect.y + boundingRect.height,
+      boundingRect.y + boundingRect.height - props.block.design.bottomAnchor,
     ]);
   }
 };

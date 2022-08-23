@@ -16,6 +16,8 @@ export type BlockTypes =
   | "promoter"
   | "visibility"
   | "terminator"
+  | "meta"
+  | "special-seq"
   | "wrap-head"
   | "wrap-tail";
 export type BlockNames =
@@ -31,15 +33,35 @@ export type BlockNames =
   | "Wrap Tail";
 export type BlockWithUUID = Block & { uuid: string };
 export type Vector2 = [number, number];
-export type BlockDesign = {
+export class BlockDesign {
   width: number;
   height: number;
   imageSrc: string;
   displayName: string;
-};
+  bottomAnchor: number;
+  constructor({
+    width,
+    height,
+    imageSrc,
+    displayName,
+    bottomAnchor,
+  }: {
+    width: number;
+    height: number;
+    imageSrc: string;
+    displayName?: string;
+    bottomAnchor?: number;
+  }) {
+    this.width = width;
+    this.height = height;
+    this.imageSrc = imageSrc;
+    this.displayName = displayName ?? "";
+    this.bottomAnchor = bottomAnchor ?? 0;
+  }
+}
 export abstract class Block {
   abstract type: BlockTypes;
-  abstract name: BlockNames;
+  abstract name: string;
   abstract design: BlockDesign;
   uuid?: string;
   constructor(args: Pick<Block, "uuid">) {
@@ -80,6 +102,24 @@ export abstract class TerminatorBlock extends Block {
   }
 }
 
+export abstract class MetaModifierBlock extends Block {
+  type = "meta" as const;
+  constructor(args: Pick<Block, "uuid">) {
+    super({
+      uuid: args.uuid,
+    });
+  }
+}
+
+export abstract class SpecialSequenceBlock extends Block {
+  type = "special-seq" as const;
+  constructor(args: Pick<Block, "uuid">) {
+    super({
+      uuid: args.uuid,
+    });
+  }
+}
+
 export type FinalBlock = {
   new (): Block;
 };
@@ -90,12 +130,12 @@ export type ProteinImpl = {
 
 export class T7PromoterBlock extends PromoterBlock {
   name = "T7 promoter" as const;
-  design = {
+  design = new BlockDesign({
     width: 184,
     height: 82.65,
     imageSrc: "/blocks/promoter.svg",
     displayName: "常時発現",
-  };
+  });
   promoter = new T7Promoter();
   constructor() {
     super({});
@@ -104,12 +144,12 @@ export class T7PromoterBlock extends PromoterBlock {
 
 export class DrugRepressiblePromoterBlock extends PromoterBlock {
   name = "Drug Repressible Promoter" as const;
-  design = {
+  design = new BlockDesign({
     width: 184,
     height: 82.65,
     imageSrc: "/blocks/promoter.svg",
     displayName: "リプレッサーA結合",
-  };
+  });
   promoter = new DrugRepressiblePromoter();
   constructor() {
     super({});
@@ -118,12 +158,12 @@ export class DrugRepressiblePromoterBlock extends PromoterBlock {
 
 export class EL222ActivatedPromoterBlock extends PromoterBlock {
   name = "EL222 Activated Promoter" as const;
-  design = {
+  design = new BlockDesign({
     width: 184,
     height: 82.65,
     imageSrc: "/blocks/promoter.svg",
     displayName: "青アクチベータ結合",
-  };
+  });
   promoter = new EL222ActivatedPromoter();
   constructor() {
     super({});
@@ -132,12 +172,12 @@ export class EL222ActivatedPromoterBlock extends PromoterBlock {
 
 export class MCherryBlock extends VisibilityBlock {
   name = "mCherry" as const;
-  design = {
+  design = new BlockDesign({
     width: 184,
     height: 30,
     imageSrc: "/blocks/visible.svg",
     displayName: "mCherry",
-  };
+  });
   get ProteinClass(): ProteinImpl {
     return mCherry;
   }
@@ -148,12 +188,12 @@ export class MCherryBlock extends VisibilityBlock {
 
 export class GFPBlock extends VisibilityBlock {
   name = "GFP" as const;
-  design = {
+  design = new BlockDesign({
     width: 184,
     height: 30,
     imageSrc: "/blocks/visible.svg",
     displayName: "GFP",
-  };
+  });
   get ProteinClass(): ProteinImpl {
     return GFP;
   }
@@ -164,12 +204,12 @@ export class GFPBlock extends VisibilityBlock {
 
 export class RepressorBlock extends VisibilityBlock {
   name = "RepressorA" as const;
-  design = {
+  design = new BlockDesign({
     width: 184,
     height: 30,
     imageSrc: "/blocks/control.svg",
     displayName: "リプレッサーA",
-  };
+  });
   get ProteinClass(): ProteinImpl {
     return RepressorA;
   }
@@ -180,12 +220,12 @@ export class RepressorBlock extends VisibilityBlock {
 
 export class EL222Block extends VisibilityBlock {
   name = "EL222" as const;
-  design = {
+  design = new BlockDesign({
     width: 184,
     height: 30,
     imageSrc: "/blocks/control.svg",
     displayName: "青色アクチベーター",
-  };
+  });
   get ProteinClass(): ProteinImpl {
     return EL222;
   }
@@ -196,12 +236,12 @@ export class EL222Block extends VisibilityBlock {
 
 export class CYC1TerminatorBlock extends TerminatorBlock {
   name = "CYC1 Terminator" as const;
-  design = {
+  design = new BlockDesign({
     width: 184,
     height: 77.65,
     imageSrc: "/blocks/terminator.svg",
     displayName: "ターミネーター",
-  };
+  });
   constructor() {
     super({});
   }
@@ -210,12 +250,11 @@ export class CYC1TerminatorBlock extends TerminatorBlock {
 export class WrapHeadBlock extends Block {
   type = "wrap-head" as const;
   name = "Wrap Head" as const;
-  design = {
+  design = new BlockDesign({
     width: 27,
     height: 30,
     imageSrc: "/blocks/wrap-head.svg",
-    displayName: "",
-  };
+  });
   uuid = uuidv4(); // todo
   constructor(public connectTo: string) {
     super({});
@@ -225,14 +264,46 @@ export class WrapHeadBlock extends Block {
 export class WrapTailBlock extends Block {
   type = "wrap-tail" as const;
   name = "Wrap Tail" as const;
-  design = {
+  design = new BlockDesign({
     width: 20,
     height: 30,
     imageSrc: "/blocks/wrap-tail.svg",
-    displayName: "",
-  };
+  });
   uuid = uuidv4(); // todo
   constructor(public connectTo: string) {
+    super({});
+  }
+}
+
+export class RecombinaseABlock extends MetaModifierBlock {
+  name = "RecombinaseA" as const;
+  design = new BlockDesign({
+    width: 184,
+    height: 30,
+    imageSrc: "/blocks/meta.svg",
+    displayName: "リコンビナーゼA",
+  });
+  get ProteinClass(): ProteinImpl {
+    return RepressorA;
+  }
+  constructor() {
+    super({});
+  }
+}
+
+export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
+  name = "RecombinaseA Recognition Seq." as const;
+  design = new BlockDesign({
+    width: 131,
+    height: 90,
+    imageSrc: "/blocks/recombinase-recognition-seq.svg",
+    displayName: "認識配列",
+    bottomAnchor: 30,
+  });
+  get ProteinClass(): ProteinImpl {
+    return RepressorA;
+  }
+  constructor() {
     super({});
   }
 }

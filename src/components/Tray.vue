@@ -19,6 +19,8 @@ const blocks = [
   new block.RepressorBlock(),
   new block.EL222Block(),
   new block.CYC1TerminatorBlock(),
+  new block.RecombinaseABlock(),
+  new block.RecombinaseARecognitionSeqBlock(),
 ];
 </script>
 
