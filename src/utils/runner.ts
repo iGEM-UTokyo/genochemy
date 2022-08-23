@@ -1,4 +1,5 @@
 import { DE, Term } from "./de-term";
+import { MatterEquations } from "./matter";
 
 export type DecodeFunctionArgs = Record<string, number>;
 export type DecodeFunction = (args: DecodeFunctionArgs) => number;
@@ -46,18 +47,18 @@ export function factoryEmptyFunction(): DecodeFunction {
 export default class Runner {
   variables: Record<string, number> = {};
   equations: Record<string, DecodeFunction> = {};
-  constructor(equations: DE[], public interval: number) {
-    for (const equation of equations) {
-      this.variables[equation.target] = 0; // todo
-      this.equations[equation.target] = factoryFunction(equation.terms);
+  constructor(equations: MatterEquations, public interval: number) {
+    for (const target of Object.keys(equations)) {
+      this.variables[target] = 0; // todo
+      this.equations[target] = factoryFunction(equations[target]);
     }
   }
-  updateEquations(equations: DE[]) {
-    for (const equation of equations) {
-      if (!this.variables[equation.target]) {
-        this.variables[equation.target] = 0; // todo
+  updateEquations(equations: MatterEquations) {
+    for (const target of Object.keys(equations)) {
+      if (!this.variables[target]) {
+        this.variables[target] = 0; // todo
       }
-      this.equations[equation.target] = factoryFunction(equation.terms);
+      this.equations[target] = factoryFunction(equations[target]);
     }
   }
   next() {
@@ -98,5 +99,8 @@ export default class Runner {
           vars4[varName]) /
         6;
     }
+  }
+  get matterNames() {
+    return Object.keys(this.variables);
   }
 }

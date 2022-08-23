@@ -12,7 +12,14 @@ import {
 } from "./utils/block";
 import { Snake } from "./utils/snake";
 import { v4 as uuidv4 } from "uuid";
-import { OperonMessengerRNA, Protein } from "./utils/matter";
+import {
+  Actor,
+  Degrader,
+  MatterEquations,
+  OperonMessengerRNA,
+  PromoterActor,
+  Protein,
+} from "./utils/matter";
 import Runner, { factoryEmptyFunction } from "./utils/runner";
 
 function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
@@ -272,12 +279,21 @@ export const useStore = defineStore("main", () => {
     for (const snake of Object.values(snakes.value)) {
       beforePlaySnakes.value[snake.uuid] = Snake.copy(snake);
     }
-    const equations = [
-      ...operonMessengerRNAs.value.map((mRNA) => mRNA.buildDE()).flat(),
-      ...proteins.value.map((protein) => protein.buildDE()).flat(),
-    ];
-    console.log(equations);
-    currentRunner = new Runner(equations, 0.1);
+    const actors: Actor[] = [];
+    for (const mRNA of operonMessengerRNAs.value) {
+      for (const promoter of mRNA.promoters) {
+        actors.push(new PromoterActor(promoter, mRNA));
+      }
+      actors.push(mRNA);
+    }
+    actors.push(...proteins.value);
+    actors.push(new Degrader());
+    const matterEquations: MatterEquations = {};
+    for (const actor of actors) {
+      actor.buildDE(matterEquations);
+    }
+    console.log(matterEquations);
+    currentRunner = new Runner(matterEquations, 0.1);
     for (const output of registeredOutputs) {
       runnerOutputs.value[output] = currentRunner.variables[output] || 0;
       runnerOutputDefaults[output] = currentRunner.variables[output] || 0;
@@ -317,12 +333,24 @@ export const useStore = defineStore("main", () => {
       run();
       return;
     }
-    const equations = [
-      ...operonMessengerRNAs.value.map((mRNA) => mRNA.buildDE()).flat(),
-      ...proteins.value.map((protein) => protein.buildDE()).flat(),
-    ];
-    console.log(equations);
-    currentRunner.updateEquations(equations);
+    const actors: Actor[] = [];
+    for (const mRNA of operonMessengerRNAs.value) {
+      for (const promoter of mRNA.promoters) {
+        actors.push(new PromoterActor(promoter, mRNA));
+      }
+      actors.push(mRNA);
+    }
+    actors.push(...proteins.value);
+    actors.push(new Degrader());
+    const matterEquations: MatterEquations = {};
+    for (const existMatterName of currentRunner.matterNames) {
+      matterEquations[existMatterName] = [];
+    }
+    for (const actor of actors) {
+      actor.buildDE(matterEquations);
+    }
+    console.log(matterEquations);
+    currentRunner.updateEquations(matterEquations);
   };
   const stop = () => {
     snakes.value = {};
