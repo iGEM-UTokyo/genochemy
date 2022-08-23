@@ -1,14 +1,18 @@
 <template>
   <div class="snake" :style="style">
-    <svg :width="props.modelValue.width" :height="props.modelValue.height">
-      <Block
-        v-for="[x, block] in blockWithPosition"
-        :key="block.uuid"
-        :block="block"
-        :x="x"
-        :y="props.modelValue.height - block.design.height"
-        anchor-top-left
-      />
+    <svg
+      :width="props.modelValue.width"
+      :height="props.modelValue.height + props.modelValue.bottomAnchor"
+    >
+      <g :transform="`translate(0, ${props.modelValue.height})`">
+        <Block
+          v-for="[x, block] in blockWithPosition"
+          :key="block.uuid"
+          :block="block"
+          :x="x"
+          :y="0"
+        />
+      </g>
     </svg>
     <teleport to=".program-inner-back">
       <BindGuide

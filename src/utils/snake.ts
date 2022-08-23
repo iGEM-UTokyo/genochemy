@@ -41,9 +41,22 @@ export class Snake {
     }, 0);
   }
   get height() {
-    return this.blocks.reduce((prev, current) => {
-      return Math.max(prev, current.design.height);
-    }, 0);
+    let upLimit = 0;
+    let downLimit = 0;
+    for (const block of this.blocks) {
+      upLimit = Math.max(
+        block.design.height - block.design.bottomAnchor,
+        upLimit
+      );
+      downLimit = Math.max(block.design.bottomAnchor, downLimit);
+    }
+    return upLimit + downLimit;
+  }
+  get bottomAnchor() {
+    return this.blocks.reduce(
+      (prev, block) => Math.max(prev, block.design.bottomAnchor),
+      0
+    );
   }
   get anchorNext(): Vector2 {
     return [this.anchorTail[0] + this.width, this.anchorTail[1]];
