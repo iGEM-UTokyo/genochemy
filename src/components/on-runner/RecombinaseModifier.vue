@@ -10,13 +10,18 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { computed, onUnmounted, toRefs, watch } from "vue";
+import { onUnmounted, toRefs, watch } from "vue";
 import { useStore } from "@/store";
-import { acceptHMRUpdate } from "pinia";
 import { RecombinaseARecognitionSeqBlock } from "@/utils/block";
 
 const store = useStore();
-const { runnerOutputs, registerOutput, UnregisterOutput, cutSnake } = store;
+const {
+  runnerOutputs,
+  registerOutput,
+  UnregisterOutput,
+  cutSnake,
+  updateRunner,
+} = store;
 const { isRunning, snakes } = toRefs(store);
 
 registerOutput("protein-RecombinaseA");
@@ -28,7 +33,7 @@ let requestAnimationFrameId: number | null = null;
 function tick() {
   requestAnimationFrameId = null;
   if (!isRunning.value) return;
-  const p = 1 - Math.exp(-runnerOutputs["protein-RecombinaseA"]); // * 0.001);
+  const p = 1 - Math.exp(-runnerOutputs["protein-RecombinaseA"] * 0.1); // * 0.001);
   if (Math.random() <= p) {
     console.log("recombine!");
     const recogSeqUUIDs: {
@@ -62,6 +67,7 @@ function tick() {
           Math.min(firstRecogSeq.index, secondRecogSeq.index),
           Math.max(firstRecogSeq.index, secondRecogSeq.index)
         );
+        updateRunner();
       }
     }
   }

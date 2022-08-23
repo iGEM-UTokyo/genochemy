@@ -20,7 +20,9 @@ function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
 }
 export type Snakes = Record<string, Snake>;
 export const useStore = defineStore("main", () => {
-  const snakes: Snakes = reactive({});
+  const snakes = ref<Snakes>({});
+  const beforePlaySnakes = ref<Snakes>({});
+  let currentRunner: Runner | null = null;
   const draggingSnake = ref<Snake | null>(null);
   const addTempBlock = (block: Block, anchorTail: Vector2) => {
     setUUID(block, uuidv4());
@@ -37,26 +39,26 @@ export const useStore = defineStore("main", () => {
     draggingSnake.value = null;
   };
   const addSnake = (snake: Snake) => {
-    snakes[snake.uuid] = snake;
+    snakes.value[snake.uuid] = snake;
   };
   const updateSnake = (snake: Snake) => {
-    if (!snakes[snake.uuid]) {
+    if (!snakes.value[snake.uuid]) {
       console.error(`snake uuid is invalid: ${snake.uuid}`);
       return;
     }
-    snakes[snake.uuid] = snake;
+    snakes.value[snake.uuid] = snake;
   };
   const mergeToTail = (toUUID: string) => {
     if (!draggingSnake.value) {
       console.error("draggingSnake is null");
       return;
     }
-    if (!snakes[toUUID]) {
+    if (!snakes.value[toUUID]) {
       console.error(`snake uuid is invalid: ${toUUID}`);
       return;
     }
     if (draggingSnake.value.isTailCovered) {
-      for (const snake of Object.values(snakes)) {
+      for (const snake of Object.values(snakes.value)) {
         const head = snake.blocks[snake.blocks.length - 1];
         if (
           head instanceof WrapTailBlock &&
@@ -66,8 +68,8 @@ export const useStore = defineStore("main", () => {
         }
       }
     }
-    snakes[toUUID].appendToTail(draggingSnake.value);
-    delete snakes[draggingSnake.value.uuid];
+    snakes.value[toUUID].appendToTail(draggingSnake.value);
+    delete snakes.value[draggingSnake.value.uuid];
     draggingSnake.value = null;
   };
   const mergeToHead = (toUUID: string) => {
@@ -75,12 +77,12 @@ export const useStore = defineStore("main", () => {
       console.error("draggingSnake is null");
       return;
     }
-    if (!snakes[toUUID]) {
+    if (!snakes.value[toUUID]) {
       console.error(`snake uuid is invalid: ${toUUID}`);
       return;
     }
     if (draggingSnake.value.isHeadCovered) {
-      for (const snake of Object.values(snakes)) {
+      for (const snake of Object.values(snakes.value)) {
         const tail = snake.blocks[0];
         if (
           tail instanceof WrapHeadBlock &&
@@ -90,19 +92,19 @@ export const useStore = defineStore("main", () => {
         }
       }
     }
-    snakes[toUUID].appendToHead(draggingSnake.value);
-    delete snakes[draggingSnake.value.uuid];
+    snakes.value[toUUID].appendToHead(draggingSnake.value);
+    delete snakes.value[draggingSnake.value.uuid];
     draggingSnake.value = null;
   };
   const splitHead = (snakeUUID: string, blockUUID: string, shift = false) => {
-    if (!snakes[snakeUUID]) {
+    if (!snakes.value[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
       return;
     }
-    const newSnake = snakes[snakeUUID].splitHead(blockUUID);
+    const newSnake = snakes.value[snakeUUID].splitHead(blockUUID);
     if (newSnake) {
       if (newSnake.isHeadCovered) {
-        for (const snake of Object.values(snakes)) {
+        for (const snake of Object.values(snakes.value)) {
           const tail = snake.blocks[0];
           if (tail instanceof WrapHeadBlock && tail.connectTo === snakeUUID) {
             tail.connectTo = newSnake.uuid;
@@ -112,18 +114,18 @@ export const useStore = defineStore("main", () => {
       if (shift) {
         newSnake.anchorTail[0] += 5;
       }
-      snakes[newSnake.uuid] = newSnake;
+      snakes.value[newSnake.uuid] = newSnake;
     }
   };
   const splitTail = (snakeUUID: string, blockUUID: string, shift = false) => {
-    if (!snakes[snakeUUID]) {
+    if (!snakes.value[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
       return;
     }
-    const newSnake = snakes[snakeUUID].splitTail(blockUUID);
+    const newSnake = snakes.value[snakeUUID].splitTail(blockUUID);
     if (newSnake) {
       if (newSnake.isTailCovered) {
-        for (const snake of Object.values(snakes)) {
+        for (const snake of Object.values(snakes.value)) {
           const head = snake.blocks[snake.blocks.length - 1];
           if (head instanceof WrapTailBlock && head.connectTo === snakeUUID) {
             head.connectTo = newSnake.uuid;
@@ -133,58 +135,61 @@ export const useStore = defineStore("main", () => {
       if (shift) {
         newSnake.anchorTail[0] -= 5;
       }
-      snakes[newSnake.uuid] = newSnake;
+      snakes.value[newSnake.uuid] = newSnake;
     }
   };
   const deleteSnake = (snakeUUID: string) => {
-    if (!snakes[snakeUUID]) {
+    if (!snakes.value[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
       return;
     }
-    delete snakes[snakeUUID];
+    delete snakes.value[snakeUUID];
   };
   const wrapSnake = (snakeUUID: string, border: { before: string }) => {
-    if (!snakes[snakeUUID]) {
+    if (!snakes.value[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
       return;
     }
-    const head = snakes[snakeUUID].wrap(border);
+    const head = snakes.value[snakeUUID].wrap(border);
     if (!head) return;
-    snakes[head.uuid] = head;
+    snakes.value[head.uuid] = head;
   };
   const cutSnake = (snakeUUID: string, cutFrom: number, cutTo: number) => {
-    if (!snakes[snakeUUID]) {
+    if (!snakes.value[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
       return;
     }
-    const currentSnake = snakes[snakeUUID];
+    const currentSnake = snakes.value[snakeUUID];
     const anchorTail: Vector2 = [
       currentSnake.getBlockBoundary(currentSnake.blocks[cutFrom].uuid)?.tailX ??
         0,
       currentSnake.anchorTail[1] + 100,
     ];
-    const cutBlocks = snakes[snakeUUID].blocks.splice(cutFrom, cutTo - cutFrom);
+    const cutBlocks = snakes.value[snakeUUID].blocks.splice(
+      cutFrom,
+      cutTo - cutFrom
+    );
     const newSnakeUUID = uuidv4();
     const tail = new WrapHeadBlock(newSnakeUUID);
     const head = new WrapTailBlock(newSnakeUUID);
-    snakes[newSnakeUUID] = new Snake({
+    snakes.value[newSnakeUUID] = new Snake({
       uuid: newSnakeUUID,
       blocks: [tail, ...cutBlocks, head],
       anchorTail,
     });
   };
   const setGrabbing = (snakeUUID: string, blockUUID: string) => {
-    if (!snakes[snakeUUID]) {
+    if (!snakes.value[snakeUUID]) {
       console.error(`snake uuid is invalid: ${snakeUUID}`);
       return;
     }
-    draggingSnake.value = Snake.copy(snakes[snakeUUID]);
+    draggingSnake.value = Snake.copy(snakes.value[snakeUUID]);
     draggingSnake.value.grabbingBlockUUID = blockUUID;
-    snakes[snakeUUID].visible = false;
+    snakes.value[snakeUUID].visible = false;
   };
   const operonMessengerRNAs = computed(() => {
     const mRNAs: Record<string, OperonMessengerRNA> = {};
-    for (const snake of Object.values(snakes)) {
+    for (const snake of Object.values(snakes.value)) {
       if (snake.isTailCovered) continue;
       let promoterBlock: PromoterBlock | null = null;
       let codingBlocks: CodingBlock[] = [];
@@ -192,7 +197,7 @@ export const useStore = defineStore("main", () => {
       let currentSnake = snake;
       let headBlock = currentSnake.blocks[currentSnake.blocks.length - 1];
       while (headBlock instanceof WrapTailBlock) {
-        currentSnake = snakes[headBlock.connectTo];
+        currentSnake = snakes.value[headBlock.connectTo];
         blocks.push(...currentSnake.blocks);
         headBlock = currentSnake.blocks[currentSnake.blocks.length - 1];
       }
@@ -263,46 +268,68 @@ export const useStore = defineStore("main", () => {
     if (isRunning.value) {
       stop();
     }
+    beforePlaySnakes.value = {};
+    for (const snake of Object.values(snakes.value)) {
+      beforePlaySnakes.value[snake.uuid] = Snake.copy(snake);
+    }
     const equations = [
       ...operonMessengerRNAs.value.map((mRNA) => mRNA.buildDE()).flat(),
       ...proteins.value.map((protein) => protein.buildDE()).flat(),
     ];
     console.log(equations);
-    const runner = new Runner(equations, 0.1);
+    currentRunner = new Runner(equations, 0.1);
     for (const output of registeredOutputs) {
-      runnerOutputs.value[output] = runner.variables[output] || 0;
-      runnerOutputDefaults[output] = runner.variables[output] || 0;
+      runnerOutputs.value[output] = currentRunner.variables[output] || 0;
+      runnerOutputDefaults[output] = currentRunner.variables[output] || 0;
     }
     for (const input of registeredInputs) {
       if (typeof runnerInputs.value[input] !== "undefined") {
-        runner.variables[input] = runnerInputs.value[input];
-        if (!runner.equations[input]) {
-          runner.equations[input] = factoryEmptyFunction();
+        currentRunner.variables[input] = runnerInputs.value[input];
+        if (!currentRunner.equations[input]) {
+          currentRunner.equations[input] = factoryEmptyFunction();
         }
       } else {
-        if (typeof runner.variables[input] === "undefined") {
-          runner.variables[input] = 0;
-          if (!runner.equations[input]) {
-            runner.equations[input] = factoryEmptyFunction();
+        if (typeof currentRunner.variables[input] === "undefined") {
+          currentRunner.variables[input] = 0;
+          if (!currentRunner.equations[input]) {
+            currentRunner.equations[input] = factoryEmptyFunction();
           }
         }
-        runnerInputs.value[input] = runner.variables[input];
+        runnerInputs.value[input] = currentRunner.variables[input];
       }
     }
     const tick = () => {
+      if (!currentRunner) return;
       for (const input of registeredInputs) {
-        runner.variables[input] = runnerInputs.value[input];
+        currentRunner.variables[input] = runnerInputs.value[input];
       }
-      runner.next();
+      currentRunner.next();
       for (const output of registeredOutputs) {
-        runnerOutputs.value[output] = runner.variables[output] || 0;
+        runnerOutputs.value[output] = currentRunner.variables[output] || 0;
       }
       animationFrame = requestAnimationFrame(tick);
     };
     animationFrame = requestAnimationFrame(tick);
     isRunning.value = true;
   };
+  const updateRunner = () => {
+    if (!currentRunner) {
+      run();
+      return;
+    }
+    const equations = [
+      ...operonMessengerRNAs.value.map((mRNA) => mRNA.buildDE()).flat(),
+      ...proteins.value.map((protein) => protein.buildDE()).flat(),
+    ];
+    console.log(equations);
+    currentRunner.updateEquations(equations);
+  };
   const stop = () => {
+    snakes.value = {};
+    for (const snake of Object.values(beforePlaySnakes.value)) {
+      snakes.value[snake.uuid] = snake;
+    }
+    beforePlaySnakes.value = {};
     if (animationFrame !== null) {
       cancelAnimationFrame(animationFrame);
       animationFrame = null;
@@ -341,6 +368,7 @@ export const useStore = defineStore("main", () => {
     registerInput,
     UnregisterInput,
     run,
+    updateRunner,
     stop,
     isRunning,
     runnerOutputs,
