@@ -315,6 +315,14 @@ export class RecombinaseA extends Protein {
   }
 }
 
+export class RecombinaseB extends Protein {
+  stageSettings = [RecombinaseModifier];
+  description = "認識配列Bに挟まれた配列を切り出します。";
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+}
+
 export class Degrader implements Actor {
   buildDE(matterEquations: MatterEquations): void {
     for (const matterName of Object.keys(matterEquations)) {

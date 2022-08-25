@@ -8,6 +8,7 @@ import {
   Promoter,
   Protein,
   RecombinaseA,
+  RecombinaseB,
   RepressorA,
   T7Promoter,
 } from "./matter";
@@ -292,6 +293,22 @@ export class RecombinaseABlock extends MetaModifierBlock {
   }
 }
 
+export class RecombinaseBBlock extends MetaModifierBlock {
+  name = "RecombinaseB" as const;
+  design = new BlockDesign({
+    width: 184,
+    height: 30,
+    imageSrc: "/blocks/meta.svg",
+    displayName: "リコンビナーゼB",
+  });
+  get ProteinClass(): ProteinImpl {
+    return RecombinaseB;
+  }
+  constructor() {
+    super({});
+  }
+}
+
 export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
   name = "RecombinaseA Recognition Seq." as const;
   design = new BlockDesign({
@@ -301,9 +318,20 @@ export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
     displayName: "認識配列A",
     bottomAnchor: 30,
   });
-  get ProteinClass(): ProteinImpl {
-    return RepressorA;
+  constructor() {
+    super({});
   }
+}
+
+export class RecombinaseBRecognitionSeqBlock extends SpecialSequenceBlock {
+  name = "RecombinaseB Recognition Seq." as const;
+  design = new BlockDesign({
+    width: 131,
+    height: 90,
+    imageSrc: "/blocks/recombinase-recognition-seq.svg",
+    displayName: "認識配列B",
+    bottomAnchor: 30,
+  });
   constructor() {
     super({});
   }
