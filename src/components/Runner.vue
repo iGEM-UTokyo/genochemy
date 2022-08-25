@@ -23,18 +23,22 @@ import { RunnerComponent } from "@/utils/matter";
 import { computed, toRefs } from "vue";
 import { useStore } from "../store";
 import BlueLightSwitchVue from "./on-runner/BlueLightSwitch.vue";
+import RedLightSwitchVue from "./on-runner/RedLightSwitch.vue";
 import DrugAVue from "./on-runner/DrugA.vue";
-import LightVue from "./on-runner/Light.vue";
+import BlueLightVue from "./on-runner/BlueLight.vue";
+import RedLightVue from "./on-runner/RedLight.vue";
 
 const store = useStore();
 const { proteins } = toRefs(store);
 
 const defaultStageSettings: Record<string, RunnerComponent> = {
-  [LightVue.name]: LightVue,
+  [BlueLightVue.name]: BlueLightVue,
+  [RedLightVue.name]: RedLightVue,
 };
 const defaultGUIViews: Record<string, RunnerComponent> = {
   [DrugAVue.name]: DrugAVue,
   [BlueLightSwitchVue.name]: BlueLightSwitchVue,
+  [RedLightSwitchVue.name]: RedLightSwitchVue,
 };
 
 const stageSettings = computed(() => {

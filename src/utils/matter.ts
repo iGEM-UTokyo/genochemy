@@ -1,9 +1,11 @@
 import { CodingBlock } from "./block";
-import { DE, Term } from "./de-term";
+import { Term } from "./de-term";
 import DrugA from "@/components/on-runner/DrugA.vue";
 import BlueLightSwitch from "@/components/on-runner/BlueLightSwitch.vue";
+import RedLightSwitch from "@/components/on-runner/RedLightSwitch.vue";
 import Fluorescence from "@/components/on-runner/Fluorescence.vue";
-import Light from "@/components/on-runner/Light.vue";
+import BlueLight from "@/components/on-runner/BlueLight.vue";
+import RedLight from "@/components/on-runner/RedLight.vue";
 import RecombinaseModifier from "@/components/on-runner/RecombinaseModifier.vue";
 
 export interface RunnerComponent {
@@ -53,9 +55,8 @@ export class DrugRepressiblePromoter extends Promoter {
 }
 
 export class EL222ActivatedPromoter extends Promoter {
-  name = "青色アクチベーター結合性プロモーター";
-  description =
-    "青色アクチベーターの二量体が結合し、それにより下流の転写が促進されます。";
+  name = "EL222結合性プロモーター";
+  description = "EL222の二量体が結合し、それにより下流の転写が促進されます。";
   buildDEForMessengerRNA(): Term[] {
     return [
       {
@@ -67,6 +68,26 @@ export class EL222ActivatedPromoter extends Promoter {
         deg: { type: "const", value: 1 },
         const: { type: "const", value: 1 },
         value: { type: "variable", name: "protein-dimerized-EL222" },
+      },
+    ];
+  }
+}
+
+export class PhyBPIF3ActivatedPromoter extends Promoter {
+  name = "PhyB-PIF3結合性プロモーター";
+  description =
+    "PhyB-PIF3のヘテロ二量体が結合し、それにより下流の転写が促進されます。";
+  buildDEForMessengerRNA(): Term[] {
+    return [
+      {
+        type: "const",
+        value: 0.05,
+      },
+      {
+        type: "hill",
+        deg: { type: "const", value: 1 },
+        const: { type: "const", value: 1 },
+        value: { type: "variable", name: "protein-PhyB-PIF3" },
       },
     ];
   }
@@ -226,7 +247,7 @@ export class RepressorA extends Protein {
 }
 
 export class EL222 extends Protein {
-  stageSettings = [Light];
+  stageSettings = [BlueLight];
   guiViews = [BlueLightSwitch];
   description = "青色光によって二量体を形成します。";
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
@@ -303,6 +324,139 @@ export class EL222 extends Protein {
     );
     if (!matterEquations["blue-light"]) {
       matterEquations["blue-light"] = [];
+    }
+  }
+}
+
+export class PhyB extends Protein {
+  stageSettings = [RedLight];
+  guiViews = [RedLightSwitch];
+  description = "赤色光によってPIF3とヘテロ二量体を形成します。";
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+  buildDE(matterEquations: MatterEquations) {
+    if (!matterEquations[this.name]) {
+      matterEquations[this.name] = [];
+    }
+    matterEquations[this.name].push(
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: -1 },
+          {
+            type: "multiply",
+            values: [
+              { type: "variable", name: "red-light" },
+              {
+                type: "multiply",
+                values: [
+                  { type: "variable", name: this.name },
+                  { type: "variable", name: "protein-PIF3" },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: 0.5 },
+          {
+            type: "variable",
+            name: "protein-PhyB-PIF3",
+          },
+        ],
+      }
+    );
+    if (!matterEquations["protein-PhyB-PIF3"]) {
+      matterEquations["protein-PhyB-PIF3"] = [];
+    }
+    matterEquations["protein-PhyB-PIF3"].push(
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: 1 },
+          {
+            type: "multiply",
+            values: [
+              { type: "variable", name: "red-light" },
+              {
+                type: "multiply",
+                values: [
+                  { type: "variable", name: this.name },
+                  { type: "variable", name: "protein-PIF3" },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: -0.5 },
+          {
+            type: "variable",
+            name: "protein-PhyB-PIF3",
+          },
+        ],
+      }
+    );
+    if (!matterEquations["red-light"]) {
+      matterEquations["red-light"] = [];
+    }
+  }
+}
+
+export class PIF3 extends Protein {
+  stageSettings = [RedLight];
+  guiViews = [RedLightSwitch];
+  description = "赤色光によってPhyBとヘテロ二量体を形成します。";
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+  buildDE(matterEquations: MatterEquations) {
+    if (!matterEquations[this.name]) {
+      matterEquations[this.name] = [];
+    }
+    matterEquations[this.name].push(
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: -1 },
+          {
+            type: "multiply",
+            values: [
+              { type: "variable", name: "red-light" },
+              {
+                type: "multiply",
+                values: [
+                  { type: "variable", name: "protein-PhyB" },
+                  { type: "variable", name: this.name },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: 0.5 },
+          {
+            type: "variable",
+            name: "protein-PhyB-PIF3",
+          },
+        ],
+      }
+    );
+    if (!matterEquations["protein-PhyB-PIF3"]) {
+      matterEquations["protein-PhyB-PIF3"] = [];
+    }
+    if (!matterEquations["red-light"]) {
+      matterEquations["red-light"] = [];
     }
   }
 }

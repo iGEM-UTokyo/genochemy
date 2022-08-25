@@ -5,6 +5,9 @@ import {
   GFP,
   mCherry,
   OperonMessengerRNA,
+  PhyB,
+  PhyBPIF3ActivatedPromoter,
+  PIF3,
   Promoter,
   Protein,
   RecombinaseA,
@@ -164,9 +167,23 @@ export class EL222ActivatedPromoterBlock extends PromoterBlock {
     width: 184,
     height: 82.65,
     imageSrc: "/blocks/promoter.svg",
-    displayName: "青アクチベータ結合",
+    displayName: "EL222二量体結合",
   });
   promoter = new EL222ActivatedPromoter();
+  constructor() {
+    super({});
+  }
+}
+
+export class PhyBPIF3ActivatedPromoterBlock extends PromoterBlock {
+  name = "PhyB-PIF3 Activated Promoter" as const;
+  design = new BlockDesign({
+    width: 184,
+    height: 82.65,
+    imageSrc: "/blocks/promoter.svg",
+    displayName: "PhyB-PIF3結合",
+  });
+  promoter = new PhyBPIF3ActivatedPromoter();
   constructor() {
     super({});
   }
@@ -226,10 +243,42 @@ export class EL222Block extends VisibilityBlock {
     width: 184,
     height: 30,
     imageSrc: "/blocks/control.svg",
-    displayName: "青色アクチベーター",
+    displayName: "EL222",
   });
   get ProteinClass(): ProteinImpl {
     return EL222;
+  }
+  constructor() {
+    super({});
+  }
+}
+
+export class PhyBBlock extends VisibilityBlock {
+  name = "PhyB" as const;
+  design = new BlockDesign({
+    width: 184,
+    height: 30,
+    imageSrc: "/blocks/control.svg",
+    displayName: "PhyB",
+  });
+  get ProteinClass(): ProteinImpl {
+    return PhyB;
+  }
+  constructor() {
+    super({});
+  }
+}
+
+export class PIF3Block extends VisibilityBlock {
+  name = "PIF3" as const;
+  design = new BlockDesign({
+    width: 184,
+    height: 30,
+    imageSrc: "/blocks/control.svg",
+    displayName: "PIF3",
+  });
+  get ProteinClass(): ProteinImpl {
+    return PIF3;
   }
   constructor() {
     super({});
