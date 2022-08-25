@@ -8,14 +8,14 @@
   <img
     class="light"
     width="70"
-    src="/runner/light-on-blue.svg"
+    src="/runner/light-on-red.svg"
     :class="{ active: light }"
   />
 </template>
 
 <script lang="ts">
 export default {
-  name: "Light",
+  name: "RedLight",
   customOptions: {},
 };
 </script>
@@ -26,7 +26,7 @@ import { useStore } from "@/store";
 
 const { runnerOutputs, registerOutput, UnregisterOutput } = useStore();
 
-const outputName = "blue-light";
+const outputName = "red-light";
 registerOutput(outputName);
 onUnmounted(() => {
   UnregisterOutput(outputName);
@@ -39,7 +39,7 @@ const light = computed(() => runnerOutputs[outputName] === 1);
 .light {
   position: absolute;
   top: 50px;
-  left: 50px;
+  left: 120px;
   pointer-events: none;
   display: none;
 }
