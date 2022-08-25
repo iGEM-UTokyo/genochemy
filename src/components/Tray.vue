@@ -25,6 +25,8 @@ const blockClasses = [
   block.CYC1TerminatorBlock,
   block.RecombinaseABlock,
   block.RecombinaseARecognitionSeqBlock,
+  block.RecombinaseBBlock,
+  block.RecombinaseBRecognitionSeqBlock,
 ];
 </script>
 
