@@ -246,6 +246,7 @@ export const useStore = defineStore("main", () => {
             }
           }
           promoterBlock = null;
+          codingBlocks = [];
         } else if (block instanceof CodingBlock) {
           codingBlocks.push(block);
         }
