@@ -1,7 +1,10 @@
 <template>
   <div class="program" ref="programRef" @wheel="wheel">
     <svg style="width: 100%; height: 100%">
-      <g class="program-inner" :transform="`translate(${-scrollX})`">
+      <g
+        class="program-inner"
+        :transform="`translate(${-scrollX}, ${-scrollY})`"
+      >
         <g class="program-inner-back" />
         <SnakeVue
           v-for="snake in filteredSnakes"
@@ -16,6 +19,13 @@
         :min-x="limits[0][0]"
         :max-x="limits[1][0]"
         v-model="scrollX"
+      />
+      <VScrollBar
+        :viewportWidth="programWidth"
+        :viewportHeight="programHeight"
+        :min-y="limits[0][1]"
+        :max-y="limits[1][1]"
+        v-model="scrollY"
       />
     </svg>
     <DraggingSnake v-if="draggingSnake !== null" v-model="draggingSnake" />
@@ -39,6 +49,7 @@ import { useStore } from "../store";
 import DraggingSnake from "@/components/DraggingSnake.vue";
 import { Vector2 } from "@/utils/block";
 import ScrollBar from "@/components/ScrollBar.vue";
+import VScrollBar from "@/components/VScrollBar.vue";
 import { Snake } from "@/utils/snake";
 import SnakeVue from "@/components/Snake.vue";
 
@@ -94,6 +105,7 @@ const ro = new ResizeObserver(() => {
 });
 
 const scrollX = ref(0);
+const scrollY = ref(0);
 
 const limits = computed(() => {
   return [
@@ -111,13 +123,26 @@ const limits = computed(() => {
         ]
       : []),
   ].reduce(
-    (a, b) => [
-      [Math.min(a[0][0], b.tail[0] - 20), Math.min(a[0][1], b.tail[1] - 20)],
-      [Math.max(a[1][0], b.head[0] + 20), Math.max(a[1][1], b.head[1] + 20)],
+    (a, b, i) => [
+      [
+        Math.min(a[0][0], b.tail[0] - 20),
+        i === Object.keys(snakes.value).length
+          ? a[0][1]
+          : Math.min(a[0][1], b.tail[1] - 20),
+      ],
+      [
+        Math.max(a[1][0], b.head[0] + 20),
+        i === Object.keys(snakes.value).length
+          ? a[1][1]
+          : Math.max(a[1][1], b.head[1] + 20),
+      ],
     ],
     [
-      [Math.min(0, scrollX.value), 0],
-      [Math.max(0, scrollX.value) + programWidth.value, programHeight.value],
+      [Math.min(0, scrollX.value), Math.min(0, scrollY.value)],
+      [
+        Math.max(0, scrollX.value) + programWidth.value,
+        Math.max(0, scrollY.value) + programHeight.value,
+      ],
     ]
   );
 });
@@ -129,8 +154,16 @@ function normalizeScrollX(newScrollX: number) {
   );
 }
 
+function normalizeScrollY(newScrollY: number) {
+  return Math.min(
+    Math.max(newScrollY, limits.value[0][1]),
+    limits.value[1][1] - programHeight.value
+  );
+}
+
 watch(limits, () => {
   scrollX.value = normalizeScrollX(scrollX.value);
+  scrollY.value = normalizeScrollY(scrollY.value);
 });
 
 const scrollRate = 0.1;
@@ -169,7 +202,7 @@ function getFixedPosition(absolutePos: Vector2) {
   const boundingRect = programRef.value.getBoundingClientRect();
   return [
     absolutePos[0] + boundingRect.x - scrollX.value,
-    absolutePos[1] + boundingRect.y,
+    absolutePos[1] + boundingRect.y - scrollY.value,
   ];
 }
 provide(getFixedPositionKey, getFixedPosition);
@@ -181,7 +214,7 @@ function getAbsolutePosition(fixedPos: DeepReadonly<Vector2>) {
   const boundingRect = programRef.value.getBoundingClientRect();
   return [
     fixedPos[0] - boundingRect.x + scrollX.value,
-    fixedPos[1] - boundingRect.y,
+    fixedPos[1] - boundingRect.y + scrollY.value,
   ];
 }
 provide(getAbsolutePositionKey, getAbsolutePosition);
@@ -197,6 +230,7 @@ provide(willBeDeletedKey, (fixedPos: DeepReadonly<Vector2>) => {
 function wheel(e: WheelEvent) {
   e.preventDefault();
   scrollX.value = normalizeScrollX(scrollX.value + e.deltaX);
+  scrollY.value = normalizeScrollX(scrollY.value + e.deltaY);
 }
 </script>
 
