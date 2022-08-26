@@ -3,6 +3,7 @@ import {
   EL222,
   EL222ActivatedPromoter,
   GFP,
+  KillSwitch,
   mCherry,
   OperonMessengerRNA,
   PhyB,
@@ -381,6 +382,22 @@ export class RecombinaseBRecognitionSeqBlock extends SpecialSequenceBlock {
     displayName: "認識配列Ⅱ",
     bottomAnchor: 30,
   });
+  constructor() {
+    super({});
+  }
+}
+
+export class KillSwitchBlock extends MetaModifierBlock {
+  name = "KillSwitch" as const;
+  design = new BlockDesign({
+    width: 184,
+    height: 30,
+    imageSrc: "/blocks/meta.svg",
+    displayName: "キルスイッチ",
+  });
+  get ProteinClass(): ProteinImpl {
+    return KillSwitch;
+  }
   constructor() {
     super({});
   }

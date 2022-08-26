@@ -30,6 +30,7 @@ const blockClasses = [
   block.RecombinaseARecognitionSeqBlock,
   block.RecombinaseBBlock,
   block.RecombinaseBRecognitionSeqBlock,
+  block.KillSwitchBlock,
 ];
 </script>
 
