@@ -29,7 +29,7 @@ export type Snakes = Record<string, Snake>;
 export const useStore = defineStore("main", () => {
   const snakes = ref<Snakes>({});
   const beforePlaySnakes = ref<Snakes>({});
-  let currentRunner: Runner | null = null;
+  const currentRunner = ref<Runner | null>(null);
   const draggingSnake = ref<Snake | null>(null);
   const addTempBlock = (block: Block, anchorTail: Vector2) => {
     setUUID(block, uuidv4());
@@ -313,35 +313,36 @@ export const useStore = defineStore("main", () => {
       actor.buildDE(matterEquations);
     }
     console.log(matterEquations);
-    currentRunner = new Runner(matterEquations, 0.1);
+    currentRunner.value = new Runner(matterEquations, 0.1);
     for (const output of registeredOutputs) {
-      runnerOutputs.value[output] = currentRunner.variables[output] || 0;
-      runnerOutputDefaults[output] = currentRunner.variables[output] || 0;
+      runnerOutputs.value[output] = currentRunner.value.variables[output] || 0;
+      runnerOutputDefaults[output] = currentRunner.value.variables[output] || 0;
     }
     for (const input of registeredInputs) {
       if (typeof runnerInputs.value[input] !== "undefined") {
-        currentRunner.variables[input] = runnerInputs.value[input];
-        if (!currentRunner.equations[input]) {
-          currentRunner.equations[input] = factoryEmptyFunction();
+        currentRunner.value.variables[input] = runnerInputs.value[input];
+        if (!currentRunner.value.equations[input]) {
+          currentRunner.value.equations[input] = factoryEmptyFunction();
         }
       } else {
-        if (typeof currentRunner.variables[input] === "undefined") {
-          currentRunner.variables[input] = 0;
-          if (!currentRunner.equations[input]) {
-            currentRunner.equations[input] = factoryEmptyFunction();
+        if (typeof currentRunner.value.variables[input] === "undefined") {
+          currentRunner.value.variables[input] = 0;
+          if (!currentRunner.value.equations[input]) {
+            currentRunner.value.equations[input] = factoryEmptyFunction();
           }
         }
-        runnerInputs.value[input] = currentRunner.variables[input];
+        runnerInputs.value[input] = currentRunner.value.variables[input];
       }
     }
     const tick = () => {
-      if (!currentRunner) return;
+      if (!currentRunner.value) return;
       for (const input of registeredInputs) {
-        currentRunner.variables[input] = runnerInputs.value[input];
+        currentRunner.value.variables[input] = runnerInputs.value[input];
       }
-      currentRunner.next();
+      currentRunner.value.next();
       for (const output of registeredOutputs) {
-        runnerOutputs.value[output] = currentRunner.variables[output] || 0;
+        runnerOutputs.value[output] =
+          currentRunner.value.variables[output] || 0;
       }
       animationFrame = requestAnimationFrame(tick);
     };
@@ -349,7 +350,7 @@ export const useStore = defineStore("main", () => {
     isRunning.value = true;
   };
   const updateRunner = () => {
-    if (!currentRunner) {
+    if (!currentRunner.value) {
       run();
       return;
     }
@@ -363,14 +364,14 @@ export const useStore = defineStore("main", () => {
     actors.push(...proteins.value);
     actors.push(new Degrader());
     const matterEquations: MatterEquations = {};
-    for (const existMatterName of currentRunner.matterNames) {
+    for (const existMatterName of currentRunner.value.matterNames) {
       matterEquations[existMatterName] = [];
     }
     for (const actor of actors) {
       actor.buildDE(matterEquations);
     }
     console.log(matterEquations);
-    currentRunner.updateEquations(matterEquations);
+    currentRunner.value.updateEquations(matterEquations);
   };
   const stop = () => {
     snakes.value = {};
@@ -420,6 +421,7 @@ export const useStore = defineStore("main", () => {
     updateRunner,
     stop,
     isRunning,
+    currentRunner,
     runnerOutputs,
     runnerInputs: readonly(runnerInputs),
     updateRunnerInput,
