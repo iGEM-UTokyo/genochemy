@@ -11,8 +11,8 @@
         />
       </g>
       <ScrollBar
-        :viewportWidth="programRef?.clientWidth ?? 0"
-        :viewportHeight="programRef?.clientHeight ?? 0"
+        :viewportWidth="programWidth"
+        :viewportHeight="programHeight"
         :min-x="limits[0][0]"
         :max-x="limits[1][0]"
         v-model="scrollX"
@@ -73,14 +73,29 @@ const filteredSnakes = computed(() =>
 
 const programRef: Ref<HTMLElement | null> = ref(null);
 
+const programWidth = ref(0);
+const programHeight = ref(0);
+
+watch(programRef, (_, prevProgramRef) => {
+  if (!prevProgramRef && programRef.value) {
+    ro.observe(programRef.value);
+  }
+  if (programRef.value) {
+    programWidth.value = programRef.value.clientWidth;
+    programHeight.value = programRef.value.clientHeight;
+  }
+});
+
+const ro = new ResizeObserver(() => {
+  if (programRef.value) {
+    programWidth.value = programRef.value.clientWidth;
+    programHeight.value = programRef.value.clientHeight;
+  }
+});
+
 const scrollX = ref(0);
 
 const limits = computed(() => {
-  if (!programRef.value)
-    return [
-      [0, 0],
-      [0, 0],
-    ];
   return [
     ...Object.values(snakes.value).flatMap<
       DeepReadonly<{ tail: Vector2; head: Vector2 }>
@@ -102,10 +117,7 @@ const limits = computed(() => {
     ],
     [
       [Math.min(0, scrollX.value), 0],
-      [
-        Math.max(0, scrollX.value) + programRef.value.clientWidth,
-        programRef.value.clientHeight,
-      ],
+      [Math.max(0, scrollX.value) + programWidth.value, programHeight.value],
     ]
   );
 });
