@@ -327,12 +327,12 @@ export class WrapTailBlock extends Block {
 }
 
 export class RecombinaseABlock extends MetaModifierBlock {
-  name = "RecombinaseA" as const;
+  name = "RecombinaseI" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
     imageSrc: "/blocks/meta.svg",
-    displayName: "リコンビナーゼA",
+    displayName: "リコンビナーゼⅠ",
   });
   get ProteinClass(): ProteinImpl {
     return RecombinaseA;
@@ -343,12 +343,12 @@ export class RecombinaseABlock extends MetaModifierBlock {
 }
 
 export class RecombinaseBBlock extends MetaModifierBlock {
-  name = "RecombinaseB" as const;
+  name = "RecombinaseII" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
     imageSrc: "/blocks/meta.svg",
-    displayName: "リコンビナーゼB",
+    displayName: "リコンビナーゼⅡ",
   });
   get ProteinClass(): ProteinImpl {
     return RecombinaseB;
@@ -359,12 +359,12 @@ export class RecombinaseBBlock extends MetaModifierBlock {
 }
 
 export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
-  name = "RecombinaseA Recognition Seq." as const;
+  name = "RecombinaseI Recognition Seq." as const;
   design = new BlockDesign({
     width: 131,
     height: 90,
     imageSrc: "/blocks/recombinase-recognition-seq.svg",
-    displayName: "認識配列A",
+    displayName: "認識配列Ⅰ",
     bottomAnchor: 30,
   });
   constructor() {
@@ -373,12 +373,12 @@ export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
 }
 
 export class RecombinaseBRecognitionSeqBlock extends SpecialSequenceBlock {
-  name = "RecombinaseB Recognition Seq." as const;
+  name = "RecombinaseII Recognition Seq." as const;
   design = new BlockDesign({
     width: 131,
     height: 90,
     imageSrc: "/blocks/recombinase-recognition-seq.svg",
-    displayName: "認識配列B",
+    displayName: "認識配列Ⅱ",
     bottomAnchor: 30,
   });
   constructor() {

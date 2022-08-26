@@ -463,7 +463,7 @@ export class PIF3 extends Protein {
 
 export class RecombinaseA extends Protein {
   stageSettings = [RecombinaseModifier];
-  description = "認識配列Aに挟まれた配列を切り出します。";
+  description = "認識配列Iに挟まれた配列を切り出します。";
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -471,7 +471,7 @@ export class RecombinaseA extends Protein {
 
 export class RecombinaseB extends Protein {
   stageSettings = [RecombinaseModifier];
-  description = "認識配列Bに挟まれた配列を切り出します。";
+  description = "認識配列IIに挟まれた配列を切り出します。";
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
