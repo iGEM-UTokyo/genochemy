@@ -128,7 +128,7 @@ export class Snake {
     let foundFlag = false;
     for (const block of this.blocks) {
       headX += block.design.width - overlap;
-      if ((block.uuid = blockUUID)) {
+      if (block.uuid === blockUUID) {
         foundFlag = true;
         break;
       }
