@@ -7,7 +7,7 @@
         :is="setting"
       />
     </div>
-    <img src="/runner/bacterium.svg" class="bacterium" />
+    <img :src="genomyImg" class="bacterium" />
     <div class="gui">
       <component
         v-for="(guiView, index) of guiViews"
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { RunnerComponent } from "@/utils/matter";
-import { computed, toRefs } from "vue";
+import { computed, onUnmounted, toRefs } from "vue";
 import { useStore } from "../store";
 import BlueLightSwitchVue from "./on-runner/BlueLightSwitch.vue";
 import RedLightSwitchVue from "./on-runner/RedLightSwitch.vue";
@@ -29,7 +29,8 @@ import BlueLightVue from "./on-runner/BlueLight.vue";
 import RedLightVue from "./on-runner/RedLight.vue";
 
 const store = useStore();
-const { proteins } = toRefs(store);
+const { registerOutput, UnregisterOutput } = store;
+const { proteins, runnerOutputs } = toRefs(store);
 
 const defaultStageSettings: Record<string, RunnerComponent> = {
   [BlueLightVue.name]: BlueLightVue,
@@ -63,6 +64,17 @@ const guiViews = computed(() => {
   }
   return Object.values(_guiViews);
 });
+
+registerOutput("kill");
+onUnmounted(() => {
+  UnregisterOutput("kill");
+});
+
+const genomyImg = computed(() =>
+  runnerOutputs.value["kill"] === 1
+    ? "/runner/killed-bacterium.svg"
+    : "/runner/bacterium.svg"
+);
 </script>
 
 <style scoped>

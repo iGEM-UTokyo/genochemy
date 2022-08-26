@@ -7,6 +7,7 @@ import Fluorescence from "@/components/on-runner/Fluorescence.vue";
 import BlueLight from "@/components/on-runner/BlueLight.vue";
 import RedLight from "@/components/on-runner/RedLight.vue";
 import RecombinaseModifier from "@/components/on-runner/RecombinaseModifier.vue";
+import KillSwitchVue from "@/components/on-runner/KillSwitch.vue";
 
 export interface RunnerComponent {
   name: string;
@@ -472,6 +473,14 @@ export class RecombinaseA extends Protein {
 export class RecombinaseB extends Protein {
   stageSettings = [RecombinaseModifier];
   description = "認識配列IIに挟まれた配列を切り出します。";
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+}
+
+export class KillSwitch extends Protein {
+  stageSettings = [KillSwitchVue];
+  description = "標的生物を死滅させます。";
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }

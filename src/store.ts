@@ -395,6 +395,11 @@ export const useStore = defineStore("main", () => {
   const updateRunnerInput = (input: string, value: number) => {
     runnerInputs.value[input] = value;
   };
+  const kill = () => {
+    if (isRunning.value && currentRunner.value) {
+      currentRunner.value.kill();
+    }
+  };
   return {
     snakes: readonly(snakes),
     draggingSnake,
@@ -425,5 +430,6 @@ export const useStore = defineStore("main", () => {
     runnerOutputs,
     runnerInputs: readonly(runnerInputs),
     updateRunnerInput,
+    kill,
   };
 });

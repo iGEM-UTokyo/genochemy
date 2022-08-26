@@ -52,6 +52,9 @@ export default class Runner {
       this.variables[target] = 0; // todo
       this.equations[target] = factoryFunction(equations[target]);
     }
+    // special variables
+    this.equations["kill"] = factoryEmptyFunction();
+    this.variables["kill"] = 0;
   }
   updateEquations(equations: MatterEquations) {
     for (const target of Object.keys(equations)) {
@@ -102,5 +105,14 @@ export default class Runner {
   }
   get matterNames() {
     return Object.keys(this.variables);
+  }
+  kill() {
+    for (const equationName of Object.keys(this.equations)) {
+      this.equations[equationName] = factoryEmptyFunction();
+    }
+    for (const varName of Object.keys(this.variables)) {
+      this.variables[varName] = 0;
+    }
+    this.variables["kill"] = 1;
   }
 }
