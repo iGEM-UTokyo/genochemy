@@ -125,7 +125,7 @@ const limits = computed(() => {
 function normalizeScrollX(newScrollX: number) {
   return Math.min(
     Math.max(newScrollX, limits.value[0][0]),
-    limits.value[1][0] - (programRef.value?.clientWidth ?? 0)
+    limits.value[1][0] - programWidth.value
   );
 }
 
@@ -137,14 +137,13 @@ const scrollRate = 0.1;
 let requestAnimationFrameId: number | null = null;
 function checkBorder() {
   requestAnimationFrameId = null;
-  if (!programRef.value) return;
   if (!draggingSnake.value || !draggingSnake.value.grabbingBlockUUID) return;
   const blockBoundary = draggingSnake.value.getBlockBoundary(
     draggingSnake.value.grabbingBlockUUID
   );
   if (!blockBoundary) return;
   const positiveX =
-    blockBoundary.headX - (scrollX.value + programRef.value.clientWidth + 5);
+    blockBoundary.headX - (scrollX.value + programWidth.value + 5);
   const negativeX = scrollX.value - 5 - blockBoundary.tailX;
   if (positiveX > 0) {
     scrollX.value += positiveX * scrollRate;

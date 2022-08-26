@@ -46,6 +46,7 @@ main {
   display: flex;
   flex-direction: column;
   position: relative;
+  user-select: none;
 }
 .toggle-right {
   position: absolute;
