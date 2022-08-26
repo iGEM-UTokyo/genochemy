@@ -47,7 +47,7 @@ export class DrugRepressiblePromoter extends Promoter {
       {
         type: "hillrev",
         deg: { type: "const", value: 1 },
-        const: { type: "const", value: 1 },
+        const: { type: "const", value: 0.1 },
         value: { type: "variable", name: "protein-Repressor-bound" },
       },
     ];
@@ -191,7 +191,7 @@ export class RepressorA extends Protein {
       {
         type: "multiply",
         values: [
-          { type: "const", value: -1 },
+          { type: "const", value: -2 },
           {
             type: "multiply",
             values: [
@@ -204,7 +204,7 @@ export class RepressorA extends Protein {
       {
         type: "multiply",
         values: [
-          { type: "const", value: 0.5 },
+          { type: "const", value: 0.1 },
           {
             type: "variable",
             name: "protein-Repressor-bound",
@@ -219,7 +219,7 @@ export class RepressorA extends Protein {
       {
         type: "multiply",
         values: [
-          { type: "const", value: 1 },
+          { type: "const", value: 2 },
           {
             type: "multiply",
             values: [
@@ -232,7 +232,7 @@ export class RepressorA extends Protein {
       {
         type: "multiply",
         values: [
-          { type: "const", value: -0.5 },
+          { type: "const", value: -0.1 },
           {
             type: "variable",
             name: "protein-Repressor-bound",
