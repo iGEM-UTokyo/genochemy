@@ -4,9 +4,13 @@
       <Program />
       <Tray />
     </div>
-    <div class="right">
-      <Runner />
-      <Property />
+    <div :class="{ right: true, show: showRight }">
+      <div class="toggle-right" @click="toggle">
+        <font-awesome-icon :icon="showRight ? 'arrow-down' : 'arrow-up'" />
+        {{ showRight ? "隠す" : "表示する" }}
+      </div>
+      <Runner v-if="showRight" />
+      <Property v-if="showRight" />
     </div>
   </main>
 </template>
@@ -16,6 +20,13 @@ import Tray from "./components/Tray.vue";
 import Program from "./components/Program.vue";
 import Runner from "@/components/Runner.vue";
 import Property from "@/components/Property.vue";
+import { ref } from "vue";
+
+const showRight = ref(true);
+
+function toggle() {
+  showRight.value = !showRight.value;
+}
 </script>
 
 <style scoped>
@@ -25,18 +36,33 @@ main {
   font-family: "Zen Maru Gothic", sans-serif;
 }
 .left {
-  width: calc(100vw - 500px);
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
 .right {
-  width: 500px;
+  width: 0px;
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+.toggle-right {
+  position: absolute;
+  top: 0;
+  width: 100px;
+  text-align: center;
+  border: 1px solid #aaa;
+  transform-origin: bottom right;
+  transform: translate(-100%, -100%) rotate(-90deg);
+  white-space: no-wrap;
+  background-color: white;
 }
 .properties {
   flex: 1;
   margin: auto;
+}
+.right.show {
+  width: 500px;
 }
 </style>
