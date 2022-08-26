@@ -29,16 +29,19 @@ const {
 
 const recombinases = [
   {
-    name: "protein-RecombinaseA",
+    name: "protein-RecombinaseI",
     recogSeqBlock: RecombinaseARecognitionSeqBlock,
   },
   {
-    name: "protein-RecombinaseB",
+    name: "protein-RecombinaseII",
     recogSeqBlock: RecombinaseBRecognitionSeqBlock,
   },
 ] as const;
 
-const { isRunning, snakes } = toRefs(store);
+const { isRunning, snakes, currentRunner } = toRefs(store);
+watch(currentRunner, () => {
+  p2Count = 0;
+});
 
 for (const recombinase of recombinases) {
   registerOutput(recombinase.name);
@@ -50,12 +53,14 @@ onUnmounted(() => {
 });
 
 let requestAnimationFrameId: number | null = null;
+const p2DetermineThreshold = 0.0065;
+let p2Count = 0;
 function tick() {
   requestAnimationFrameId = null;
   if (!isRunning.value) return;
   for (const recombinase of recombinases) {
     const p1 = 1 - Math.exp(-runnerOutputs[recombinase.name] * 0.002);
-    const p2 = 1 - Math.exp(-runnerOutputs[recombinase.name] * 0.005);
+    const p2 = 1 - Math.exp(-runnerOutputs[recombinase.name] * 0.007);
     const rand = Math.random();
     if (rand <= p1) {
       const recogSeqUUIDs: {
@@ -98,7 +103,7 @@ function tick() {
         }
         updateRunner();
       }
-    } else if (rand <= p2) {
+    } else if (rand <= p2 || p2Count === Math.floor(1 / p2DetermineThreshold)) {
       const recogSeqUUIDs: { [snakeUUID: string]: number[] } = {};
       for (const snake of Object.values(snakes.value)) {
         if (snake.isLoop) continue;
@@ -134,6 +139,9 @@ function tick() {
         );
         updateRunner();
       }
+    }
+    if (p2 >= p2DetermineThreshold) {
+      p2Count++;
     }
   }
   requestAnimationFrameId = requestAnimationFrame(tick);
