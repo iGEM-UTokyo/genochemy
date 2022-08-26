@@ -121,7 +121,7 @@ watch(limits, () => {
   scrollX.value = normalizeScrollX(scrollX.value);
 });
 
-const scrollRate = 0.3;
+const scrollRate = 0.1;
 let requestAnimationFrameId: number | null = null;
 function checkBorder() {
   requestAnimationFrameId = null;
