@@ -179,11 +179,32 @@ export const useStore = defineStore("main", () => {
     const newSnakeUUID = uuidv4();
     const tail = new WrapHeadBlock(newSnakeUUID);
     const head = new WrapTailBlock(newSnakeUUID);
-    snakes.value[newSnakeUUID] = new Snake({
+    const newSnake = new Snake({
       uuid: newSnakeUUID,
       blocks: [tail, ...cutBlocks, head],
       anchorTail,
     });
+    for (let i = 0; i < 5; i++) {
+      let moveY = 0;
+      for (const snake of Object.values(snakes.value)) {
+        if (
+          snake.anchorTail[0] <= newSnake.anchorNext[0] &&
+          newSnake.anchorTail[0] <= snake.anchorNext[0] &&
+          snake.anchorTail[1] - snake.height <= newSnake.anchorTail[1] &&
+          newSnake.anchorTail[1] - newSnake.height <= snake.anchorTail[1]
+        ) {
+          moveY = Math.max(
+            moveY,
+            snake.anchorTail[1] - newSnake.anchorTail[1] + newSnake.height
+          );
+        }
+      }
+      if (moveY === 0) {
+        break;
+      }
+      anchorTail[1] += moveY;
+    }
+    snakes.value[newSnakeUUID] = newSnake;
   };
   const recombineTwoSnakes = (
     snakeUUID1: string,
