@@ -101,10 +101,10 @@ let tailAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
 // non-reactive. updated on mousedown
 let headAnchors: { pos: Readonly<Vector2>; uuid: string }[] = [];
 const down = () => {
-  window.addEventListener("mousemove", mousemove);
-  window.addEventListener("mouseup", mouseup);
-  window.addEventListener("touchmove", touchmove);
-  window.addEventListener("touchend", touchend);
+  window.addEventListener("pointermove", mousemove);
+  window.addEventListener("pointerup", mouseup);
+  // window.addEventListener("touchmove", touchmove);
+  // window.addEventListener("touchend", touchend);
   tailAnchors = [];
   headAnchors = [];
   for (let snake of Object.values(snakes)) {
@@ -234,10 +234,10 @@ const touchend = () => {
   up();
 };
 const up = () => {
-  window.removeEventListener("mousemove", mousemove);
-  window.removeEventListener("mouseup", mouseup);
-  window.removeEventListener("touchmove", touchmove);
-  window.removeEventListener("touchend", touchend);
+  window.removeEventListener("pointermove", mousemove);
+  window.removeEventListener("pointerup", mouseup);
+  // window.removeEventListener("touchmove", touchmove);
+  // window.removeEventListener("touchend", touchend);
   previousTouch = null;
 
   if (
