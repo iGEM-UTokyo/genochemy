@@ -34,6 +34,7 @@ main {
   height: 100%;
   display: flex;
   font-family: "Zen Maru Gothic", sans-serif;
+  touch-action: none;
 }
 .left {
   flex: 1;

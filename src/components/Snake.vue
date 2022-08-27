@@ -3,9 +3,9 @@
     <g :transform="`translate(${x}, ${y})`" @click="click">
       <Block
         v-for="[x, block] in blockWithPosition"
-        @mousedown="mousedown(block.uuid)"
-        @touchstart="mousedown(block.uuid)"
-        @mousemove="mousemove(block.uuid)"
+        @pointerdown="mousedown(block.uuid)"
+        @pointermove="mousemove(block.uuid)"
+        @pointerup="mouseup(block.uuid)"
         :key="block.uuid"
         :block="block"
         :x="x"
@@ -67,7 +67,9 @@ const wrapInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
 });
 let touchingBlockUUID: string | null = null;
 let timeoutId: number | null = null;
+let isDown = false;
 const mousedown = (blockUUID: string) => {
+  isDown = true;
   if (touchingBlockUUID !== null) {
     if (timeoutId !== null) {
       clearTimeout(timeoutId);
@@ -78,17 +80,24 @@ const mousedown = (blockUUID: string) => {
     touchingBlockUUID = blockUUID;
     timeoutId = setTimeout(() => {
       touchingBlockUUID = null;
-      down(blockUUID);
+      if (isDown) {
+        down(blockUUID);
+      }
     }, 350);
   }
+};
+const mouseup = (blockUUID: string) => {
+  isDown = false;
 };
 const mousemove = (blockUUID: string) => {
   if (touchingBlockUUID !== null) {
     if (timeoutId !== null) {
       clearTimeout(timeoutId);
     }
-    touchingBlockUUID = null;
-    down(blockUUID);
+    if (isDown) {
+      touchingBlockUUID = null;
+      down(blockUUID);
+    }
   }
 };
 
