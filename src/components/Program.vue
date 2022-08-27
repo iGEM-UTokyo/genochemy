@@ -29,7 +29,7 @@
       />
     </svg>
     <DraggingSnake v-if="draggingSnake !== null" v-model="draggingSnake" />
-    <CursorMode v-model="cursorMode" />
+    <!-- <CursorMode v-model="cursorMode" /> -->
     <div class="running" v-if="isRunning" />
   </div>
 </template>
