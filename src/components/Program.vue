@@ -110,31 +110,41 @@ const scrollY = ref(0);
 const limits = computed(() => {
   return [
     ...Object.values(snakes.value).flatMap<
-      DeepReadonly<{ tail: Vector2; head: Vector2 }>
+      DeepReadonly<{
+        tail: Vector2;
+        head: Vector2;
+        height: number;
+        isDragging: boolean;
+      }>
     >((snake) =>
-      snake.visible ? { tail: snake.anchorTail, head: snake.anchorNext } : []
+      snake.visible
+        ? {
+            tail: snake.anchorTail,
+            head: snake.anchorNext,
+            height: snake.height,
+            isDragging: false,
+          }
+        : []
     ),
     ...(draggingSnake.value
       ? [
           {
             tail: draggingSnake.value.anchorTail,
             head: draggingSnake.value.anchorNext,
+            height: draggingSnake.value.height,
+            isDragging: true,
           },
         ]
       : []),
   ].reduce(
-    (a, b, i) => [
+    (a, b) => [
       [
         Math.min(a[0][0], b.tail[0] - 20),
-        i === Object.keys(snakes.value).length
-          ? a[0][1]
-          : Math.min(a[0][1], b.tail[1] - 20),
+        b.isDragging ? a[0][1] : Math.min(a[0][1], b.tail[1] - b.height - 20),
       ],
       [
         Math.max(a[1][0], b.head[0] + 20),
-        i === Object.keys(snakes.value).length
-          ? a[1][1]
-          : Math.max(a[1][1], b.head[1] + 20),
+        b.isDragging ? a[1][1] : Math.max(a[1][1], b.tail[1] + 20),
       ],
     ],
     [
@@ -230,7 +240,7 @@ provide(willBeDeletedKey, (fixedPos: DeepReadonly<Vector2>) => {
 function wheel(e: WheelEvent) {
   e.preventDefault();
   scrollX.value = normalizeScrollX(scrollX.value + e.deltaX);
-  scrollY.value = normalizeScrollX(scrollY.value + e.deltaY);
+  scrollY.value = normalizeScrollY(scrollY.value + e.deltaY);
 }
 </script>
 
