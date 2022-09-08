@@ -2,7 +2,7 @@
   <div class="tray">
     <div class="tray-inner">
       <TrayBlock
-        v-for="(blockClass, index) in blockClasses"
+        v-for="(blockClass, index) in allFinalBlockClasses"
         :key="index"
         :block-class="blockClass"
       />
@@ -12,26 +12,7 @@
 
 <script setup lang="ts">
 import TrayBlock from "./TrayBlock.vue";
-import * as block from "@/utils/block";
-
-const blockClasses = [
-  block.T7PromoterBlock,
-  block.DrugRepressiblePromoterBlock,
-  block.EL222ActivatedPromoterBlock,
-  block.PhyBPIF3ActivatedPromoterBlock,
-  block.MCherryBlock,
-  block.GFPBlock,
-  block.RepressorBlock,
-  block.EL222Block,
-  block.PhyBBlock,
-  block.PIF3Block,
-  block.CYC1TerminatorBlock,
-  block.RecombinaseABlock,
-  block.RecombinaseARecognitionSeqBlock,
-  block.RecombinaseBBlock,
-  block.RecombinaseBRecognitionSeqBlock,
-  block.KillSwitchBlock,
-];
+import { allFinalBlockClasses } from "@/utils/block";
 </script>
 
 <style scoped>

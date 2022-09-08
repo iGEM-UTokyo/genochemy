@@ -40,6 +40,16 @@ export class Snake {
       return prev + current.design.width - overlap;
     }, 0);
   }
+  get upLimit() {
+    let upLimit = 0;
+    for (const block of this.blocks) {
+      upLimit = Math.max(
+        block.design.height - block.design.bottomAnchor,
+        upLimit
+      );
+    }
+    return upLimit;
+  }
   get height() {
     let upLimit = 0;
     let downLimit = 0;

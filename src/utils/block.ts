@@ -402,3 +402,62 @@ export class KillSwitchBlock extends MetaModifierBlock {
     super({});
   }
 }
+
+export const allFinalBlockClasses: FinalBlock[] = [
+  T7PromoterBlock,
+  DrugRepressiblePromoterBlock,
+  EL222ActivatedPromoterBlock,
+  PhyBPIF3ActivatedPromoterBlock,
+  MCherryBlock,
+  GFPBlock,
+  RepressorBlock,
+  EL222Block,
+  PhyBBlock,
+  PIF3Block,
+  CYC1TerminatorBlock,
+  RecombinaseABlock,
+  RecombinaseARecognitionSeqBlock,
+  RecombinaseBBlock,
+  RecombinaseBRecognitionSeqBlock,
+  KillSwitchBlock,
+];
+
+export function uniqueNameToBlock(uniqueName: string): Block {
+  switch (uniqueName) {
+    case "prom-const-1":
+      return new T7PromoterBlock();
+    case "prom-repr-DrugA":
+      return new DrugRepressiblePromoterBlock();
+    case "prom-activ-EL222dim":
+      return new EL222ActivatedPromoterBlock();
+    case "prom-activ-PhyBPIF3":
+      return new PhyBPIF3ActivatedPromoterBlock();
+    case "visi-mCherry":
+      return new MCherryBlock();
+    case "visi-GFP":
+      return new GFPBlock();
+    case "ctrl-DrugA":
+      return new RepressorBlock();
+    case "ctrl-EL222":
+      return new EL222Block();
+    case "ctrl-PhyB":
+      return new PhyBBlock();
+    case "ctrl-PIF3":
+      return new PIF3Block();
+    case "term-1":
+      return new CYC1TerminatorBlock();
+    // todo
+    case "meta-recomb1":
+      return new RecombinaseABlock();
+    case "meta-recomb2":
+      return new RecombinaseBBlock();
+    case "seq-recog-recomb1":
+      return new RecombinaseARecognitionSeqBlock();
+    case "seq-recog-recomb2":
+      return new RecombinaseBRecognitionSeqBlock();
+    case "meta-kill":
+      return new KillSwitchBlock();
+    default:
+      throw new Error(`invalid unique name: ${uniqueName}`);
+  }
+}

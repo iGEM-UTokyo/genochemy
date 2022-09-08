@@ -45,8 +45,10 @@ export const useStore = defineStore("main", () => {
   const clearDraggingSnake = () => {
     draggingSnake.value = null;
   };
-  const addSnake = (snake: Snake) => {
-    snakes.value[snake.uuid] = snake;
+  const addSnake = (..._snakes: Snake[]) => {
+    for (const snake of _snakes) {
+      snakes.value[snake.uuid] = snake;
+    }
   };
   const updateSnake = (snake: Snake) => {
     if (!snakes.value[snake.uuid]) {
