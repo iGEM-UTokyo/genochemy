@@ -1,6 +1,6 @@
 <template>
   <div class="tabs-container">
-    <tabs :tabs="['Protein', 'RNA', 'Load']" v-model="activeTab">
+    <tabs :tabs="['Protein', 'RNA', 'Questions', 'Load']" v-model="activeTab">
       <div class="tab-button" @click="run">
         <font-awesome-icon :icon="store.isRunning ? 'rotate-left' : 'play'" />
       </div>
@@ -11,6 +11,7 @@
     <div class="tab">
       <tab-messenger-r-n-a v-if="activeTab === 'RNA'" />
       <tab-protein v-if="activeTab === 'Protein'" />
+      <tab-questions v-if="activeTab === 'Questions'" />
       <tab-load v-if="activeTab === 'Load'" />
     </div>
   </div>
@@ -22,6 +23,7 @@ import { useStore } from "@/store";
 import Tabs from "@/components/Tabs.vue";
 import TabMessengerRNA from "@/components/TabMessengerRNA.vue";
 import TabProtein from "@/components/TabProtein.vue";
+import TabQuestions from "@/components/TabQuestions.vue";
 import TabLoad from "@/components/TabLoad.vue";
 
 const store = useStore();
