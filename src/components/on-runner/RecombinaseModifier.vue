@@ -166,4 +166,7 @@ watch(isRunning, () => {
     tick();
   }
 });
+if (isRunning.value && requestAnimationFrameId === null) {
+  tick();
+}
 </script>
