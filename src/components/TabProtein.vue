@@ -54,11 +54,8 @@ const activeProteinMessengerRNAs = computed(() => {
   width: 100px;
 }
 .tab-content {
-  flex: 1;
-  padding: 10px 0;
   display: flex;
   align-items: stretch;
-  overflow: hidden;
 }
 .protein-settings {
   flex: 1;
