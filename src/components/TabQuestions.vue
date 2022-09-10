@@ -33,6 +33,7 @@
           >▶</span
         >
       </p>
+      <button @click="showAnswer">Show Answer</button>
     </div>
   </div>
 </template>
@@ -40,6 +41,10 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import questions from "@/utils/questions";
+import { useStore } from "@/store";
+import importJson from "@/utils/importer";
+
+const { addSnake } = useStore();
 
 const questionNumber = ref(0);
 const currentQuestion = computed(() => questions[questionNumber.value]);
@@ -64,6 +69,9 @@ function incrementImage() {
 function decrementImage() {
   if (imageNumber.value <= 0) return;
   imageNumber.value--;
+}
+function showAnswer() {
+  addSnake(...importJson(currentQuestion.value.answer));
 }
 </script>
 
