@@ -1,6 +1,7 @@
 <template>
   <div
     :class="{ 'icon-button': true, active: props.active }"
+    :style="style"
     @click="emit('click')"
   >
     <slot />
@@ -8,13 +9,19 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits, computed } from "vue";
 const props = defineProps<{
   active?: boolean;
+  backgroundColor?: string;
+  color?: string;
 }>();
 const emit = defineEmits<{
   (e: "click"): void;
 }>();
+const style = computed(() => ({
+  ...(props.backgroundColor ? { backgroundColor: props.backgroundColor } : {}),
+  ...(props.color ? { color: props.color } : {}),
+}));
 </script>
 
 <style scoped>

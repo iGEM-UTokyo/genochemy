@@ -69,6 +69,7 @@ export abstract class Block {
   abstract type: BlockTypes;
   abstract name: string;
   abstract design: BlockDesign;
+  abstract uniqueName: string;
   uuid?: string;
   constructor(args: Pick<Block, "uuid">) {
     this.uuid = args.uuid;
@@ -136,6 +137,7 @@ export type ProteinImpl = {
 
 export class T7PromoterBlock extends PromoterBlock {
   name = "T7 promoter" as const;
+  uniqueName = "prom-const-1" as const;
   design = new BlockDesign({
     width: 184,
     height: 82.65,
@@ -150,6 +152,7 @@ export class T7PromoterBlock extends PromoterBlock {
 
 export class DrugRepressiblePromoterBlock extends PromoterBlock {
   name = "Drug Repressible Promoter" as const;
+  uniqueName = "prom-repr-DrugA" as const;
   design = new BlockDesign({
     width: 184,
     height: 82.65,
@@ -164,6 +167,7 @@ export class DrugRepressiblePromoterBlock extends PromoterBlock {
 
 export class EL222ActivatedPromoterBlock extends PromoterBlock {
   name = "EL222 Activated Promoter" as const;
+  uniqueName = "prom-activ-EL222dim" as const;
   design = new BlockDesign({
     width: 184,
     height: 82.65,
@@ -178,6 +182,7 @@ export class EL222ActivatedPromoterBlock extends PromoterBlock {
 
 export class PhyBPIF3ActivatedPromoterBlock extends PromoterBlock {
   name = "PhyB-PIF3 Activated Promoter" as const;
+  uniqueName = "prom-activ-PhyBPIF3" as const;
   design = new BlockDesign({
     width: 184,
     height: 82.65,
@@ -192,6 +197,7 @@ export class PhyBPIF3ActivatedPromoterBlock extends PromoterBlock {
 
 export class MCherryBlock extends VisibilityBlock {
   name = "mCherry" as const;
+  uniqueName = "visi-mCherry" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
@@ -208,6 +214,7 @@ export class MCherryBlock extends VisibilityBlock {
 
 export class GFPBlock extends VisibilityBlock {
   name = "GFP" as const;
+  uniqueName = "visi-GFP" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
@@ -224,6 +231,7 @@ export class GFPBlock extends VisibilityBlock {
 
 export class RepressorBlock extends VisibilityBlock {
   name = "RepressorA" as const;
+  uniqueName = "ctrl-RepressorA" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
@@ -240,6 +248,7 @@ export class RepressorBlock extends VisibilityBlock {
 
 export class EL222Block extends VisibilityBlock {
   name = "EL222" as const;
+  uniqueName = "ctrl-EL222" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
@@ -256,6 +265,7 @@ export class EL222Block extends VisibilityBlock {
 
 export class PhyBBlock extends VisibilityBlock {
   name = "PhyB" as const;
+  uniqueName = "ctrl-PhyB" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
@@ -272,6 +282,7 @@ export class PhyBBlock extends VisibilityBlock {
 
 export class PIF3Block extends VisibilityBlock {
   name = "PIF3" as const;
+  uniqueName = "ctrl-PIF3" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
@@ -288,6 +299,7 @@ export class PIF3Block extends VisibilityBlock {
 
 export class CYC1TerminatorBlock extends TerminatorBlock {
   name = "CYC1 Terminator" as const;
+  uniqueName = "term-1" as const;
   design = new BlockDesign({
     width: 184,
     height: 77.65,
@@ -302,6 +314,7 @@ export class CYC1TerminatorBlock extends TerminatorBlock {
 export class WrapHeadBlock extends Block {
   type = "wrap-head" as const;
   name = "Wrap Head" as const;
+  uniqueName = "wrap-head" as const;
   design = new BlockDesign({
     width: 27,
     height: 30,
@@ -316,6 +329,7 @@ export class WrapHeadBlock extends Block {
 export class WrapTailBlock extends Block {
   type = "wrap-tail" as const;
   name = "Wrap Tail" as const;
+  uniqueName = "wrap-tail" as const;
   design = new BlockDesign({
     width: 20,
     height: 30,
@@ -329,6 +343,7 @@ export class WrapTailBlock extends Block {
 
 export class RecombinaseABlock extends MetaModifierBlock {
   name = "RecombinaseI" as const;
+  uniqueName = "meta-recomb1" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
@@ -345,6 +360,7 @@ export class RecombinaseABlock extends MetaModifierBlock {
 
 export class RecombinaseBBlock extends MetaModifierBlock {
   name = "RecombinaseII" as const;
+  uniqueName = "meta-recomb2" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
@@ -361,6 +377,7 @@ export class RecombinaseBBlock extends MetaModifierBlock {
 
 export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
   name = "RecombinaseI Recognition Seq." as const;
+  uniqueName = "seq-recog-recomb1" as const;
   design = new BlockDesign({
     width: 131,
     height: 90,
@@ -375,6 +392,7 @@ export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
 
 export class RecombinaseBRecognitionSeqBlock extends SpecialSequenceBlock {
   name = "RecombinaseII Recognition Seq." as const;
+  uniqueName = "seq-recog-recomb2" as const;
   design = new BlockDesign({
     width: 131,
     height: 90,
@@ -389,6 +407,7 @@ export class RecombinaseBRecognitionSeqBlock extends SpecialSequenceBlock {
 
 export class KillSwitchBlock extends MetaModifierBlock {
   name = "KillSwitch" as const;
+  uniqueName = "meta-kill" as const;
   design = new BlockDesign({
     width: 184,
     height: 30,
@@ -436,7 +455,7 @@ export function uniqueNameToBlock(uniqueName: string): Block {
       return new MCherryBlock();
     case "visi-GFP":
       return new GFPBlock();
-    case "ctrl-DrugA":
+    case "ctrl-RepressorA":
       return new RepressorBlock();
     case "ctrl-EL222":
       return new EL222Block();

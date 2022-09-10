@@ -30,6 +30,7 @@
     </svg>
     <DraggingSnake v-if="draggingSnake !== null" v-model="draggingSnake" />
     <!-- <CursorMode v-model="cursorMode" /> -->
+    <ShareTwitter />
     <div class="running" v-if="isRunning" />
   </div>
 </template>
@@ -52,6 +53,7 @@ import ScrollBar from "@/components/ScrollBar.vue";
 import VScrollBar from "@/components/VScrollBar.vue";
 import { Snake } from "@/utils/snake";
 import SnakeVue from "@/components/Snake.vue";
+import ShareTwitter from "@/components/ShareTwitter.vue";
 
 export const getFixedPositionKey: InjectionKey<
   (absolutePos: DeepReadonly<Vector2>) => Vector2

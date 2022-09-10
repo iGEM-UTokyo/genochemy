@@ -11,7 +11,7 @@ function setUUID(block: Block): asserts block is BlockWithUUID {
 
 export default function importJson(json: JsonFormat): Snake[] {
   const snakes: Snake[] = [];
-  let accumulatedHeight = 0;
+  let accumulatedHeight = 20;
   for (const snake of json) {
     const blocks = snake.blocks.map((uniqueName): BlockWithUUID => {
       const block = uniqueNameToBlock(uniqueName);
@@ -21,7 +21,7 @@ export default function importJson(json: JsonFormat): Snake[] {
     const newSnake = new Snake({
       uuid: uuidv4(),
       blocks,
-      anchorTail: [0, 0],
+      anchorTail: [20, 0],
     });
     newSnake.anchorTail[1] = accumulatedHeight + newSnake.upLimit;
     snakes.push(newSnake);
