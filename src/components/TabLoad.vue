@@ -12,7 +12,7 @@ import importJson from "@/utils/importer";
 const { addSnake } = useStore();
 
 function load() {
-  const snakes = importJson(questions[7].answer);
+  const snakes = importJson(questions[8].answer);
   addSnake(...snakes);
 }
 </script>

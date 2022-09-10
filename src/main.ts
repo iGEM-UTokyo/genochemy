@@ -11,6 +11,7 @@ import {
   faArrowDown,
   faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
+import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import App from "./App.vue";
@@ -25,6 +26,7 @@ library.add(faArrowsUpDownLeftRight);
 library.add(faWaveSquare);
 library.add(faArrowDown);
 library.add(faArrowUp);
+library.add(faTwitter as any);
 app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(createPinia());
