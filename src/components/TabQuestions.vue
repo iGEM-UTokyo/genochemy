@@ -33,7 +33,9 @@
           >▶</span
         >
       </p>
-      <button @click="showAnswer">Show Answer</button>
+      <button @click="showAnswer" v-if="currentQuestion.answer">
+        Show Answer
+      </button>
     </div>
   </div>
 </template>
@@ -71,7 +73,9 @@ function decrementImage() {
   imageNumber.value--;
 }
 function showAnswer() {
-  addSnake(...importJson(currentQuestion.value.answer));
+  if (currentQuestion.value.answer) {
+    addSnake(...importJson(currentQuestion.value.answer));
+  }
 }
 </script>
 

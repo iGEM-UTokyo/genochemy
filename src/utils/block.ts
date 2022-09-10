@@ -152,7 +152,7 @@ export class T7PromoterBlock extends PromoterBlock {
 
 export class DrugRepressiblePromoterBlock extends PromoterBlock {
   name = "Drug Repressible Promoter" as const;
-  uniqueName = "prom-repr-DrugA" as const;
+  uniqueName = "prom-repr-RepressorADrugA" as const;
   design = new BlockDesign({
     width: 184,
     height: 82.65,
@@ -445,7 +445,7 @@ export function uniqueNameToBlock(uniqueName: string): Block {
   switch (uniqueName) {
     case "prom-const-1":
       return new T7PromoterBlock();
-    case "prom-repr-DrugA":
+    case "prom-repr-RepressorADrugA":
       return new DrugRepressiblePromoterBlock();
     case "prom-activ-EL222dim":
       return new EL222ActivatedPromoterBlock();
