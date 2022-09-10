@@ -43,7 +43,7 @@ main {
 }
 .right {
   width: 0px;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;

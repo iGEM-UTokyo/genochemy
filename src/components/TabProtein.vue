@@ -8,12 +8,12 @@
     <div class="protein-settings" v-if="activeProtein">
       <h3>{{ activeProteinName }}</h3>
       {{ activeProtein.description }}<br />
+      mRNA(s):<br />
+      <list-box :list="activeProteinMessengerRNAs" />
       <Logger
         v-if="measurableProteins.includes(activeProteinName)"
         :target="`protein-${activeProteinName}`"
       />
-      mRNA(s):<br />
-      <list-box :list="activeProteinMessengerRNAs" />
     </div>
   </div>
 </template>
@@ -54,12 +54,16 @@ const activeProteinMessengerRNAs = computed(() => {
   width: 100px;
 }
 .tab-content {
+  flex: 1;
+  padding: 10px 0;
   display: flex;
   align-items: stretch;
+  overflow: hidden;
 }
 .protein-settings {
   flex: 1;
   margin-left: 10px;
+  overflow-y: auto;
 }
 h3 {
   margin: 0;

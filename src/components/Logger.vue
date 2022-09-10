@@ -24,7 +24,6 @@ import { ref, defineProps, watch, toRefs, onUnmounted } from "vue";
 ChartJS.register(
   Title,
   Tooltip,
-  Legend,
   LineElement,
   LinearScale,
   PointElement,
@@ -41,10 +40,8 @@ const props = defineProps<{
 }>();
 
 const store = useStore();
-const { time } = toRefs(store);
+const { time, currentRunner } = toRefs(store);
 const { target } = toRefs(props);
-
-console.log("TARGET:" + target.value);
 
 store.registerOutput(target.value);
 onUnmounted(() => {
@@ -52,12 +49,15 @@ onUnmounted(() => {
 });
 
 watch(time, () => {
-  chartData.value.datasets[0].data[time.value] =
+  chartData.value.datasets[0].data[time.value.toFixed(2)] =
     store.runnerOutputs[target.value];
-  console.log(store.runnerOutputs[target.value]);
 });
 
-const chartData = ref<{ datasets: { data: Record<number, number> }[] }>({
+watch(currentRunner, () => {
+  chartData.value.datasets[0].data = {};
+});
+
+const chartData = ref<{ datasets: { data: Record<string, number> }[] }>({
   datasets: [
     {
       data: {},
