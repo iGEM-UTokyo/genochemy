@@ -43,7 +43,10 @@ const defaultGUIViews: Record<string, RunnerComponent> = {
 };
 
 const stageSettings = computed(() => {
-  const _stageSettings: Record<string, RunnerComponent> = defaultStageSettings;
+  const _stageSettings: Record<string, RunnerComponent> = Object.assign(
+    {},
+    defaultStageSettings
+  );
   for (const protein of proteins.value) {
     for (const stageSetting of protein.stageSettings) {
       if (!_stageSettings[stageSetting.name]) {
@@ -54,7 +57,10 @@ const stageSettings = computed(() => {
   return Object.values(_stageSettings);
 });
 const guiViews = computed(() => {
-  const _guiViews: Record<string, RunnerComponent> = defaultGUIViews;
+  const _guiViews: Record<string, RunnerComponent> = Object.assign(
+    {},
+    defaultGUIViews
+  );
   for (const protein of proteins.value) {
     for (const guiView of protein.guiViews) {
       if (!_guiViews[guiView.name]) {

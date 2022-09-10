@@ -410,10 +410,9 @@ export const useStore = defineStore("main", () => {
     if (animationFrame !== null) {
       cancelAnimationFrame(animationFrame);
       animationFrame = null;
-
-      for (const output of registeredOutputs) {
-        runnerOutputs.value[output] = runnerOutputDefaults[output] || 0;
-      }
+    }
+    for (const output of registeredOutputs) {
+      runnerOutputs.value[output] = runnerOutputDefaults[output] || 0;
     }
     isRunning.value = false;
   };
