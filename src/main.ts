@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import { library } from "@fortawesome/fontawesome-svg-core";
+import { IconDefinition, library } from "@fortawesome/fontawesome-svg-core";
 import {
   faPlay,
   faStop,
@@ -26,7 +26,7 @@ library.add(faArrowsUpDownLeftRight);
 library.add(faWaveSquare);
 library.add(faArrowDown);
 library.add(faArrowUp);
-library.add(faTwitter as any);
+library.add(faTwitter as IconDefinition);
 app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(createPinia());
