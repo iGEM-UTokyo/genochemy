@@ -10,7 +10,11 @@ const questions: Question[] = [
   {
     name: "Green Creature",
     imgs: ["Question1.png"],
-    answer: [],
+    answer: [
+      {
+        blocks: ["prom-const-1", "visi-GFP", "term-1"],
+      },
+    ],
   },
   {
     name: "Blue makes green",
@@ -40,6 +44,11 @@ const questions: Question[] = [
   {
     name: "Blue makes infinitely green",
     imgs: ["Question6.png"],
+    answer: [],
+  },
+  {
+    name: "Green to Red",
+    imgs: ["Question6.5.png"],
     answer: [],
   },
   {
