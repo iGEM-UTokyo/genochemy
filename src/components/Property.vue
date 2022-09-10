@@ -46,8 +46,13 @@ const activeTab = ref("Protein");
   flex: 1;
   display: flex;
   border-left: 1px solid #aaa;
-  padding-left: 10px;
+  padding: 0 10px;
   align-items: stretch;
   overflow: hidden;
+}
+.tab-content {
+  flex: 1;
+  padding: 10px 0;
+  overflow-y: auto;
 }
 </style>
