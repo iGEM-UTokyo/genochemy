@@ -1,5 +1,8 @@
 <template>
-  <Line :chart-options="chartOptions" :chart-data="chartData" />
+  <Line
+    :chart-options="(chartOptions as any)"
+    :chart-data="(chartData as any)"
+  />
 </template>
 
 <script setup lang="ts">
@@ -13,7 +16,7 @@ import {
   LinearScale,
   PointElement,
   CategoryScale,
-  Plugin,
+  ChartOptions,
 } from "chart.js";
 import { useStore } from "@/store";
 import { ref, defineProps, watch, toRefs, onUnmounted } from "vue";
@@ -34,7 +37,7 @@ const props = defineProps<{
   width?: number;
   height?: number;
   cssClasses?: string;
-  target?: string;
+  target: string;
 }>();
 
 const store = useStore();
@@ -54,7 +57,7 @@ watch(time, () => {
   console.log(store.runnerOutputs[target.value]);
 });
 
-const chartData = ref({
+const chartData = ref<{ datasets: { data: Record<number, number> }[] }>({
   datasets: [
     {
       data: {},
@@ -62,7 +65,7 @@ const chartData = ref({
   ],
 });
 
-const chartOptions = ref({
+const chartOptions = ref<ChartOptions>({
   responsive: true,
   animation: false,
 });

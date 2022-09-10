@@ -8,7 +8,10 @@
     <div class="protein-settings" v-if="activeProtein">
       <h3>{{ activeProteinName }}</h3>
       {{ activeProtein.description }}<br />
-      <Logger :target="activeProteinName" />
+      <Logger
+        v-if="measurableProteins.includes(activeProteinName)"
+        :target="`protein-${activeProteinName}`"
+      />
       mRNA(s):<br />
       <list-box :list="activeProteinMessengerRNAs" />
     </div>
@@ -16,13 +19,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, ref } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "@/store";
 import ListBox from "@/components/ListBox.vue";
-import LineChart from "@/components/Logger.vue";
 import Logger from "./Logger.vue";
 
 const store = useStore();
+
+const measurableProteins = ["mCherry", "GFP"];
 
 const proteinNames = computed(() =>
   store.proteins.map((protein) => protein.name.substring("protein-".length))
