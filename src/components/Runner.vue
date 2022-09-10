@@ -80,6 +80,7 @@ const genomyImg = computed(() =>
 <style scoped>
 .runner {
   height: 300px;
+  flex-shrink: 0;
   border: 1px solid #aaa;
   display: flex;
   align-items: center;

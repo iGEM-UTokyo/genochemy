@@ -36,13 +36,10 @@ const activeTab = ref("Protein");
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .tab-button {
   padding: 5px 10px;
-}
-.tab-content {
-  flex: 1;
-  padding: 10px 0;
 }
 
 .tab {
@@ -50,5 +47,7 @@ const activeTab = ref("Protein");
   display: flex;
   border-left: 1px solid #aaa;
   padding-left: 10px;
+  align-items: stretch;
+  overflow: hidden;
 }
 </style>
