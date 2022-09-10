@@ -1,7 +1,7 @@
 <template>
   <div class="share-twitter">
     <IconButton @click="share" background-color="#00ACEE" color="white">
-      <font-awesome-icon icon="fa-brands fa-twitter" />
+      <font-awesome-icon :icon="faTwitter" />
     </IconButton>
   </div>
 </template>
@@ -10,6 +10,7 @@
 import { useStore } from "@/store";
 import exportJson from "@/utils/exporter";
 import IconButton from "./IconButton.vue";
+import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 
 const store = useStore();
 function share() {
