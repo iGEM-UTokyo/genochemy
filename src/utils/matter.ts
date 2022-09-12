@@ -62,7 +62,7 @@ export class EL222ActivatedPromoter extends Promoter {
     return [
       {
         type: "const",
-        value: 0.05,
+        value: 0.02,
       },
       {
         type: "hill",
