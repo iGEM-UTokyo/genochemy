@@ -45,24 +45,28 @@ export class BlockDesign {
   imageSrc: string;
   displayName: string;
   bottomAnchor: number;
+  description: string;
   constructor({
     width,
     height,
     imageSrc,
     displayName,
     bottomAnchor,
+    description,
   }: {
     width: number;
     height: number;
     imageSrc: string;
     displayName?: string;
     bottomAnchor?: number;
+    description?: string;
   }) {
     this.width = width;
     this.height = height;
     this.imageSrc = imageSrc;
     this.displayName = displayName ?? "";
     this.bottomAnchor = bottomAnchor ?? 0;
+    this.description = description ?? "";
   }
 }
 export abstract class Block {
@@ -143,6 +147,7 @@ export class T7PromoterBlock extends PromoterBlock {
     height: 82.65,
     imageSrc: "/blocks/promoter.svg",
     displayName: "block.promConst1.displayName",
+    description: "block.promConst1.description",
   });
   promoter = new T7Promoter();
   constructor() {
@@ -158,6 +163,7 @@ export class DrugRepressiblePromoterBlock extends PromoterBlock {
     height: 82.65,
     imageSrc: "/blocks/promoter.svg",
     displayName: "block.promReprRepressorADrugA.displayName",
+    description: "block.promReprRepressorADrugA.description",
   });
   promoter = new DrugRepressiblePromoter();
   constructor() {
@@ -173,6 +179,7 @@ export class EL222ActivatedPromoterBlock extends PromoterBlock {
     height: 82.65,
     imageSrc: "/blocks/promoter.svg",
     displayName: "block.promActivEL222dim.displayName",
+    description: "block.promActivEL222dim.description",
   });
   promoter = new EL222ActivatedPromoter();
   constructor() {
@@ -188,6 +195,7 @@ export class PhyBPIF3ActivatedPromoterBlock extends PromoterBlock {
     height: 82.65,
     imageSrc: "/blocks/promoter.svg",
     displayName: "block.promActivPhyBPIF3.displayName",
+    description: "block.promActivPhyBPIF3.description",
   });
   promoter = new PhyBPIF3ActivatedPromoter();
   constructor() {
@@ -203,6 +211,7 @@ export class MCherryBlock extends VisibilityBlock {
     height: 30,
     imageSrc: "/blocks/visible.svg",
     displayName: "block.visiMCherry.displayName",
+    description: "block.visiMCherry.description",
   });
   get ProteinClass(): ProteinImpl {
     return mCherry;
@@ -220,6 +229,7 @@ export class GFPBlock extends VisibilityBlock {
     height: 30,
     imageSrc: "/blocks/visible.svg",
     displayName: "block.visiGFP.displayName",
+    description: "block.visiGFP.description",
   });
   get ProteinClass(): ProteinImpl {
     return GFP;
@@ -237,6 +247,7 @@ export class RepressorBlock extends VisibilityBlock {
     height: 30,
     imageSrc: "/blocks/control.svg",
     displayName: "block.ctrlRepressorA.displayName",
+    description: "block.ctrlRepressorA.description",
   });
   get ProteinClass(): ProteinImpl {
     return RepressorA;
@@ -254,6 +265,7 @@ export class EL222Block extends VisibilityBlock {
     height: 30,
     imageSrc: "/blocks/control.svg",
     displayName: "block.ctrlEL222.displayName",
+    description: "block.ctrlEL222.description",
   });
   get ProteinClass(): ProteinImpl {
     return EL222;
@@ -271,6 +283,7 @@ export class PhyBBlock extends VisibilityBlock {
     height: 30,
     imageSrc: "/blocks/control.svg",
     displayName: "block.ctrlPhyB.displayName",
+    description: "block.ctrlPhyB.description",
   });
   get ProteinClass(): ProteinImpl {
     return PhyB;
@@ -288,6 +301,7 @@ export class PIF3Block extends VisibilityBlock {
     height: 30,
     imageSrc: "/blocks/control.svg",
     displayName: "block.ctrlPIF3.displayName",
+    description: "block.ctrlPIF3.description",
   });
   get ProteinClass(): ProteinImpl {
     return PIF3;
@@ -305,6 +319,7 @@ export class CYC1TerminatorBlock extends TerminatorBlock {
     height: 77.65,
     imageSrc: "/blocks/terminator.svg",
     displayName: "block.term1.displayName",
+    description: "block.term1.description",
   });
   constructor() {
     super({});
@@ -349,6 +364,7 @@ export class RecombinaseABlock extends MetaModifierBlock {
     height: 30,
     imageSrc: "/blocks/meta.svg",
     displayName: "block.metaRecomb1.displayName",
+    description: "block.metaRecomb1.description",
   });
   get ProteinClass(): ProteinImpl {
     return RecombinaseA;
@@ -366,6 +382,7 @@ export class RecombinaseBBlock extends MetaModifierBlock {
     height: 30,
     imageSrc: "/blocks/meta.svg",
     displayName: "block.metaRecomb2.displayName",
+    description: "block.metaRecomb2.description",
   });
   get ProteinClass(): ProteinImpl {
     return RecombinaseB;
@@ -383,6 +400,7 @@ export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
     height: 90,
     imageSrc: "/blocks/recombinase-recognition-seq.svg",
     displayName: "block.seqRecogRecomb1.displayName",
+    description: "block.seqRecogRecomb1.description",
     bottomAnchor: 30,
   });
   constructor() {
@@ -398,6 +416,7 @@ export class RecombinaseBRecognitionSeqBlock extends SpecialSequenceBlock {
     height: 90,
     imageSrc: "/blocks/recombinase-recognition-seq.svg",
     displayName: "block.seqRecogRecomb2.displayName",
+    description: "block.seqRecogRecomb2.description",
     bottomAnchor: 30,
   });
   constructor() {
@@ -413,6 +432,7 @@ export class KillSwitchBlock extends MetaModifierBlock {
     height: 30,
     imageSrc: "/blocks/meta.svg",
     displayName: "block.metaKill.displayName",
+    description: "block.metaKill.description",
   });
   get ProteinClass(): ProteinImpl {
     return KillSwitch;

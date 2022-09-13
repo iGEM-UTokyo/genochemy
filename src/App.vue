@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="app">
     <div class="left">
       <Program />
       <Tray />

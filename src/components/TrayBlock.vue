@@ -1,10 +1,22 @@
 <template>
   <div
+    class="tray-block"
     @mousedown="down"
     @touchstart="down"
+    @pointerenter="pointerenter"
+    @pointerleave="pointerleave"
     ref="blockElem"
     :style="{ transform: `translateY(${block.design.bottomAnchor}px)` }"
   >
+    <teleport to=".app" v-if="showDescription">
+      <div
+        class="description"
+        :style="{ top: `${y}px`, left: `${x}px`, width: `${width}px` }"
+      >
+        <h2>{{ t(block.design.displayName) }}</h2>
+        {{ t(block.design.description) }}
+      </div>
+    </teleport>
     <svg
       :width="block.design.width"
       :height="block.design.height + block.design.bottomAnchor"
@@ -17,21 +29,25 @@
 </template>
 
 <style scoped>
-div {
+.tray-block {
   position: relative;
   display: flex; /* for height-adjustment */
   touch-action: none;
   user-select: none;
 }
-img {
-  pointer-events: none;
-}
-span {
-  color: white;
+.description {
   position: absolute;
-  left: 15px;
-  bottom: 5px;
-  font-size: 16px;
+  background-color: white;
+  border-radius: 10px;
+  border: 1px solid #aaa;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  transform: translateY(calc(-100% - 20px));
+}
+h2 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
 }
 </style>
 
@@ -40,7 +56,9 @@ import { useStore } from "../store";
 import { Ref, ref, defineProps } from "vue";
 import BlockVue from "@/components/Block.vue";
 import type { FinalBlock } from "@/utils/block";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const props = defineProps<{
   blockClass: FinalBlock;
 }>();
@@ -57,5 +75,29 @@ const down = () => {
     ]);
     block.value = new props.blockClass();
   }
+};
+const x = ref(0);
+const y = ref(0);
+const width = ref(0);
+const showDescription = ref(false);
+let timeoutId: number | null = null;
+const pointerenter = () => {
+  if (blockElem.value !== null) {
+    const boundingRect = blockElem.value.getBoundingClientRect();
+    x.value = boundingRect.x;
+    y.value = boundingRect.y + block.value.design.bottomAnchor;
+    width.value = boundingRect.width;
+    timeoutId = setTimeout(() => {
+      timeoutId = null;
+      showDescription.value = true;
+    }, 250);
+  }
+};
+const pointerleave = () => {
+  if (timeoutId !== null) {
+    clearTimeout(timeoutId);
+    timeoutId = null;
+  }
+  showDescription.value = false;
 };
 </script>
