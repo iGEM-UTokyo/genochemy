@@ -3,7 +3,7 @@
   <g>
     <image :href="src" :width="props.block.design.width" :x="props.x" :y="_y" />
     <text :x="props.x + 10" :y="props.y - 9" fill="white">{{
-      displayName
+      t(displayName)
     }}</text>
   </g>
 </template>
@@ -29,7 +29,9 @@ span {
 <script setup lang="ts">
 import { Block } from "../utils/block";
 import { defineProps, computed } from "vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const props = defineProps<{
   x: number;
   y: number;
