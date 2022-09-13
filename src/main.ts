@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { createI18n } from "vue-i18n";
 import { createPinia } from "pinia";
 import { IconDefinition, library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -15,6 +16,7 @@ import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import App from "./App.vue";
+import messages, { Messages } from "./messages";
 
 const app = createApp(App);
 
@@ -30,4 +32,11 @@ library.add(faTwitter as IconDefinition);
 app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(createPinia());
+
+const i18n = createI18n<[Messages], "ja">({
+  legacy: false,
+  locale: "ja",
+  messages,
+});
+app.use(i18n);
 app.mount("#app");

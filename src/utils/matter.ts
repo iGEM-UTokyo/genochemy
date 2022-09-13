@@ -27,8 +27,8 @@ export abstract class Promoter {
 }
 
 export class T7Promoter extends Promoter {
-  name = "常時発現";
-  description = "常に一定の割合で下流を転写します。";
+  name = "matter.promT7.name";
+  description = "matter.promT7.description";
   buildDEForMessengerRNA(): Term[] {
     return [
       {
@@ -40,9 +40,8 @@ export class T7Promoter extends Promoter {
 }
 
 export class DrugRepressiblePromoter extends Promoter {
-  name = "リプレッサーA結合性プロモーター";
-  description =
-    "活性化されたリプレッサーAが結合すると下流の転写が抑制されます。";
+  name = "matter.promReprRepressorADrugA.name";
+  description = "matter.promReprRepressorADrugA.description";
   buildDEForMessengerRNA(): Term[] {
     return [
       {
