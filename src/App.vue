@@ -20,7 +20,7 @@ import Tray from "./components/Tray.vue";
 import Program from "./components/Program.vue";
 import Runner from "@/components/Runner.vue";
 import Property from "@/components/Property.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import importJson from "./utils/importer";
 import { useStore } from "./store";
 
@@ -32,17 +32,19 @@ function toggle() {
   showRight.value = !showRight.value;
 }
 
-try {
-  const searchParams = new URLSearchParams(location.search);
-  const circuit = searchParams.get("c");
-  if (circuit) {
-    console.log(circuit);
-    const snakes = importJson(JSON.parse(atob(circuit)));
-    store.addSnake(...snakes);
+onMounted(() => {
+  try {
+    const searchParams = new URLSearchParams(location.search);
+    const circuit = searchParams.get("c");
+    if (circuit) {
+      console.log(circuit);
+      const snakes = importJson(JSON.parse(atob(circuit)));
+      store.addSnake(...snakes);
+    }
+  } catch (e) {
+    console.error(e);
   }
-} catch (e) {
-  console.error(e);
-}
+});
 </script>
 
 <style scoped>
