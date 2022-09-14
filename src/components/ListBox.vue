@@ -7,13 +7,15 @@
       :class="{ 'active-listbox-item': modelValue === item }"
       @click="update(item)"
     >
-      {{ item }}
+      {{ t(item) }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, watch, defineProps, defineEmits, toRefs } from "vue";
+import { watch, defineProps, defineEmits, toRefs } from "vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const props = defineProps<{
   list: string[];
   modelValue?: string;
