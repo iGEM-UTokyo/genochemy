@@ -10,8 +10,8 @@
       Promoter(s):
       <list-box :list="promoterNames" v-model="activePromoterName" />
       <section v-if="activePromoter">
-        <h4>{{ activePromoterName }}</h4>
-        {{ activePromoter.description }}
+        <h4>{{ t(activePromoterName) }}</h4>
+        {{ t(activePromoter.description) }}
       </section>
     </div>
   </div>
@@ -21,7 +21,9 @@
 import { computed, ref } from "vue";
 import { useStore } from "@/store";
 import ListBox from "@/components/ListBox.vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const store = useStore();
 const mRNANames = computed(() =>
   store.operonMessengerRNAs.map((mRNA) => mRNA.name)
