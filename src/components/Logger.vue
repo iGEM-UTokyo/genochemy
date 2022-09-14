@@ -11,7 +11,6 @@ import {
   Chart as ChartJS,
   Title,
   Tooltip,
-  Legend,
   LineElement,
   LinearScale,
   PointElement,
@@ -63,6 +62,12 @@ const chartData = ref<{ datasets: { data: Record<string, number> }[] }>({
       data: {},
     },
   ],
+});
+
+watch(toRefs(props).target, (target, prevTarget) => {
+  if (prevTarget !== target) {
+    chartData.value.datasets[0].data = {};
+  }
 });
 
 const chartOptions = ref<ChartOptions>({
