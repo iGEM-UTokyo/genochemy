@@ -56,7 +56,8 @@ Loadタブから、iGEMプロジェクトを模した配列を読み込むこと
   },
   {
     img: "https://lh3.googleusercontent.com/pw/AL9nZEWvSOoMyOMncxXLw-p88dPHjKGgxSqwdXDIzIDhT20v8_sv0HMQGC9tckfFCQlLO2zlVbp3Au-bL-GPJiQIiTNXz8gWclw_EkR5OAm5ZxwGTHE4QCB2FiGEA7rX-zX1Pc4PdrIZMPeXcb0mDQP8WorcUw=w1709-h962-no",
-    text: `Labでは、3パラメーター: 薬剤Aの量と赤色光、青色光それぞれの照射の有無を調整することができます。`,
+    text: `Labでは、3パラメーター: 薬剤Aの量と赤色光、青色光それぞれの照射の有無を調整することができます。
+前ページで繋げた回路は薬剤や光には依存しないためここでの調整は変化をもたらしませんが、もっと複雑な回路になってくると効いてくる要素です。`,
   },
   {
     img: "https://lh3.googleusercontent.com/pw/AL9nZEWa80C1xhE1c3dr6gdRR7CYV_T6BjGF1PBLO7CZgYUmc8thYNvrZYUgZrsVcFtolgfwRXwAuJqy7EeiJmJ4lG2NLLJiJSMQ2L87s-EqB5lCIeIyyX7DpuhOAZykeIkLdp7a2ZQt4TAys3p94rYxXeo0yw=w1709-h962-no",
