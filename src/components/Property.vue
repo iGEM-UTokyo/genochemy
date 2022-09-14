@@ -33,7 +33,7 @@ import TabLoad from "@/components/TabLoad.vue";
 
 const store = useStore();
 const { run, stop } = store;
-const activeTab = ref("Protein");
+const activeTab = ref("Tutorial");
 </script>
 
 <style scoped>

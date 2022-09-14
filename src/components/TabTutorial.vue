@@ -16,7 +16,7 @@
     >
     <div class="question-content">
       <img :src="currentTutorial.img" /><br />
-      {{ currentTutorial.text }}
+      <p v-text="currentTutorial.text"></p>
     </div>
   </div>
 </template>
@@ -51,9 +51,12 @@ h2 {
   margin: 0;
 }
 .question-content {
-  text-align: center;
+  margin: 0 10px;
 }
 img {
   width: 100%;
+}
+p {
+  white-space: pre-wrap;
 }
 </style>
