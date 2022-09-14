@@ -63,8 +63,8 @@ function tick() {
   requestAnimationFrameId = null;
   if (!isRunning.value) return;
   for (const recombinase of recombinases) {
-    const p1 = 1 - Math.exp(-runnerOutputs[recombinase.name] * 0.002);
-    const p2 = 1 - Math.exp(-runnerOutputs[recombinase.name] * 0.007);
+    const p1 = 1 - Math.exp(-runnerOutputs[recombinase.name] * 0.005);
+    const p2 = 1 - Math.exp(-runnerOutputs[recombinase.name] * 0.01);
     if (p2 > 0.001) {
       const rand = Math.random();
       if (rand <= p1) {
