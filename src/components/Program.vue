@@ -30,8 +30,11 @@
     </svg>
     <DraggingSnake v-if="draggingSnake !== null" v-model="draggingSnake" />
     <!-- <CursorMode v-model="cursorMode" /> -->
-    <ShareTwitter />
     <div class="running" v-if="isRunning" />
+    <div class="buttons">
+      v0.5.0
+      <ShareTwitter />
+    </div>
   </div>
 </template>
 
@@ -260,5 +263,14 @@ function wheel(e: WheelEvent) {
   height: 100%;
   border: 5px solid #1de9b6;
   box-sizing: border-box;
+}
+
+.buttons {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
 }
 </style>
