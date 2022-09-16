@@ -1,9 +1,7 @@
 <template>
-  <div class="share-twitter">
-    <IconButton @click="share" background-color="#00ACEE" color="white">
-      <font-awesome-icon :icon="faTwitter" />
-    </IconButton>
-  </div>
+  <IconButton @click="share" background-color="#00ACEE" color="white">
+    <font-awesome-icon :icon="faTwitter" />
+  </IconButton>
 </template>
 
 <script lang="ts" setup>
@@ -27,10 +25,4 @@ function share() {
 }
 </script>
 
-<style scoped>
-.share-twitter {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-}
-</style>
+<style scoped></style>
