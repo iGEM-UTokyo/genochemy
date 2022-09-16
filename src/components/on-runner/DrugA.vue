@@ -1,6 +1,6 @@
 <template>
   <div class="drug-a">
-    薬剤A:
+    {{ t("runner.drugA") }}:
     <input
       class="drug"
       type="range"
@@ -23,6 +23,8 @@ export default {
 <script setup lang="ts">
 import { onUnmounted, ref, watch } from "vue";
 import { useStore } from "@/store";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const { registerInput, UnregisterInput, runnerInputs, updateRunnerInput } =
   useStore();
 const inputName = "drug";

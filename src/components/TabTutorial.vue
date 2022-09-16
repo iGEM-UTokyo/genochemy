@@ -5,7 +5,7 @@
       @click="decrement"
       >◀</span
     >
-    Tutorial {{ tutorialNumber + 1 }}
+    {{ t("tutorial.tutorial") }} {{ tutorialNumber + 1 }}
     <span
       :class="{
         'q-nav': true,
@@ -16,7 +16,7 @@
     >
     <div class="question-content">
       <img :src="currentTutorial.img" /><br />
-      <p v-text="currentTutorial.text"></p>
+      <p v-text="t(currentTutorial.text)"></p>
     </div>
   </div>
 </template>
@@ -24,6 +24,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import tutorial from "@/utils/tutorial";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const tutorialNumber = ref(0);
 const currentTutorial = computed(() => tutorial[tutorialNumber.value]);

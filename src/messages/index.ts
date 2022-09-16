@@ -37,6 +37,44 @@ export interface Messages {
     seqRecogRecomb2: BlockMessages;
     metaKill: BlockMessages;
   };
+  tutorial: {
+    tutorial: string;
+    "1": string;
+    "2": string;
+    "3": string;
+    "4": string;
+    "5": string;
+    "6": string;
+    "7": string;
+    "8": string;
+    "9": string;
+    "10": string;
+    "11": string;
+  };
+  tabs: {
+    tutorial: string;
+    protein: string;
+    rna: string;
+    questions: string;
+    load: string;
+  };
+  runner: {
+    drugA: string;
+    redLight: string;
+    blueLight: string;
+  };
+  view: {
+    show: string;
+    hide: string;
+  };
+  questions: {
+    question: string;
+    showAnswer: string;
+    image: string;
+  };
+  load: {
+    loadUTokyo2022Project: string;
+  };
 }
 
 type A<T> = {
