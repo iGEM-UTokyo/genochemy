@@ -8,6 +8,7 @@ import BlueLight from "@/components/on-runner/BlueLight.vue";
 import RedLight from "@/components/on-runner/RedLight.vue";
 import RecombinaseModifier from "@/components/on-runner/RecombinaseModifier.vue";
 import KillSwitchVue from "@/components/on-runner/KillSwitch.vue";
+import { MessagesAddresses } from "@/messages";
 
 export interface RunnerComponent {
   name: string;
@@ -22,13 +23,13 @@ export interface Actor {
 
 export abstract class Promoter {
   abstract buildDEForMessengerRNA(): Term[];
-  name = "";
-  description = "";
+  name: MessagesAddresses | "" = "";
+  description: MessagesAddresses | "" = "";
 }
 
 export class T7Promoter extends Promoter {
-  name = "matter.promT7.name";
-  description = "matter.promT7.description";
+  name = "matter.promT7.name" as const;
+  description = "matter.promT7.description" as const;
   buildDEForMessengerRNA(): Term[] {
     return [
       {
@@ -40,8 +41,8 @@ export class T7Promoter extends Promoter {
 }
 
 export class DrugRepressiblePromoter extends Promoter {
-  name = "matter.promReprRepressorADrugA.name";
-  description = "matter.promReprRepressorADrugA.description";
+  name = "matter.promReprRepressorADrugA.name" as const;
+  description = "matter.promReprRepressorADrugA.description" as const;
   buildDEForMessengerRNA(): Term[] {
     return [
       {
@@ -55,8 +56,8 @@ export class DrugRepressiblePromoter extends Promoter {
 }
 
 export class EL222ActivatedPromoter extends Promoter {
-  name = "EL222結合性プロモーター";
-  description = "EL222の二量体が結合し、それにより下流の転写が促進されます。";
+  name = "matter.promActivEL222dim.name" as const;
+  description = "matter.promActivEL222dim.description" as const;
   buildDEForMessengerRNA(): Term[] {
     return [
       {
@@ -74,9 +75,8 @@ export class EL222ActivatedPromoter extends Promoter {
 }
 
 export class PhyBPIF3ActivatedPromoter extends Promoter {
-  name = "PhyB-PIF3結合性プロモーター";
-  description =
-    "PhyB-PIF3のヘテロ二量体が結合し、それにより下流の転写が促進されます。";
+  name = "matter.promActivPhyBPIF3.name" as const;
+  description = "matter.promActivPhyBPIF3.description" as const;
   buildDEForMessengerRNA(): Term[] {
     return [
       {
@@ -97,7 +97,7 @@ export abstract class Matter implements Actor {
   abstract get name(): string;
   guiViews: RunnerComponent[] = [];
   stageSettings: RunnerComponent[] = [];
-  description = "";
+  description: MessagesAddresses | "" = "";
   abstract buildDE(matterEquations: MatterEquations): void;
 }
 
@@ -162,7 +162,7 @@ export class Protein extends Matter {
 
 export class mCherry extends Protein {
   stageSettings = [Fluorescence];
-  description = "赤色の蛍光を発します。";
+  description = "matter.visiMCherry.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -170,7 +170,7 @@ export class mCherry extends Protein {
 
 export class GFP extends Protein {
   stageSettings = [Fluorescence];
-  description = "緑色の蛍光を発します。";
+  description = "matter.visiGFP.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -178,8 +178,7 @@ export class GFP extends Protein {
 
 export class RepressorA extends Protein {
   guiViews = [DrugA];
-  description =
-    "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。";
+  description = "matter.ctrlRepressorA.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -249,7 +248,7 @@ export class RepressorA extends Protein {
 export class EL222 extends Protein {
   stageSettings = [BlueLight];
   guiViews = [BlueLightSwitch];
-  description = "青色光によって二量体を形成します。";
+  description = "matter.ctrlEL222.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -331,7 +330,7 @@ export class EL222 extends Protein {
 export class PhyB extends Protein {
   stageSettings = [RedLight];
   guiViews = [RedLightSwitch];
-  description = "赤色光によってPIF3とヘテロ二量体を形成します。";
+  description = "matter.ctrlPhyB.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -413,7 +412,7 @@ export class PhyB extends Protein {
 export class PIF3 extends Protein {
   stageSettings = [RedLight];
   guiViews = [RedLightSwitch];
-  description = "赤色光によってPhyBとヘテロ二量体を形成します。";
+  description = "matter.ctrlPIF3.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -463,7 +462,7 @@ export class PIF3 extends Protein {
 
 export class RecombinaseA extends Protein {
   stageSettings = [RecombinaseModifier];
-  description = "認識配列Iに挟まれた配列を切り出します。";
+  description = "matter.metaRecombA.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -471,7 +470,7 @@ export class RecombinaseA extends Protein {
 
 export class RecombinaseB extends Protein {
   stageSettings = [RecombinaseModifier];
-  description = "認識配列IIに挟まれた配列を切り出します。";
+  description = "matter.metaRecombB.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -479,7 +478,7 @@ export class RecombinaseB extends Protein {
 
 export class KillSwitch extends Protein {
   stageSettings = [KillSwitchVue];
-  description = "標的生物を死滅させます。";
+  description = "matter.metaKill.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }

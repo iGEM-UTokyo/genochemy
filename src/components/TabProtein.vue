@@ -7,7 +7,7 @@
     />
     <div class="protein-settings" v-if="activeProtein">
       <h3>{{ activeProteinName }}</h3>
-      {{ activeProtein.description }}<br />
+      {{ t(activeProtein.description) }}<br />
       mRNA(s):<br />
       <list-box :list="activeProteinMessengerRNAs" />
       <Logger
@@ -23,6 +23,9 @@ import { computed, ref } from "vue";
 import { useStore } from "@/store";
 import ListBox from "@/components/ListBox.vue";
 import Logger from "./Logger.vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const store = useStore();
 

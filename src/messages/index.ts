@@ -7,6 +7,16 @@ export interface Messages {
     promT7: MatterMessages;
     promReprRepressorADrugA: MatterMessages;
     promActivEL222dim: MatterMessages;
+    promActivPhyBPIF3: MatterMessages;
+    visiMCherry: MatterMessages;
+    visiGFP: MatterMessages;
+    ctrlRepressorA: MatterMessages;
+    ctrlEL222: MatterMessages;
+    ctrlPhyB: MatterMessages;
+    ctrlPIF3: MatterMessages;
+    metaRecombA: MatterMessages;
+    metaRecombB: MatterMessages;
+    metaKill: MatterMessages;
   };
   block: {
     promConst1: BlockMessages;
@@ -28,6 +38,15 @@ export interface Messages {
     metaKill: BlockMessages;
   };
 }
+
+type A<T> = {
+  [K in keyof T]: T[K] extends string
+    ? K
+    : C<B<T[K]> extends string ? B<T[K]> : "", K extends string ? K : "">;
+};
+type B<T> = A<T>[keyof A<T>];
+type C<T extends string, K extends string> = `${K}.${T}`;
+export type MessagesAddresses = B<Messages>;
 
 const messages = {
   ja,
