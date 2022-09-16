@@ -6,10 +6,10 @@
       class="protein-list"
     />
     <div class="protein-settings" v-if="activeProtein">
-      <h3>{{ activeProteinName }}</h3>
+      <h3>{{ t(activeProteinName) }}</h3>
       {{ t(activeProtein.description) }}<br />
       mRNA(s):<br />
-      <list-box :list="activeProteinMessengerRNAs" />
+      <list-box :list="activeProteinMessengerRNAs" localized />
       <Logger
         v-if="measurableProteins.includes(activeProteinName)"
         :target="`protein-${activeProteinName}`"
@@ -32,13 +32,13 @@ const store = useStore();
 const measurableProteins = ["mCherry", "GFP"];
 
 const proteinNames = computed(() =>
-  store.proteins.map((protein) => protein.name.substring("protein-".length))
+  store.proteins.map((protein) => protein.displayName)
 );
 const activeProteinName = ref("");
 const activeProtein = computed(() => {
   if (activeProteinName.value === "") return null;
   const protein = store.proteins.filter(
-    (protein) => protein.name === `protein-${activeProteinName.value}`
+    (protein) => protein.displayName === activeProteinName.value
   );
   if (protein.length !== 1) {
     // throw new Error(`Protein: ${activeProteinName.value} does not exist or duplicates.`)
@@ -48,7 +48,9 @@ const activeProtein = computed(() => {
 });
 const activeProteinMessengerRNAs = computed(() => {
   if (activeProtein.value === null) return [];
-  return activeProtein.value.messengerRNAs.map((mRNA) => mRNA.name);
+  return activeProtein.value.messengerRNAs.map((mRNA) =>
+    mRNA.getDisplayName(t)
+  );
 });
 </script>
 

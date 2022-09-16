@@ -4,6 +4,7 @@
       :list="mRNANames"
       v-model="activeMessengerRNAName"
       class="mRNA-list"
+      localized
     />
     <div class="mRNA-settings" v-if="activeMessengerRNA">
       <h3>{{ activeMessengerRNAName }}</h3>
@@ -26,13 +27,13 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const store = useStore();
 const mRNANames = computed(() =>
-  store.operonMessengerRNAs.map((mRNA) => mRNA.name)
+  store.operonMessengerRNAs.map((mRNA) => mRNA.getDisplayName(t))
 );
 const activeMessengerRNAName = ref("");
 const activeMessengerRNA = computed(() => {
   if (activeMessengerRNAName.value === "") return null;
   const mRNA = store.operonMessengerRNAs.filter(
-    (mRNA) => mRNA.name === activeMessengerRNAName.value
+    (mRNA) => mRNA.getDisplayName(t) === activeMessengerRNAName.value
   );
   if (mRNA.length !== 1) {
     // throw new Error(`Protein: ${activeProteinName.value} does not exist or duplicates.`)

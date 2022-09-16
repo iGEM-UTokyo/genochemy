@@ -7,7 +7,7 @@
       :class="{ 'active-listbox-item': modelValue === item }"
       @click="update(item)"
     >
-      {{ t(item) }}
+      {{ localized ? item : t(item) }}
     </div>
   </div>
 </template>
@@ -19,6 +19,7 @@ const { t } = useI18n();
 const props = defineProps<{
   list: string[];
   modelValue?: string;
+  localized?: boolean;
 }>();
 const { list, modelValue } = toRefs(props);
 const emit = defineEmits<{
