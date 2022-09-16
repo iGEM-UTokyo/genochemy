@@ -3,7 +3,7 @@ import { Messages } from ".";
 const ja: Messages = {
   matter: {
     promT7: {
-      name: "常時発現",
+      name: "常に発現",
       description: "常に一定の割合で下流を転写します。",
     },
     promReprRepressorADrugA: {
@@ -12,14 +12,14 @@ const ja: Messages = {
         "活性化されたリプレッサーAが結合すると下流の転写が抑制されます。",
     },
     promActivEL222dim: {
-      name: "EL222結合性プロモーター",
+      name: "青センサー促進プロモーター",
       description:
-        "EL222の二量体が結合し、それにより下流の転写が促進されます。",
+        "青センサーの二量体が結合し、それにより下流の転写が促進されます。",
     },
     promActivPhyBPIF3: {
-      name: "PhyB-PIF3結合性プロモーター",
+      name: "赤センサーab促進プロモーター",
       description:
-        "PhyB-PIF3のヘテロ二量体が結合し、それにより下流の転写が促進されます。",
+        "赤センサーa,bのヘテロ二量体が結合し、それにより下流の転写が促進されます。",
     },
     visiGFP: {
       name: "GFP",
@@ -36,16 +36,16 @@ const ja: Messages = {
         "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
     },
     ctrlEL222: {
-      name: "EL222",
+      name: "青センサー",
       description: "青色光によって二量体を形成します。",
     },
     ctrlPhyB: {
-      name: "PhyB",
-      description: "赤色光によってPIF3とヘテロ二量体を形成します。",
+      name: "赤センサーa",
+      description: "赤色光によって赤センサーbとヘテロ二量体を形成します。",
     },
     ctrlPIF3: {
-      name: "PIF3",
-      description: "赤色光によってPhyBとヘテロ二量体を形成します。",
+      name: "赤センサーb",
+      description: "赤色光によって赤センサーaとヘテロ二量体を形成します。",
     },
     metaRecombA: {
       name: "リコンビナーゼI",
@@ -62,23 +62,23 @@ const ja: Messages = {
   },
   block: {
     promConst1: {
-      displayName: "常時発現",
+      displayName: "常に発現",
       description: "常に一定の割合で下流を転写します。",
     },
     promReprRepressorADrugA: {
-      displayName: "リプレッサーA結合",
+      displayName: "活性リプレッサーA抑制",
       description:
         "活性化されたリプレッサーAが結合すると下流の転写が抑制されます。",
     },
     promActivEL222dim: {
-      displayName: "EL222二量体結合",
+      displayName: "青センサー促進",
       description:
-        "EL222の二量体が結合し、それにより下流の転写が促進されます。",
+        "青センサーの二量体が結合し、それにより下流の転写が促進されます。",
     },
     promActivPhyBPIF3: {
-      displayName: "PhyB-PIF3結合",
+      displayName: "赤センサーab促進",
       description:
-        "PhyB-PIF3のヘテロ二量体が結合し、それにより下流の転写が促進されます。",
+        "赤センサーa,bのヘテロ二量体が結合し、それにより下流の転写が促進されます。",
     },
     visiMCherry: {
       displayName: "mCherry",
@@ -94,16 +94,16 @@ const ja: Messages = {
         "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
     },
     ctrlEL222: {
-      displayName: "EL222",
+      displayName: "青センサー",
       description: "青色光によって二量体を形成します。",
     },
     ctrlPhyB: {
-      displayName: "PhyB",
-      description: "赤色光によってPIF3とヘテロ二量体を形成します。",
+      displayName: "赤センサーa",
+      description: "赤色光によって赤センサーbとヘテロ二量体を形成します。",
     },
     ctrlPIF3: {
-      displayName: "PIF3",
-      description: "赤色光によってPhyBとヘテロ二量体を形成します。",
+      displayName: "赤センサーb",
+      description: "赤色光によって赤センサーaとヘテロ二量体を形成します。",
     },
     term1: {
       displayName: "ターミネーター",
