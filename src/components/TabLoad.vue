@@ -25,5 +25,6 @@ button {
   border: 1px solid #aaa;
   padding: 10px;
   border-radius: 10px;
+  font-family: inherit;
 }
 </style>
