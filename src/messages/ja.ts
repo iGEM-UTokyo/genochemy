@@ -16,6 +16,49 @@ const ja: Messages = {
       description:
         "EL222の二量体が結合し、それにより下流の転写が促進されます。",
     },
+    promActivPhyBPIF3: {
+      name: "PhyB-PIF3結合性プロモーター",
+      description:
+        "PhyB-PIF3のヘテロ二量体が結合し、それにより下流の転写が促進されます。",
+    },
+    visiGFP: {
+      name: "GFP",
+      description: "緑色の蛍光を発します。",
+    },
+    visiMCherry: {
+      name: "mCherry",
+      description:
+        "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
+    },
+    ctrlRepressorA: {
+      name: "リプレッサーA",
+      description:
+        "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
+    },
+    ctrlEL222: {
+      name: "EL222",
+      description: "青色光によって二量体を形成します。",
+    },
+    ctrlPhyB: {
+      name: "PhyB",
+      description: "赤色光によってPIF3とヘテロ二量体を形成します。",
+    },
+    ctrlPIF3: {
+      name: "PIF3",
+      description: "赤色光によってPhyBとヘテロ二量体を形成します。",
+    },
+    metaRecombA: {
+      name: "リコンビナーゼI",
+      description: "認識配列Iに挟まれた配列を切り出します。",
+    },
+    metaRecombB: {
+      name: "リコンビナーゼII",
+      description: "認識配列IIに挟まれた配列を切り出します。",
+    },
+    metaKill: {
+      name: "キルスイッチ",
+      description: "標的生物を死滅させます。",
+    },
   },
   block: {
     promConst1: {
