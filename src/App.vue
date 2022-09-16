@@ -7,7 +7,7 @@
     <div :class="{ right: true, show: showRight }">
       <div class="toggle-right" @click="toggle">
         <font-awesome-icon :icon="showRight ? 'arrow-down' : 'arrow-up'" />
-        {{ showRight ? "隠す" : "表示する" }}
+        {{ showRight ? t("view.hide") : t("view.show") }}
       </div>
       <Runner v-if="showRight" />
       <Property v-if="showRight" />
@@ -23,6 +23,9 @@ import Property from "@/components/Property.vue";
 import { onMounted, ref } from "vue";
 import importJson from "./utils/importer";
 import { useStore } from "./store";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const store = useStore();
 

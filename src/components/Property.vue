@@ -1,9 +1,6 @@
 <template>
   <div class="tabs-container">
-    <tabs
-      :tabs="['Tutorial', 'Protein', 'RNA', 'Questions', 'Load']"
-      v-model="activeTab"
-    >
+    <tabs :tabs="tabItems" v-model="activeTab">
       <div class="tab-button" @click="run">
         <font-awesome-icon :icon="store.isRunning ? 'rotate-left' : 'play'" />
       </div>
@@ -12,11 +9,11 @@
       </div>
     </tabs>
     <div class="tab">
-      <tab-tutorial v-if="activeTab === 'Tutorial'" />
-      <tab-messenger-r-n-a v-if="activeTab === 'RNA'" />
-      <tab-protein v-if="activeTab === 'Protein'" />
-      <tab-questions v-if="activeTab === 'Questions'" />
-      <tab-load v-if="activeTab === 'Load'" />
+      <tab-tutorial v-if="activeTab === 'tabs.tutorial'" />
+      <tab-messenger-r-n-a v-if="activeTab === 'tabs.rna'" />
+      <tab-protein v-if="activeTab === 'tabs.protein'" />
+      <tab-questions v-if="activeTab === 'tabs.questions'" />
+      <tab-load v-if="activeTab === 'tabs.load'" />
     </div>
   </div>
 </template>
@@ -30,10 +27,18 @@ import TabMessengerRNA from "@/components/TabMessengerRNA.vue";
 import TabProtein from "@/components/TabProtein.vue";
 import TabQuestions from "@/components/TabQuestions.vue";
 import TabLoad from "@/components/TabLoad.vue";
+import { MessagesAddresses } from "@/messages";
 
 const store = useStore();
 const { run, stop } = store;
-const activeTab = ref("Tutorial");
+const activeTab = ref<MessagesAddresses>("tabs.tutorial");
+const tabItems: MessagesAddresses[] = [
+  "tabs.tutorial",
+  "tabs.protein",
+  "tabs.rna",
+  "tabs.questions",
+  "tabs.load",
+];
 </script>
 
 <style scoped>

@@ -5,7 +5,7 @@
       @click="decrement"
       >◀</span
     >
-    Question {{ questionNumber + 1 }}
+    {{ t("questions.question") }} {{ questionNumber + 1 }}
     <span
       :class="{
         'q-nav': true,
@@ -23,7 +23,7 @@
           @click="decrementImage"
           >◀</span
         >
-        Image {{ imageNumber + 1 }}
+        {{ t("questions.image") }} {{ imageNumber + 1 }}
         <span
           :class="{
             'q-nav': true,
@@ -34,7 +34,7 @@
         >
       </p>
       <button @click="showAnswer" v-if="currentQuestion.answer">
-        Show Answer
+        {{ t("questions.showAnswer") }}
       </button>
     </div>
   </div>
@@ -45,7 +45,9 @@ import { computed, ref } from "vue";
 import questions from "@/utils/questions";
 import { useStore } from "@/store";
 import importJson from "@/utils/importer";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const { addSnake } = useStore();
 
 const questionNumber = ref(0);

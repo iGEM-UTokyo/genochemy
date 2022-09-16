@@ -1,6 +1,6 @@
 <template>
   <div class="tab-content">
-    <button @click="load">Import UTokyo 2022 Project</button>
+    <button @click="load">{{ t("load.loadUTokyo2022Project") }}</button>
   </div>
 </template>
 
@@ -8,11 +8,13 @@
 import { useStore } from "@/store";
 import questions from "@/utils/questions";
 import importJson from "@/utils/importer";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const { addSnake } = useStore();
 
 function load() {
-  const snakes = importJson(questions[8].answer);
+  const snakes = importJson(questions[8].answer!);
   addSnake(...snakes);
 }
 </script>
