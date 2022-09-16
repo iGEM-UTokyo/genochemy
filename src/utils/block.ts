@@ -17,6 +17,7 @@ import {
   T7Promoter,
 } from "./matter";
 import { v4 as uuidv4 } from "uuid";
+import { MessagesAddresses } from "@/messages";
 
 export type BlockTypes =
   | "promoter"
@@ -43,9 +44,9 @@ export class BlockDesign {
   width: number;
   height: number;
   imageSrc: string;
-  displayName: string;
+  displayName: MessagesAddresses | "";
   bottomAnchor: number;
-  description: string;
+  description: MessagesAddresses | "";
   constructor({
     width,
     height,
@@ -57,9 +58,9 @@ export class BlockDesign {
     width: number;
     height: number;
     imageSrc: string;
-    displayName?: string;
+    displayName?: MessagesAddresses;
     bottomAnchor?: number;
-    description?: string;
+    description?: MessagesAddresses;
   }) {
     this.width = width;
     this.height = height;
