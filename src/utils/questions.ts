@@ -1,7 +1,8 @@
+import { MessagesAddresses } from "@/messages";
 import { JsonFormat } from "./importer";
 
 interface Question {
-  name: string;
+  name: MessagesAddresses;
   imgs: string[];
   answer?: JsonFormat;
   hint?: JsonFormat;
@@ -35,7 +36,7 @@ type Assertion =
     };
 const questions: Question[] = [
   {
-    name: "Green Creature",
+    name: "questions.1",
     imgs: ["Question1.png"],
     answer: [
       {
@@ -56,7 +57,7 @@ const questions: Question[] = [
     },
   },
   {
-    name: "Blue makes green",
+    name: "questions.2",
     imgs: ["Question2.png"],
     answer: [
       {
@@ -68,7 +69,7 @@ const questions: Question[] = [
     ],
   },
   {
-    name: "Killer Light",
+    name: "questions.3",
     imgs: ["Question2.5.png"],
     answer: [
       {
@@ -80,7 +81,7 @@ const questions: Question[] = [
     ],
   },
   {
-    name: "Drug Addict",
+    name: "questions.4",
     imgs: ["Question3.png"],
     answer: [
       {
@@ -92,11 +93,11 @@ const questions: Question[] = [
     ],
   },
   {
-    name: "NAND Gate",
+    name: "questions.5",
     imgs: ["Question4-1.png", "Question4-2.png"],
   },
   {
-    name: "Short Temper",
+    name: "questions.6",
     imgs: ["Question5.png"],
     answer: [
       {
@@ -112,15 +113,15 @@ const questions: Question[] = [
     ],
   },
   {
-    name: "Blue makes infinitely green",
+    name: "questions.7",
     imgs: ["Question6.png"],
   },
   {
-    name: "Green to Red",
+    name: "questions.8",
     imgs: ["Question6.5.png"],
   },
   {
-    name: "Optopass",
+    name: "questions.9",
     imgs: ["Question7.png"],
     answer: [
       {

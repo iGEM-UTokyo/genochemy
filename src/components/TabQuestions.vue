@@ -14,7 +14,7 @@
       @click="increment"
       >▶</span
     >
-    <h2>{{ currentQuestion.name }}</h2>
+    <h2>{{ t(currentQuestion.name) }}</h2>
     <div class="question-content">
       <img :src="currentImage" /><br />
       <p v-if="currentQuestion.imgs.length > 1">
