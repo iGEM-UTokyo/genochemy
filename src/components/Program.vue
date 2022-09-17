@@ -32,6 +32,8 @@
     <!-- <CursorMode v-model="cursorMode" /> -->
     <div class="running" v-if="isRunning" />
     <div class="buttons">
+      <img src="/logo.svg" />
+      <div style="flex: 1" />
       v0.5.0
       <ShareTwitter />
     </div>
@@ -268,9 +270,16 @@ function wheel(e: WheelEvent) {
 .buttons {
   position: absolute;
   bottom: 10px;
-  right: 10px;
+  width: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
   display: flex;
   gap: 10px;
   align-items: flex-end;
+  pointer-events: none;
+}
+.buttons img {
+  height: 50px;
+  transform: translateY(9px);
 }
 </style>
