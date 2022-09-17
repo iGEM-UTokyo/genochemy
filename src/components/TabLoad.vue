@@ -14,7 +14,39 @@ const { t } = useI18n();
 const { addSnake } = useStore();
 
 function load() {
-  const snakes = importJson(questions[8].answer!);
+  const snakes = importJson([
+    {
+      blocks: [
+        "prom-const-1",
+        "ctrl-EL222",
+        "ctrl-PhyB",
+        "ctrl-PIF3",
+        "term-1",
+      ],
+    },
+    {
+      blocks: [
+        "prom-activ-EL222dim",
+        "seq-recog-recomb2",
+        "meta-recomb1",
+        "term-1",
+        "seq-recog-recomb2",
+        "visi-GFP",
+        "term-1",
+      ],
+    },
+    {
+      blocks: [
+        "prom-activ-PhyBPIF3",
+        "seq-recog-recomb1",
+        "meta-kill",
+        "term-1",
+        "seq-recog-recomb1",
+        "meta-recomb2",
+        "term-1",
+      ],
+    },
+  ]);
   addSnake(...snakes);
 }
 </script>

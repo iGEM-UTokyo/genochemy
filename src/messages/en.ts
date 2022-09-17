@@ -1,6 +1,6 @@
 import { Messages } from ".";
 
-const ja: Messages = {
+const en: Messages = {
   matter: {
     promT7: {
       name: "常に発現",
@@ -160,6 +160,9 @@ Loadタブから、iGEMプロジェクトを模した配列を読み込むこと
     "11": `実行ボタンを押し、環境調整も終わったら次は実験結果の観察と評価です。
 LabにあるGenomyのイラストを見ると蛍光タンパク質の発現量と種類を大まかに目で確認することができます。
 前述したとおり、ProteinタブとRNAタブでは生産中の物質の情報について知ることができ、特に蛍光タンパク質については発現量も見ることができます。`,
+    "12": `それでは、Questionsタブにある問題に取り組んで、遺伝子回路設計を練習しましょう！
+問題は簡単なイラストで表示されています。
+一部の問題は、Show Answerボタンで模範解答を見ることができます。別解を作ってみるのも良いでしょう。`,
   },
   tabs: {
     tutorial: "チュートリアル",
@@ -189,7 +192,7 @@ LabにあるGenomyのイラストを見ると蛍光タンパク質の発現量�
     "6": "Short Temper",
     "7": "Blue makes infinitely green",
     "8": "Green to Red",
-    "9": "Optopass",
+    "9": "Optopass Mini",
   },
   load: {
     loadUTokyo2022Project: "UTokyo 2022のプロジェクトを読み込む",
@@ -197,4 +200,4 @@ LabにあるGenomyのイラストを見ると蛍光タンパク質の発現量�
   twitterShare: "Genochemy で遺伝子回路を作りました！",
 };
 
-export default ja;
+export default en;

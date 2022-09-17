@@ -50,6 +50,7 @@ export interface Messages {
     "9": string;
     "10": string;
     "11": string;
+    "12": string;
   };
   tabs: {
     tutorial: string;
