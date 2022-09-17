@@ -33,6 +33,7 @@ const style = computed(() => ({
   text-align: center;
   line-height: 50px;
   background-color: white;
+  pointer-events: all;
 }
 .active {
   background-color: #0097a7;
