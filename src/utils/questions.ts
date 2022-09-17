@@ -134,15 +134,7 @@ const questions: Question[] = [
         ],
       },
       {
-        blocks: [
-          "prom-activ-EL222dim",
-          "seq-recog-recomb2",
-          "meta-recomb1",
-          "term-1",
-          "seq-recog-recomb2",
-          "visi-GFP",
-          "term-1",
-        ],
+        blocks: ["prom-activ-EL222dim", "meta-recomb1", "term-1"],
       },
       {
         blocks: [
@@ -151,7 +143,7 @@ const questions: Question[] = [
           "meta-kill",
           "term-1",
           "seq-recog-recomb1",
-          "meta-recomb2",
+          "visi-GFP",
           "term-1",
         ],
       },

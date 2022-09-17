@@ -50,6 +50,10 @@ const tutorial: TutorialContent[] = [
     img: "https://lh3.googleusercontent.com/pw/AL9nZEWa80C1xhE1c3dr6gdRR7CYV_T6BjGF1PBLO7CZgYUmc8thYNvrZYUgZrsVcFtolgfwRXwAuJqy7EeiJmJ4lG2NLLJiJSMQ2L87s-EqB5lCIeIyyX7DpuhOAZykeIkLdp7a2ZQt4TAys3p94rYxXeo0yw=w1709-h962-no",
     text: "tutorial.11",
   },
+  {
+    img: "https://lh3.googleusercontent.com/pw/AL9nZEUQveCKcKHccwcxi3_GX_rHayMLTX0EvyYWA9lQcH9N19Sdq2H1kwI3xbbq4f4nvh7Reo_cL5dsYtbEFTIGVwGIWSEHowWuWT3iApFp1Hu5p6lCZrGahWKKx9pPZEAb-ld3hfBDvIqDy2EyMCooFEmlVQ=s1116-no",
+    text: "tutorial.12",
+  },
 ];
 
 export default tutorial;
