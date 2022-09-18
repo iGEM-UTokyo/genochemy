@@ -1,8 +1,11 @@
 <template>
-  <div :style="divStyle">
-    <img :src="src" :width="props.block.width" />
-    <span>{{ displayName }}</span>
-  </div>
+  <!-- <div :style="divStyle"> -->
+  <g>
+    <image :href="src" :width="props.block.design.width" :x="props.x" :y="_y" />
+    <text :x="props.x + 10" :y="props.y - 9" fill="white">{{
+      t(displayName)
+    }}</text>
+  </g>
 </template>
 
 <style scoped>
@@ -25,19 +28,24 @@ span {
 
 <script setup lang="ts">
 import { Block } from "../utils/block";
-import { overlap } from "../utils/snake";
-import { defineProps, computed, StyleValue, ComputedRef } from "vue";
-import { blockDesignDetails } from "@/utils/block-designs";
+import { defineProps, computed } from "vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const props = defineProps<{
+  x: number;
+  y: number;
   block: Block;
 }>();
-const src = computed(() => blockDesignDetails[props.block.name].imageSrc);
-const displayName = computed(
-  () => blockDesignDetails[props.block.name].displayName || props.block.name
+const src = computed(() => props.block.design.imageSrc);
+const displayName = computed(() => props.block.design.displayName);
+const _y = computed(
+  () => -props.block.design.height + props.y + props.block.design.bottomAnchor
 );
-
-const divStyle: ComputedRef<StyleValue> = computed(() => ({
-  width: `${props.block.width - overlap}px`,
-}));
 </script>
+
+<style scoped>
+text {
+  user-select: none;
+}
+</style>

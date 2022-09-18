@@ -2,10 +2,9 @@
   <div class="tray">
     <div class="tray-inner">
       <TrayBlock
-        v-for="(detail, name) in blockDesignDetails"
-        :key="name"
-        :blockName="name"
-        :detail="detail"
+        v-for="(blockClass, index) in allFinalBlockClasses"
+        :key="index"
+        :block-class="blockClass"
       />
     </div>
   </div>
@@ -13,7 +12,7 @@
 
 <script setup lang="ts">
 import TrayBlock from "./TrayBlock.vue";
-import { blockDesignDetails } from "../utils/block-designs";
+import { allFinalBlockClasses } from "@/utils/block";
 </script>
 
 <style scoped>

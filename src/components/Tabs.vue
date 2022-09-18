@@ -7,7 +7,7 @@
       :class="{ 'active-tab-item': tab === modelValue }"
       @click="update(tab)"
     >
-      {{ tab }}
+      {{ t(tab) }}
     </div>
     <div class="tabs-right">
       <slot></slot>
@@ -16,7 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, toRefs } from "vue";
+import { defineProps, defineEmits, toRefs } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   modelValue: string;

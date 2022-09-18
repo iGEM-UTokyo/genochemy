@@ -1,15 +1,22 @@
 import { createApp } from "vue";
+import { createI18n } from "vue-i18n";
 import { createPinia } from "pinia";
-import { library } from "@fortawesome/fontawesome-svg-core";
+import { IconDefinition, library } from "@fortawesome/fontawesome-svg-core";
 import {
   faPlay,
   faStop,
   faRotateLeft,
   faTrash,
+  faWaveSquare,
+  faArrowsUpDownLeftRight,
+  faArrowDown,
+  faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
+import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import App from "./App.vue";
+import messages, { Messages } from "./messages";
 
 const app = createApp(App);
 
@@ -17,7 +24,19 @@ library.add(faPlay);
 library.add(faStop);
 library.add(faRotateLeft);
 library.add(faTrash);
+library.add(faArrowsUpDownLeftRight);
+library.add(faWaveSquare);
+library.add(faArrowDown);
+library.add(faArrowUp);
+library.add(faTwitter as IconDefinition);
 app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(createPinia());
+
+const i18n = createI18n<[Messages], "ja">({
+  legacy: false,
+  locale: "ja",
+  messages,
+});
+app.use(i18n);
 app.mount("#app");

@@ -1,6 +1,6 @@
 <template>
   <div class="tabs-container">
-    <tabs :tabs="['Protein', 'RNA']" v-model="activeTab">
+    <tabs :tabs="tabItems" v-model="activeTab">
       <div class="tab-button" @click="run">
         <font-awesome-icon :icon="store.isRunning ? 'rotate-left' : 'play'" />
       </div>
@@ -8,8 +8,13 @@
         <font-awesome-icon icon="stop" />
       </div>
     </tabs>
-    <tab-messenger-r-n-a v-if="activeTab === 'RNA'" />
-    <tab-protein v-if="activeTab === 'Protein'" />
+    <div class="tab">
+      <tab-tutorial v-if="activeTab === 'tabs.tutorial'" />
+      <tab-messenger-r-n-a v-if="activeTab === 'tabs.rna'" />
+      <tab-protein v-if="activeTab === 'tabs.protein'" />
+      <tab-questions v-if="activeTab === 'tabs.questions'" />
+      <tab-load v-if="activeTab === 'tabs.load'" />
+    </div>
   </div>
 </template>
 
@@ -17,12 +22,23 @@
 import { ref } from "vue";
 import { useStore } from "@/store";
 import Tabs from "@/components/Tabs.vue";
+import TabTutorial from "@/components/TabTutorial.vue";
 import TabMessengerRNA from "@/components/TabMessengerRNA.vue";
 import TabProtein from "@/components/TabProtein.vue";
+import TabQuestions from "@/components/TabQuestions.vue";
+import TabLoad from "@/components/TabLoad.vue";
+import { MessagesAddresses } from "@/messages";
 
 const store = useStore();
 const { run, stop } = store;
-const activeTab = ref("Protein");
+const activeTab = ref<MessagesAddresses>("tabs.tutorial");
+const tabItems: MessagesAddresses[] = [
+  "tabs.tutorial",
+  "tabs.protein",
+  "tabs.rna",
+  "tabs.questions",
+  "tabs.load",
+];
 </script>
 
 <style scoped>
@@ -30,12 +46,23 @@ const activeTab = ref("Protein");
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .tab-button {
   padding: 5px 10px;
 }
+
+.tab {
+  flex: 1;
+  display: flex;
+  border-left: 1px solid #aaa;
+  padding: 0 10px;
+  align-items: stretch;
+  overflow: hidden;
+}
 .tab-content {
   flex: 1;
   padding: 10px 0;
+  overflow-y: auto;
 }
 </style>

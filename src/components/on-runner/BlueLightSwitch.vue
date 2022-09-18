@@ -1,6 +1,6 @@
 <template>
   <div class="control">
-    <label for="blue-light-switch">青色光:</label>
+    <label for="blue-light-switch">{{ t("runner.blueLight") }}:</label>
     <input
       id="blue-light-switch"
       type="checkbox"
@@ -20,6 +20,8 @@ export default {
 <script setup lang="ts">
 import { onUnmounted, ref, watch } from "vue";
 import { useStore } from "@/store";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const { registerInput, UnregisterInput, runnerInputs, updateRunnerInput } =
   useStore();
 const inputName = "blue-light";

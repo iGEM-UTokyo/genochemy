@@ -1,23 +1,35 @@
 import { CodingBlock } from "./block";
-import { DE, Term } from "./de-term";
+import { Term } from "./de-term";
 import DrugA from "@/components/on-runner/DrugA.vue";
 import BlueLightSwitch from "@/components/on-runner/BlueLightSwitch.vue";
+import RedLightSwitch from "@/components/on-runner/RedLightSwitch.vue";
 import Fluorescence from "@/components/on-runner/Fluorescence.vue";
-import Light from "@/components/on-runner/Light.vue";
+import BlueLight from "@/components/on-runner/BlueLight.vue";
+import RedLight from "@/components/on-runner/RedLight.vue";
+import RecombinaseModifier from "@/components/on-runner/RecombinaseModifier.vue";
+import KillSwitchVue from "@/components/on-runner/KillSwitch.vue";
+import { MessagesAddresses } from "@/messages";
 
 export interface RunnerComponent {
   name: string;
 }
 
+export type MatterEquations = {
+  [matterName: string]: Term[];
+};
+export interface Actor {
+  buildDE(matterEquations: MatterEquations): void;
+}
+
 export abstract class Promoter {
   abstract buildDEForMessengerRNA(): Term[];
-  name = "";
-  description = "";
+  name: MessagesAddresses | "" = "";
+  description: MessagesAddresses | "" = "";
 }
 
 export class T7Promoter extends Promoter {
-  name = "常時発現";
-  description = "常に一定の割合で下流を転写します。";
+  name = "matter.promT7.name" as const;
+  description = "matter.promT7.description" as const;
   buildDEForMessengerRNA(): Term[] {
     return [
       {
@@ -29,15 +41,14 @@ export class T7Promoter extends Promoter {
 }
 
 export class DrugRepressiblePromoter extends Promoter {
-  name = "リプレッサーA結合性プロモーター";
-  description =
-    "活性化されたリプレッサーAが結合すると下流の転写が抑制されます。";
+  name = "matter.promReprRepressorADrugA.name" as const;
+  description = "matter.promReprRepressorADrugA.description" as const;
   buildDEForMessengerRNA(): Term[] {
     return [
       {
         type: "hillrev",
         deg: { type: "const", value: 1 },
-        const: { type: "const", value: 1 },
+        const: { type: "const", value: 0.1 },
         value: { type: "variable", name: "protein-Repressor-bound" },
       },
     ];
@@ -45,14 +56,13 @@ export class DrugRepressiblePromoter extends Promoter {
 }
 
 export class EL222ActivatedPromoter extends Promoter {
-  name = "青色アクチベーター結合性プロモーター";
-  description =
-    "青色アクチベーターの二量体が結合し、それにより下流の転写が促進されます。";
+  name = "matter.promActivEL222dim.name" as const;
+  description = "matter.promActivEL222dim.description" as const;
   buildDEForMessengerRNA(): Term[] {
     return [
       {
         type: "const",
-        value: 0.05,
+        value: 0.02,
       },
       {
         type: "hill",
@@ -64,12 +74,43 @@ export class EL222ActivatedPromoter extends Promoter {
   }
 }
 
-export abstract class Matter {
+export class PhyBPIF3ActivatedPromoter extends Promoter {
+  name = "matter.promActivPhyBPIF3.name" as const;
+  description = "matter.promActivPhyBPIF3.description" as const;
+  buildDEForMessengerRNA(): Term[] {
+    return [
+      {
+        type: "const",
+        value: 0.05,
+      },
+      {
+        type: "hill",
+        deg: { type: "const", value: 1 },
+        const: { type: "const", value: 1 },
+        value: { type: "variable", name: "protein-PhyB-PIF3" },
+      },
+    ];
+  }
+}
+
+export abstract class Matter implements Actor {
   abstract get name(): string;
   guiViews: RunnerComponent[] = [];
   stageSettings: RunnerComponent[] = [];
-  description = "";
-  abstract buildDE(): DE[];
+  description: MessagesAddresses | "" = "";
+  abstract buildDE(matterEquations: MatterEquations): void;
+}
+
+export class PromoterActor implements Actor {
+  constructor(public promoter: Promoter, public mRNA: OperonMessengerRNA) {}
+  buildDE(matterEquations: MatterEquations) {
+    if (!matterEquations[this.mRNA.name]) {
+      matterEquations[this.mRNA.name] = [];
+    }
+    matterEquations[this.mRNA.name].push(
+      ...this.promoter.buildDEForMessengerRNA()
+    );
+  }
 }
 
 export function toMRNAName(name: string) {
@@ -86,24 +127,19 @@ export class OperonMessengerRNA extends Matter {
   get name() {
     return `mRNA-${this.codingBlocks.map((block) => block.name).join("-")}`;
   }
-  buildDE(): DE[] {
-    return [
-      {
-        target: this.name,
-        terms: [
-          ...this.promoters
-            .map((promoter) => promoter.buildDEForMessengerRNA())
-            .flat(),
-          {
-            type: "multiply",
-            values: [
-              { type: "const", value: -1 },
-              { type: "variable", name: this.name },
-            ],
-          },
-        ],
-      },
-    ];
+  getDisplayName(t: (a: string) => string) {
+    return `${this.codingBlocks
+      .map((block) => t(block.design.displayName))
+      .join(",")}`;
+  }
+  buildDE(matterEquations: MatterEquations) {
+    for (const block of this.codingBlocks) {
+      const protein = new block.ProteinClass(block.name, [this]);
+      if (!matterEquations[protein.name]) {
+        matterEquations[protein.name] = [];
+      }
+      matterEquations[protein.name].push(...this.buildDEForProtein());
+    }
   }
   buildDEForProtein(): Term[] {
     return [
@@ -116,6 +152,7 @@ export class OperonMessengerRNA extends Matter {
 }
 
 export class Protein extends Matter {
+  displayName: MessagesAddresses | "" = "";
   constructor(
     private _name: string,
     public messengerRNAs: OperonMessengerRNA[]
@@ -125,28 +162,14 @@ export class Protein extends Matter {
   get name() {
     return `protein-${this._name}`;
   }
-  buildDE(): DE[] {
-    return [
-      {
-        target: this.name,
-        terms: [
-          ...this.messengerRNAs.map((mRNA) => mRNA.buildDEForProtein()).flat(),
-          {
-            type: "multiply",
-            values: [
-              { type: "const", value: -1 },
-              { type: "variable", name: this.name },
-            ],
-          },
-        ],
-      },
-    ];
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  buildDE(matterEquations: MatterEquations) {}
 }
 
 export class mCherry extends Protein {
   stageSettings = [Fluorescence];
-  description = "赤色の蛍光を発します。";
+  displayName = "matter.visiMCherry.name" as const;
+  description = "matter.visiMCherry.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -154,7 +177,8 @@ export class mCherry extends Protein {
 
 export class GFP extends Protein {
   stageSettings = [Fluorescence];
-  description = "緑色の蛍光を発します。";
+  displayName = "matter.visiGFP.name" as const;
+  description = "matter.visiGFP.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
@@ -162,152 +186,331 @@ export class GFP extends Protein {
 
 export class RepressorA extends Protein {
   guiViews = [DrugA];
-  description =
-    "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。";
+  displayName = "matter.ctrlRepressorA.name" as const;
+  description = "matter.ctrlRepressorA.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
-  buildDE(): DE[] {
-    const baseTerm = super.buildDE()[0];
-    baseTerm.terms.push({
-      type: "multiply",
-      values: [
-        { type: "const", value: -1 },
-        {
-          type: "multiply",
-          values: [
-            { type: "variable", name: this.name },
-            { type: "variable", name: "drug" },
-          ],
-        },
-      ],
-    });
-    baseTerm.terms.push({
-      type: "multiply",
-      values: [
-        { type: "const", value: 0.5 },
-        {
-          type: "variable",
-          name: "protein-Repressor-bound",
-        },
-      ],
-    });
-    return [
-      baseTerm,
+  buildDE(matterEquations: MatterEquations) {
+    if (!matterEquations[this.name]) {
+      matterEquations[this.name] = [];
+    }
+    matterEquations[this.name].push(
       {
-        target: "drug",
-        terms: [],
-      },
-      {
-        target: "protein-Repressor-bound",
-        terms: [
+        type: "multiply",
+        values: [
+          { type: "const", value: -2 },
           {
             type: "multiply",
             values: [
-              { type: "const", value: 1 },
-              {
-                type: "multiply",
-                values: [
-                  { type: "variable", name: this.name },
-                  { type: "variable", name: "drug" },
-                ],
-              },
-            ],
-          },
-          {
-            type: "multiply",
-            values: [
-              { type: "const", value: -0.5 },
-              {
-                type: "variable",
-                name: "protein-Repressor-bound",
-              },
+              { type: "variable", name: this.name },
+              { type: "variable", name: "drug" },
             ],
           },
         ],
       },
-    ];
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: 0.1 },
+          {
+            type: "variable",
+            name: "protein-Repressor-bound",
+          },
+        ],
+      }
+    );
+    if (!matterEquations["protein-Repressor-bound"]) {
+      matterEquations["protein-Repressor-bound"] = [];
+    }
+    matterEquations["protein-Repressor-bound"].push(
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: 2 },
+          {
+            type: "multiply",
+            values: [
+              { type: "variable", name: this.name },
+              { type: "variable", name: "drug" },
+            ],
+          },
+        ],
+      },
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: -0.1 },
+          {
+            type: "variable",
+            name: "protein-Repressor-bound",
+          },
+        ],
+      }
+    );
+    if (!matterEquations["drug"]) {
+      matterEquations["drug"] = [];
+    }
   }
 }
 
 export class EL222 extends Protein {
-  stageSettings = [Light];
+  stageSettings = [BlueLight];
   guiViews = [BlueLightSwitch];
-  description = "青色光によって二量体を形成します。";
+  displayName = "matter.ctrlEL222.name" as const;
+  description = "matter.ctrlEL222.description" as const;
   constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
     super(_name, messengerRNAs);
   }
-  buildDE(): DE[] {
-    const baseTerm = super.buildDE()[0];
-    baseTerm.terms.push({
-      type: "multiply",
-      values: [
-        { type: "const", value: -1 },
-        {
-          type: "multiply",
-          values: [
-            { type: "variable", name: "blue-light" },
-            {
-              type: "multiply",
-              values: [
-                { type: "variable", name: this.name },
-                { type: "variable", name: this.name },
-              ],
-            },
-          ],
-        },
-      ],
-    });
-    baseTerm.terms.push({
-      type: "multiply",
-      values: [
-        { type: "const", value: 0.5 },
-        {
-          type: "variable",
-          name: "protein-dimerized-EL222",
-        },
-      ],
-    });
-    return [
-      baseTerm,
+  buildDE(matterEquations: MatterEquations) {
+    if (!matterEquations[this.name]) {
+      matterEquations[this.name] = [];
+    }
+    matterEquations[this.name].push(
       {
-        target: "blue-light",
-        terms: [],
-      },
-      {
-        target: "protein-dimerized-EL222",
-        terms: [
+        type: "multiply",
+        values: [
+          { type: "const", value: -1 },
           {
             type: "multiply",
             values: [
-              { type: "const", value: 1 },
+              { type: "variable", name: "blue-light" },
               {
                 type: "multiply",
                 values: [
-                  { type: "variable", name: "blue-light" },
-                  {
-                    type: "multiply",
-                    values: [
-                      { type: "variable", name: this.name },
-                      { type: "variable", name: this.name },
-                    ],
-                  },
+                  { type: "variable", name: this.name },
+                  { type: "variable", name: this.name },
                 ],
-              },
-            ],
-          },
-          {
-            type: "multiply",
-            values: [
-              { type: "const", value: -0.5 },
-              {
-                type: "variable",
-                name: "protein-dimerized-EL222",
               },
             ],
           },
         ],
       },
-    ];
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: 0.5 },
+          {
+            type: "variable",
+            name: "protein-dimerized-EL222",
+          },
+        ],
+      }
+    );
+    if (!matterEquations["protein-dimerized-EL222"]) {
+      matterEquations["protein-dimerized-EL222"] = [];
+    }
+    matterEquations["protein-dimerized-EL222"].push(
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: 1 },
+          {
+            type: "multiply",
+            values: [
+              { type: "variable", name: "blue-light" },
+              {
+                type: "multiply",
+                values: [
+                  { type: "variable", name: this.name },
+                  { type: "variable", name: this.name },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: -0.5 },
+          {
+            type: "variable",
+            name: "protein-dimerized-EL222",
+          },
+        ],
+      }
+    );
+    if (!matterEquations["blue-light"]) {
+      matterEquations["blue-light"] = [];
+    }
+  }
+}
+
+export class PhyB extends Protein {
+  stageSettings = [RedLight];
+  guiViews = [RedLightSwitch];
+  displayName = "matter.ctrlPhyB.name" as const;
+  description = "matter.ctrlPhyB.description" as const;
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+  buildDE(matterEquations: MatterEquations) {
+    if (!matterEquations[this.name]) {
+      matterEquations[this.name] = [];
+    }
+    matterEquations[this.name].push(
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: -1 },
+          {
+            type: "multiply",
+            values: [
+              { type: "variable", name: "red-light" },
+              {
+                type: "multiply",
+                values: [
+                  { type: "variable", name: this.name },
+                  { type: "variable", name: "protein-PIF3" },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: 0.5 },
+          {
+            type: "variable",
+            name: "protein-PhyB-PIF3",
+          },
+        ],
+      }
+    );
+    if (!matterEquations["protein-PhyB-PIF3"]) {
+      matterEquations["protein-PhyB-PIF3"] = [];
+    }
+    matterEquations["protein-PhyB-PIF3"].push(
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: 1 },
+          {
+            type: "multiply",
+            values: [
+              { type: "variable", name: "red-light" },
+              {
+                type: "multiply",
+                values: [
+                  { type: "variable", name: this.name },
+                  { type: "variable", name: "protein-PIF3" },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: -0.5 },
+          {
+            type: "variable",
+            name: "protein-PhyB-PIF3",
+          },
+        ],
+      }
+    );
+    if (!matterEquations["red-light"]) {
+      matterEquations["red-light"] = [];
+    }
+  }
+}
+
+export class PIF3 extends Protein {
+  stageSettings = [RedLight];
+  guiViews = [RedLightSwitch];
+  displayName = "matter.ctrlPIF3.name" as const;
+  description = "matter.ctrlPIF3.description" as const;
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+  buildDE(matterEquations: MatterEquations) {
+    if (!matterEquations[this.name]) {
+      matterEquations[this.name] = [];
+    }
+    matterEquations[this.name].push(
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: -1 },
+          {
+            type: "multiply",
+            values: [
+              { type: "variable", name: "red-light" },
+              {
+                type: "multiply",
+                values: [
+                  { type: "variable", name: "protein-PhyB" },
+                  { type: "variable", name: this.name },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "multiply",
+        values: [
+          { type: "const", value: 0.5 },
+          {
+            type: "variable",
+            name: "protein-PhyB-PIF3",
+          },
+        ],
+      }
+    );
+    if (!matterEquations["protein-PhyB-PIF3"]) {
+      matterEquations["protein-PhyB-PIF3"] = [];
+    }
+    if (!matterEquations["red-light"]) {
+      matterEquations["red-light"] = [];
+    }
+  }
+}
+
+export class RecombinaseA extends Protein {
+  stageSettings = [RecombinaseModifier];
+  displayName = "matter.metaRecombA.name" as const;
+  description = "matter.metaRecombA.description" as const;
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+}
+
+export class RecombinaseB extends Protein {
+  stageSettings = [RecombinaseModifier];
+  displayName = "matter.metaRecombB.name" as const;
+  description = "matter.metaRecombB.description" as const;
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+}
+
+export class KillSwitch extends Protein {
+  stageSettings = [KillSwitchVue];
+  displayName = "matter.metaKill.name" as const;
+  description = "matter.metaKill.description" as const;
+  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
+    super(_name, messengerRNAs);
+  }
+}
+
+export class Degrader implements Actor {
+  buildDE(matterEquations: MatterEquations): void {
+    for (const matterName of Object.keys(matterEquations)) {
+      if (matterName.startsWith("protein-") || matterName.startsWith("mRNA-")) {
+        matterEquations[matterName].push({
+          type: "multiply",
+          values: [
+            { type: "const", value: -1 },
+            { type: "variable", name: matterName },
+          ],
+        });
+      }
+    }
   }
 }
