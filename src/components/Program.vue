@@ -34,7 +34,7 @@
     <div class="buttons">
       <img src="/logo.svg" />
       <div style="flex: 1" />
-      v0.5.0
+      v0.6.0
       <ShareTwitter />
     </div>
   </div>
