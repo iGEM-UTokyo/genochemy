@@ -1,8 +1,9 @@
 <template>
   <div
     class="tray-block"
-    @mousedown="down"
-    @touchstart="down"
+    @pointerdown="down"
+    @pointermove="move"
+    @pointerup="up"
     @pointerenter="pointerenter"
     @pointerleave="pointerleave"
     ref="blockElem"
@@ -52,15 +53,27 @@ const props = defineProps<{
 const blockElem: Ref<HTMLElement | null> = ref(null);
 const block = ref(new props.blockClass());
 const { addTempBlock } = useStore();
+let isDown = false;
 const down = () => {
-  if (blockElem.value !== null) {
+  isDown = true;
+};
+const move = (e: PointerEvent) => {
+  if (
+    isDown &&
+    blockElem.value !== null &&
+    Math.abs(e.movementX ** 2 + e.movementY ** 2) > 0.1
+  ) {
     const boundingRect = blockElem.value.getBoundingClientRect();
     addTempBlock(block.value, [
       boundingRect.x,
       boundingRect.y + boundingRect.height - block.value.design.bottomAnchor,
     ]);
     block.value = new props.blockClass();
+    isDown = false;
   }
+};
+const up = () => {
+  isDown = false;
 };
 const blockRect = computed(
   () => blockElem.value?.getBoundingClientRect() ?? null
