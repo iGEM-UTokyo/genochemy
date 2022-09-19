@@ -15,6 +15,10 @@
       >
         <h2>{{ displayName }}</h2>
         {{ t(block.design.description) }}
+        <template v-if="block.params !== null">
+          <h3>{{ t(matterName) }}</h3>
+          {{ t(matterDescription) }}
+        </template>
       </div>
     </teleport>
     <svg
@@ -53,6 +57,10 @@
 h2 {
   margin: 0 0 10px 0;
   font-size: 18px;
+}
+h3 {
+  margin: 8px 0 3px 0;
+  font-size: 16px;
 }
 </style>
 
@@ -95,7 +103,7 @@ const pointerenter = () => {
     timeoutId = setTimeout(() => {
       timeoutId = null;
       showDescription.value = true;
-    }, 250);
+    }, 300);
   }
 };
 const pointerleave = () => {
@@ -106,6 +114,19 @@ const pointerleave = () => {
   showDescription.value = false;
 };
 const displayName = computed(() =>
-  t(block.value.design.displayName).replace(/<[^,]+,([^>]+)>/g, "$1")
+  t(block.value.design.displayName).replace(/<[^,]+,([^>]*)>/g, "$1")
 );
+const matterName = computed(() => {
+  if (block.value.params === null) return "";
+  return block.value.params[Object.keys(block.value.params)[0]].value;
+});
+const matterDescription = computed(() => {
+  if (block.value.params === null) return "";
+  const nameAddress =
+    block.value.params[Object.keys(block.value.params)[0]].value;
+  return `${nameAddress.substring(
+    0,
+    nameAddress.length - ".name".length
+  )}.description`;
+});
 </script>

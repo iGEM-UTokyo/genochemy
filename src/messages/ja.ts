@@ -27,8 +27,7 @@ const ja: Messages = {
     },
     visiMCherry: {
       name: "mCherry",
-      description:
-        "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
+      description: "ピンク色の蛍光を発します。",
     },
     ctrlRepressorA: {
       name: "リプレッサーA",
@@ -47,6 +46,10 @@ const ja: Messages = {
       name: "赤センサーb",
       description: "赤色光によって赤センサーaとヘテロ二量体を形成します。",
     },
+    ctrlEL222dim: {
+      name: "青センサー二量体",
+      description: "青色光によって二量体化した青センサーです。",
+    },
     ctrlPhyBPIF3: {
       name: "赤センサーab",
       description: "赤センサーaと赤センサーbのヘテロ二量体です。",
@@ -58,6 +61,14 @@ const ja: Messages = {
     metaRecombB: {
       name: "リコンビナーゼII",
       description: "認識配列IIに挟まれた配列を切り出します。",
+    },
+    seqRecogRecombA: {
+      name: "I",
+      description: "リコンビナーゼIに認識される配列です。",
+    },
+    seqRecogRecombB: {
+      name: "II",
+      description: "リコンビナーゼIIに認識される配列です。",
     },
     metaKill: {
       name: "キルスイッチ",
@@ -100,7 +111,7 @@ const ja: Messages = {
       description: "対応する認識配列に挟まれた配列を切り出します。",
     },
     seqRecogRecomb: {
-      displayName: "<recombinase,リコンビナーゼ>認識配列",
+      displayName: "認識配列<recombinase,>",
       description: "リコンビナーゼに認識される配列です。",
     },
     metaKill: {

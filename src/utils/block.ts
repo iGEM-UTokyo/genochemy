@@ -16,6 +16,7 @@ import {
   RecombinaseA,
   RecombinaseB,
   recombinaseNames,
+  recombinaseSequenceNames,
   RepressorA,
   repressorNames,
   repressorPartsNames,
@@ -213,10 +214,12 @@ export class InduciblePromoterBlock extends PromoterBlock {
       value: typeof activatorNames[number];
       list: typeof activatorNames;
     };
-  } = { activator: { value: "matter.ctrlEL222.name", list: activatorNames } };
+  } = {
+    activator: { value: "matter.ctrlEL222dim.name", list: activatorNames },
+  };
   getPromoter() {
     switch (this.params.activator.value) {
-      case "matter.ctrlEL222.name":
+      case "matter.ctrlEL222dim.name":
         return new EL222ActivatedPromoter();
       case "matter.ctrlPhyBPIF3.name":
         return new PhyBPIF3ActivatedPromoter();
@@ -509,13 +512,13 @@ export class RecombinaseRecognitionSeqBlock extends SpecialSequenceBlock {
   });
   params: {
     recombinase: {
-      value: typeof recombinaseNames[number];
-      list: typeof recombinaseNames;
+      value: typeof recombinaseSequenceNames[number];
+      list: typeof recombinaseSequenceNames;
     };
   } = {
     recombinase: {
-      value: "matter.metaRecombA.name",
-      list: recombinaseNames,
+      value: "matter.seqRecogRecombA.name",
+      list: recombinaseSequenceNames,
     },
   };
   constructor() {
@@ -589,7 +592,7 @@ export function uniqueNameToBlockV1(uniqueName: string): Block {
     }
     case "prom-activ-EL222dim": {
       const block = new InduciblePromoterBlock();
-      block.params.activator.value = "matter.ctrlEL222.name";
+      block.params.activator.value = "matter.ctrlEL222dim.name";
       return block;
     }
     case "prom-activ-PhyBPIF3": {
