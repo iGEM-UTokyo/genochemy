@@ -119,7 +119,6 @@ const paramValue = computed({
     if (props.snakeUUID && props.block.uuid) {
       updateBlock(props.snakeUUID, props.block.uuid, (block: BlockWithUUID) => {
         if (block.params === null) return block;
-        console.log("hoge");
         block.params[Object.keys(block.params)[0]].value = value;
         return block;
       });
