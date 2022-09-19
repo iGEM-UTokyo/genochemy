@@ -645,12 +645,12 @@ export function uniqueNameToBlockV1(uniqueName: string): Block {
     }
     case "seq-recog-recomb1": {
       const block = new RecombinaseRecognitionSeqBlock();
-      block.params.recombinase.value = "matter.metaRecombA.name";
+      block.params.recombinase.value = "matter.seqRecogRecombA.name";
       return block;
     }
     case "seq-recog-recomb2": {
       const block = new RecombinaseRecognitionSeqBlock();
-      block.params.recombinase.value = "matter.metaRecombB.name";
+      block.params.recombinase.value = "matter.seqRecogRecombB.name";
       return block;
     }
     case "meta-kill":

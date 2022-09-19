@@ -125,7 +125,9 @@ export class OperonMessengerRNA extends Matter {
     super();
   }
   get name() {
-    return `mRNA-${this.codingBlocks.map((block) => block.name).join("-")}`;
+    return `mRNA-${this.codingBlocks
+      .map((block) => block.getProtein().name)
+      .join("-")}`;
   }
   getDisplayName(t: (a: string) => string) {
     return `${this.codingBlocks
