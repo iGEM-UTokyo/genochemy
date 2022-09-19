@@ -12,7 +12,9 @@
         @pointerup="mouseup(block.uuid)"
         :key="block.uuid"
         :block="block"
-        :snake-u-u-i-d="currentSnake.uuid"
+        :update-block="
+          (updater) => updateBlock(currentSnake.uuid, block.uuid, updater)
+        "
         :x="x"
         :y="0"
       />
@@ -60,7 +62,8 @@ watch(
   { flush: "post" }
 );
 
-const { splitHead, splitTail, wrapSnake, setGrabbing, snakes } = useStore();
+const { splitHead, splitTail, wrapSnake, setGrabbing, snakes, updateBlock } =
+  useStore();
 const wrapInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
   const head = currentSnake.value.blocks[currentSnake.value.blocks.length - 1];
   if (head instanceof WrapTailBlock) {

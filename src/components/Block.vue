@@ -57,16 +57,16 @@ option {
 import { Block, BlockWithUUID } from "../utils/block";
 import { defineProps, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { useStore } from "@/store";
 
 const { t } = useI18n();
-const { updateBlock } = useStore();
 
 const props = defineProps<{
   x: number;
   y: number;
-  snakeUUID?: string;
   block: Block | BlockWithUUID;
+  updateBlock: (
+    updater: <T extends Block | BlockWithUUID>(block: T) => T
+  ) => void;
 }>();
 const src = computed(() => props.block.design.imageSrc);
 const displayName = computed(() => props.block.design.displayName);
@@ -126,13 +126,11 @@ const paramValue = computed({
     return params[Object.keys(params)[0]].value;
   },
   set(value: string) {
-    if (props.snakeUUID && props.block.uuid) {
-      updateBlock(props.snakeUUID, props.block.uuid, (block: BlockWithUUID) => {
-        if (block.params === null) return block;
-        block.params[Object.keys(block.params)[0]].value = value;
-        return block;
-      });
-    }
+    props.updateBlock((block) => {
+      if (block.params === null) return block;
+      block.params[Object.keys(block.params)[0]].value = value;
+      return block;
+    });
   },
 });
 </script>

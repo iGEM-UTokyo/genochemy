@@ -22,7 +22,12 @@
       :height="block.design.height + block.design.bottomAnchor"
     >
       <g :transform="`translate(0, ${block.design.height})`">
-        <BlockVue :x="0" :y="0" :block="block" />
+        <BlockVue
+          :x="0"
+          :y="0"
+          :block="block"
+          :update-block="(updater) => updater(block)"
+        />
       </g>
     </svg>
   </div>
