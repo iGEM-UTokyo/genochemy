@@ -19,11 +19,11 @@
         @pointerleave="pointerleave"
       >
         <template v-for="(element, index) of elements" :key="index">
-          <select v-if="element.type === 'options'" v-model="paramValue">
-            <option v-for="item of element.items" :key="item" :value="item">
-              {{ t(item) }}
-            </option>
-          </select>
+          <matter-select
+            v-if="element.type === 'options'"
+            v-model="paramValue"
+            :list="element.items"
+          />
           <span v-else>{{ element.text }}</span>
         </template>
       </div>
@@ -44,21 +44,6 @@
   display: flex;
   gap: 5px;
 }
-.block-inner select {
-  background-color: inherit;
-  flex: 1;
-  min-width: 0;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: white;
-  margin-top: 2px;
-  font-family: inherit;
-}
-.block-inner select:focus-visible {
-  outline: none;
-}
-.block-inner option {
-  color: black;
-}
 </style>
 
 <script setup lang="ts">
@@ -67,6 +52,7 @@ import { defineProps, computed, ref, Ref } from "vue";
 import { useI18n } from "vue-i18n";
 import Tooltip from "./tooltip/Tooltip.vue";
 import BlockDescription from "./tooltip/BlockDescription.vue";
+import MatterSelect from "./MatterSelect.vue";
 
 const { t } = useI18n();
 
