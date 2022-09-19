@@ -1,4 +1,4 @@
-import { Block, BlockWithUUID, uniqueNameToBlock, Vector2 } from "./block";
+import { Block, BlockWithUUID, uniqueNameToBlockV1, Vector2 } from "./block";
 import { Snake } from "./snake";
 import { v4 as uuidv4 } from "uuid";
 
@@ -14,7 +14,7 @@ export default function importJson(json: JsonFormat): Snake[] {
   let accumulatedHeight = 20;
   for (const snake of json) {
     const blocks = snake.blocks.map((uniqueName): BlockWithUUID => {
-      const block = uniqueNameToBlock(uniqueName);
+      const block = uniqueNameToBlockV1(uniqueName);
       setUUID(block);
       return block;
     });

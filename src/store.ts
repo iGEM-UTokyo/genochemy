@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, reactive, readonly, Ref, ref } from "vue";
+import { computed, readonly, Ref, ref } from "vue";
 import {
   Block,
   BlockWithUUID,
@@ -207,6 +207,15 @@ export const useStore = defineStore("main", () => {
       anchorTail[1] += moveY;
     }
     snakes.value[newSnakeUUID] = newSnake;
+  };
+  const updateBlock = (
+    snakeUUID: string,
+    blockUUID: string,
+    updater: (block: BlockWithUUID) => BlockWithUUID
+  ) => {
+    snakes.value[snakeUUID].blocks.map((block) =>
+      block.uuid !== blockUUID ? block : updater(block)
+    );
   };
   const recombineTwoSnakes = (
     snakeUUID1: string,
@@ -441,6 +450,7 @@ export const useStore = defineStore("main", () => {
     deleteSnake,
     wrapSnake,
     cutSnake,
+    updateBlock,
     recombineTwoSnakes,
     setGrabbing,
     operonMessengerRNAs,

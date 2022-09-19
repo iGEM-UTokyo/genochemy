@@ -4,10 +4,15 @@
       <Block
         v-for="[x, block] in blockWithPosition"
         @pointerdown="mousedown(block.uuid)"
-        @pointermove="mousemove(block.uuid)"
+        @pointermove="
+          (e) => {
+            mousemove(block.uuid, e);
+          }
+        "
         @pointerup="mouseup(block.uuid)"
         :key="block.uuid"
         :block="block"
+        :snake-u-u-i-d="currentSnake.uuid"
         :x="x"
         :y="0"
       />
@@ -89,8 +94,11 @@ const mousedown = (blockUUID: string) => {
 const mouseup = (blockUUID: string) => {
   isDown = false;
 };
-const mousemove = (blockUUID: string) => {
-  if (touchingBlockUUID !== null) {
+const mousemove = (blockUUID: string, e: PointerEvent) => {
+  if (
+    touchingBlockUUID !== null &&
+    Math.abs(e.movementX ** 2 + e.movementY ** 2) > 0.1
+  ) {
     if (timeoutId !== null) {
       clearTimeout(timeoutId);
     }
