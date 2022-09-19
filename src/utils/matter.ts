@@ -514,3 +514,23 @@ export class Degrader implements Actor {
     }
   }
 }
+
+export const repressorNames = ["matter.ctrlRepressorA.name"] as const;
+export const activatorNames = [
+  "matter.ctrlEL222.name",
+  "matter.ctrlPhyBPIF3.name",
+] as const;
+export const fluorescenceProteinNames = [
+  "matter.visiMCherry.name",
+  "matter.visiGFP.name",
+] as const;
+export const repressorPartsNames = ["matter.ctrlRepressorA.name"] as const;
+export const activatorPartsNames = [
+  "matter.ctrlEL222.name",
+  "matter.ctrlPhyB.name",
+  "matter.ctrlPIF3.name",
+] as const;
+export const recombinaseNames = [
+  "matter.metaRecombA.name",
+  "matter.metaRecombB.name",
+] as const;

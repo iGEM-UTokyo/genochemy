@@ -1,7 +1,10 @@
 import {
+  activatorNames,
+  activatorPartsNames,
   DrugRepressiblePromoter,
   EL222,
   EL222ActivatedPromoter,
+  fluorescenceProteinNames,
   GFP,
   KillSwitch,
   mCherry,
@@ -13,7 +16,10 @@ import {
   Protein,
   RecombinaseA,
   RecombinaseB,
+  recombinaseNames,
   RepressorA,
+  repressorNames,
+  repressorPartsNames,
   T7Promoter,
 } from "./matter";
 import { v4 as uuidv4 } from "uuid";
@@ -75,6 +81,9 @@ export abstract class Block {
   abstract name: string;
   abstract design: BlockDesign;
   abstract uniqueName: string;
+  abstract params: null | {
+    [key: string]: { list: readonly string[]; value: string };
+  };
   uuid?: string;
   constructor(args: Pick<Block, "uuid">) {
     this.uuid = args.uuid;
@@ -151,6 +160,7 @@ export class T7PromoterBlock extends PromoterBlock {
     description: "block.promConst1.description",
   });
   promoter = new T7Promoter();
+  params = null;
   constructor() {
     super({});
   }
@@ -167,6 +177,14 @@ export class DrugRepressiblePromoterBlock extends PromoterBlock {
     description: "block.promReprRepressorADrugA.description",
   });
   promoter = new DrugRepressiblePromoter();
+  params: {
+    repressor: {
+      value: typeof repressorNames[number];
+      list: typeof repressorNames;
+    };
+  } = {
+    repressor: { value: "matter.ctrlRepressorA.name", list: repressorNames },
+  };
   constructor() {
     super({});
   }
@@ -182,27 +200,33 @@ export class EL222ActivatedPromoterBlock extends PromoterBlock {
     displayName: "block.promActivEL222dim.displayName",
     description: "block.promActivEL222dim.description",
   });
+  params: {
+    activator: {
+      value: typeof activatorNames[number];
+      list: typeof activatorNames;
+    };
+  } = { activator: { value: "matter.ctrlEL222.name", list: activatorNames } };
   promoter = new EL222ActivatedPromoter();
   constructor() {
     super({});
   }
 }
 
-export class PhyBPIF3ActivatedPromoterBlock extends PromoterBlock {
-  name = "PhyB-PIF3 Activated Promoter" as const;
-  uniqueName = "prom-activ-PhyBPIF3" as const;
-  design = new BlockDesign({
-    width: 184,
-    height: 82.65,
-    imageSrc: "/blocks/promoter.svg",
-    displayName: "block.promActivPhyBPIF3.displayName",
-    description: "block.promActivPhyBPIF3.description",
-  });
-  promoter = new PhyBPIF3ActivatedPromoter();
-  constructor() {
-    super({});
-  }
-}
+// export class PhyBPIF3ActivatedPromoterBlock extends PromoterBlock {
+//   name = "PhyB-PIF3 Activated Promoter" as const;
+//   uniqueName = "prom-activ-PhyBPIF3" as const;
+//   design = new BlockDesign({
+//     width: 184,
+//     height: 82.65,
+//     imageSrc: "/blocks/promoter.svg",
+//     displayName: "block.promActivPhyBPIF3.displayName",
+//     description: "block.promActivPhyBPIF3.description",
+//   });
+//   promoter = new PhyBPIF3ActivatedPromoter();
+//   constructor() {
+//     super({});
+//   }
+// }
 
 export class MCherryBlock extends VisibilityBlock {
   name = "mCherry" as const;
@@ -214,6 +238,14 @@ export class MCherryBlock extends VisibilityBlock {
     displayName: "block.visiMCherry.displayName",
     description: "block.visiMCherry.description",
   });
+  params: {
+    protein: {
+      value: typeof fluorescenceProteinNames[number];
+      list: typeof fluorescenceProteinNames;
+    };
+  } = {
+    protein: { value: "matter.visiGFP.name", list: fluorescenceProteinNames },
+  };
   get ProteinClass(): ProteinImpl {
     return mCherry;
   }
@@ -222,23 +254,23 @@ export class MCherryBlock extends VisibilityBlock {
   }
 }
 
-export class GFPBlock extends VisibilityBlock {
-  name = "GFP" as const;
-  uniqueName = "visi-GFP" as const;
-  design = new BlockDesign({
-    width: 184,
-    height: 30,
-    imageSrc: "/blocks/visible.svg",
-    displayName: "block.visiGFP.displayName",
-    description: "block.visiGFP.description",
-  });
-  get ProteinClass(): ProteinImpl {
-    return GFP;
-  }
-  constructor() {
-    super({});
-  }
-}
+// export class GFPBlock extends VisibilityBlock {
+//   name = "GFP" as const;
+//   uniqueName = "visi-GFP" as const;
+//   design = new BlockDesign({
+//     width: 184,
+//     height: 30,
+//     imageSrc: "/blocks/visible.svg",
+//     displayName: "block.visiGFP.displayName",
+//     description: "block.visiGFP.description",
+//   });
+//   get ProteinClass(): ProteinImpl {
+//     return GFP;
+//   }
+//   constructor() {
+//     super({});
+//   }
+// }
 
 export class RepressorBlock extends VisibilityBlock {
   name = "RepressorA" as const;
@@ -250,6 +282,17 @@ export class RepressorBlock extends VisibilityBlock {
     displayName: "block.ctrlRepressorA.displayName",
     description: "block.ctrlRepressorA.description",
   });
+  params: {
+    repressor: {
+      value: typeof repressorPartsNames[number];
+      list: typeof repressorPartsNames;
+    };
+  } = {
+    repressor: {
+      value: "matter.ctrlRepressorA.name",
+      list: repressorPartsNames,
+    },
+  };
   get ProteinClass(): ProteinImpl {
     return RepressorA;
   }
@@ -268,6 +311,17 @@ export class EL222Block extends VisibilityBlock {
     displayName: "block.ctrlEL222.displayName",
     description: "block.ctrlEL222.description",
   });
+  params: {
+    activator: {
+      value: typeof activatorPartsNames[number];
+      list: typeof activatorPartsNames;
+    };
+  } = {
+    activator: {
+      value: "matter.ctrlEL222.name",
+      list: activatorPartsNames,
+    },
+  };
   get ProteinClass(): ProteinImpl {
     return EL222;
   }
@@ -276,41 +330,41 @@ export class EL222Block extends VisibilityBlock {
   }
 }
 
-export class PhyBBlock extends VisibilityBlock {
-  name = "PhyB" as const;
-  uniqueName = "ctrl-PhyB" as const;
-  design = new BlockDesign({
-    width: 184,
-    height: 30,
-    imageSrc: "/blocks/control.svg",
-    displayName: "block.ctrlPhyB.displayName",
-    description: "block.ctrlPhyB.description",
-  });
-  get ProteinClass(): ProteinImpl {
-    return PhyB;
-  }
-  constructor() {
-    super({});
-  }
-}
+// export class PhyBBlock extends VisibilityBlock {
+//   name = "PhyB" as const;
+//   uniqueName = "ctrl-PhyB" as const;
+//   design = new BlockDesign({
+//     width: 184,
+//     height: 30,
+//     imageSrc: "/blocks/control.svg",
+//     displayName: "block.ctrlPhyB.displayName",
+//     description: "block.ctrlPhyB.description",
+//   });
+//   get ProteinClass(): ProteinImpl {
+//     return PhyB;
+//   }
+//   constructor() {
+//     super({});
+//   }
+// }
 
-export class PIF3Block extends VisibilityBlock {
-  name = "PIF3" as const;
-  uniqueName = "ctrl-PIF3" as const;
-  design = new BlockDesign({
-    width: 184,
-    height: 30,
-    imageSrc: "/blocks/control.svg",
-    displayName: "block.ctrlPIF3.displayName",
-    description: "block.ctrlPIF3.description",
-  });
-  get ProteinClass(): ProteinImpl {
-    return PIF3;
-  }
-  constructor() {
-    super({});
-  }
-}
+// export class PIF3Block extends VisibilityBlock {
+//   name = "PIF3" as const;
+//   uniqueName = "ctrl-PIF3" as const;
+//   design = new BlockDesign({
+//     width: 184,
+//     height: 30,
+//     imageSrc: "/blocks/control.svg",
+//     displayName: "block.ctrlPIF3.displayName",
+//     description: "block.ctrlPIF3.description",
+//   });
+//   get ProteinClass(): ProteinImpl {
+//     return PIF3;
+//   }
+//   constructor() {
+//     super({});
+//   }
+// }
 
 export class CYC1TerminatorBlock extends TerminatorBlock {
   name = "CYC1 Terminator" as const;
@@ -322,6 +376,7 @@ export class CYC1TerminatorBlock extends TerminatorBlock {
     displayName: "block.term1.displayName",
     description: "block.term1.description",
   });
+  params = null;
   constructor() {
     super({});
   }
@@ -336,6 +391,7 @@ export class WrapHeadBlock extends Block {
     height: 30,
     imageSrc: "/blocks/wrap-head.svg",
   });
+  params = null;
   uuid = uuidv4(); // todo
   constructor(public connectTo: string) {
     super({});
@@ -351,6 +407,7 @@ export class WrapTailBlock extends Block {
     height: 30,
     imageSrc: "/blocks/wrap-tail.svg",
   });
+  params = null;
   uuid = uuidv4(); // todo
   constructor(public connectTo: string) {
     super({});
@@ -367,6 +424,17 @@ export class RecombinaseABlock extends MetaModifierBlock {
     displayName: "block.metaRecomb1.displayName",
     description: "block.metaRecomb1.description",
   });
+  params: {
+    recombinase: {
+      value: typeof recombinaseNames[number];
+      list: typeof recombinaseNames;
+    };
+  } = {
+    recombinase: {
+      value: "matter.metaRecombA.name",
+      list: recombinaseNames,
+    },
+  };
   get ProteinClass(): ProteinImpl {
     return RecombinaseA;
   }
@@ -375,23 +443,23 @@ export class RecombinaseABlock extends MetaModifierBlock {
   }
 }
 
-export class RecombinaseBBlock extends MetaModifierBlock {
-  name = "RecombinaseII" as const;
-  uniqueName = "meta-recomb2" as const;
-  design = new BlockDesign({
-    width: 184,
-    height: 30,
-    imageSrc: "/blocks/meta.svg",
-    displayName: "block.metaRecomb2.displayName",
-    description: "block.metaRecomb2.description",
-  });
-  get ProteinClass(): ProteinImpl {
-    return RecombinaseB;
-  }
-  constructor() {
-    super({});
-  }
-}
+// export class RecombinaseBBlock extends MetaModifierBlock {
+//   name = "RecombinaseII" as const;
+//   uniqueName = "meta-recomb2" as const;
+//   design = new BlockDesign({
+//     width: 184,
+//     height: 30,
+//     imageSrc: "/blocks/meta.svg",
+//     displayName: "block.metaRecomb2.displayName",
+//     description: "block.metaRecomb2.description",
+//   });
+//   get ProteinClass(): ProteinImpl {
+//     return RecombinaseB;
+//   }
+//   constructor() {
+//     super({});
+//   }
+// }
 
 export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
   name = "RecombinaseI Recognition Seq." as const;
@@ -404,26 +472,37 @@ export class RecombinaseARecognitionSeqBlock extends SpecialSequenceBlock {
     description: "block.seqRecogRecomb1.description",
     bottomAnchor: 30,
   });
+  params: {
+    recombinase: {
+      value: typeof recombinaseNames[number];
+      list: typeof recombinaseNames;
+    };
+  } = {
+    recombinase: {
+      value: "matter.metaRecombA.name",
+      list: recombinaseNames,
+    },
+  };
   constructor() {
     super({});
   }
 }
 
-export class RecombinaseBRecognitionSeqBlock extends SpecialSequenceBlock {
-  name = "RecombinaseII Recognition Seq." as const;
-  uniqueName = "seq-recog-recomb2" as const;
-  design = new BlockDesign({
-    width: 131,
-    height: 90,
-    imageSrc: "/blocks/recombinase-recognition-seq.svg",
-    displayName: "block.seqRecogRecomb2.displayName",
-    description: "block.seqRecogRecomb2.description",
-    bottomAnchor: 30,
-  });
-  constructor() {
-    super({});
-  }
-}
+// export class RecombinaseBRecognitionSeqBlock extends SpecialSequenceBlock {
+//   name = "RecombinaseII Recognition Seq." as const;
+//   uniqueName = "seq-recog-recomb2" as const;
+//   design = new BlockDesign({
+//     width: 131,
+//     height: 90,
+//     imageSrc: "/blocks/recombinase-recognition-seq.svg",
+//     displayName: "block.seqRecogRecomb2.displayName",
+//     description: "block.seqRecogRecomb2.description",
+//     bottomAnchor: 30,
+//   });
+//   constructor() {
+//     super({});
+//   }
+// }
 
 export class KillSwitchBlock extends MetaModifierBlock {
   name = "KillSwitch" as const;
@@ -435,6 +514,7 @@ export class KillSwitchBlock extends MetaModifierBlock {
     displayName: "block.metaKill.displayName",
     description: "block.metaKill.description",
   });
+  params = null;
   get ProteinClass(): ProteinImpl {
     return KillSwitch;
   }
@@ -447,54 +527,93 @@ export const allFinalBlockClasses: FinalBlock[] = [
   T7PromoterBlock,
   DrugRepressiblePromoterBlock,
   EL222ActivatedPromoterBlock,
-  PhyBPIF3ActivatedPromoterBlock,
+  // PhyBPIF3ActivatedPromoterBlock,
   MCherryBlock,
-  GFPBlock,
+  // GFPBlock,
   RepressorBlock,
   EL222Block,
-  PhyBBlock,
-  PIF3Block,
+  // PhyBBlock,
+  // PIF3Block,
   CYC1TerminatorBlock,
   RecombinaseABlock,
   RecombinaseARecognitionSeqBlock,
-  RecombinaseBBlock,
-  RecombinaseBRecognitionSeqBlock,
+  // RecombinaseBBlock,
+  // RecombinaseBRecognitionSeqBlock,
   KillSwitchBlock,
 ];
 
-export function uniqueNameToBlock(uniqueName: string): Block {
+export function uniqueNameToBlockV1(uniqueName: string): Block {
   switch (uniqueName) {
     case "prom-const-1":
       return new T7PromoterBlock();
-    case "prom-repr-RepressorADrugA":
-      return new DrugRepressiblePromoterBlock();
-    case "prom-activ-EL222dim":
-      return new EL222ActivatedPromoterBlock();
-    case "prom-activ-PhyBPIF3":
-      return new PhyBPIF3ActivatedPromoterBlock();
-    case "visi-mCherry":
-      return new MCherryBlock();
-    case "visi-GFP":
-      return new GFPBlock();
-    case "ctrl-RepressorA":
-      return new RepressorBlock();
-    case "ctrl-EL222":
-      return new EL222Block();
-    case "ctrl-PhyB":
-      return new PhyBBlock();
-    case "ctrl-PIF3":
-      return new PIF3Block();
+    case "prom-repr-RepressorADrugA": {
+      const block = new DrugRepressiblePromoterBlock();
+      block.params.repressor.value = "matter.ctrlRepressorA.name";
+      return block;
+    }
+    case "prom-activ-EL222dim": {
+      const block = new EL222ActivatedPromoterBlock();
+      block.params.activator.value = "matter.ctrlEL222.name";
+      return block;
+    }
+    case "prom-activ-PhyBPIF3": {
+      const block = new EL222ActivatedPromoterBlock();
+      block.params.activator.value = "matter.ctrlPhyBPIF3.name";
+      return block;
+    }
+    case "visi-mCherry": {
+      const block = new MCherryBlock();
+      block.params.protein.value = "matter.visiMCherry.name";
+      return block;
+    }
+    case "visi-GFP": {
+      const block = new MCherryBlock();
+      block.params.protein.value = "matter.visiGFP.name";
+      return block;
+    }
+    case "ctrl-RepressorA": {
+      const block = new RepressorBlock();
+      block.params.repressor.value = "matter.ctrlRepressorA.name";
+      return block;
+    }
+    case "ctrl-EL222": {
+      const block = new EL222Block();
+      block.params.activator.value = "matter.ctrlEL222.name";
+      return block;
+    }
+    case "ctrl-PhyB": {
+      const block = new EL222Block();
+      block.params.activator.value = "matter.ctrlPhyB.name";
+      return block;
+    }
+    case "ctrl-PIF3": {
+      const block = new EL222Block();
+      block.params.activator.value = "matter.ctrlPIF3.name";
+      return block;
+    }
     case "term-1":
       return new CYC1TerminatorBlock();
     // todo
-    case "meta-recomb1":
-      return new RecombinaseABlock();
-    case "meta-recomb2":
-      return new RecombinaseBBlock();
-    case "seq-recog-recomb1":
-      return new RecombinaseARecognitionSeqBlock();
-    case "seq-recog-recomb2":
-      return new RecombinaseBRecognitionSeqBlock();
+    case "meta-recomb1": {
+      const block = new RecombinaseABlock();
+      block.params.recombinase.value = "matter.metaRecombA.name";
+      return block;
+    }
+    case "meta-recomb2": {
+      const block = new RecombinaseABlock();
+      block.params.recombinase.value = "matter.metaRecombB.name";
+      return block;
+    }
+    case "seq-recog-recomb1": {
+      const block = new RecombinaseARecognitionSeqBlock();
+      block.params.recombinase.value = "matter.metaRecombA.name";
+      return block;
+    }
+    case "seq-recog-recomb2": {
+      const block = new RecombinaseARecognitionSeqBlock();
+      block.params.recombinase.value = "matter.metaRecombB.name";
+      return block;
+    }
     case "meta-kill":
       return new KillSwitchBlock();
     default:

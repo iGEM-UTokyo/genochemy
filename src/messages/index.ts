@@ -14,6 +14,7 @@ export interface Messages {
     ctrlEL222: MatterMessages;
     ctrlPhyB: MatterMessages;
     ctrlPIF3: MatterMessages;
+    ctrlPhyBPIF3: MatterMessages;
     metaRecombA: MatterMessages;
     metaRecombB: MatterMessages;
     metaKill: MatterMessages;
