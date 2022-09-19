@@ -27,11 +27,11 @@ const {
 const recombinases = [
   {
     name: "protein-RecombinaseI",
-    matterName: "matter.metaRecombA.name",
+    matterName: "matter.seqRecogRecombA.name",
   },
   {
     name: "protein-RecombinaseII",
-    matterName: "matter.metaRecombB.name",
+    matterName: "matter.seqRecogRecombB.name",
   },
 ] as const;
 
