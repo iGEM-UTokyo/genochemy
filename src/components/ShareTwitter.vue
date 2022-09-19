@@ -15,7 +15,8 @@ const { t } = useI18n();
 const store = useStore();
 function share() {
   const version = 2;
-  const json = exportJsonV2(Object.values(store.snakes));
+  const snakes = store.isRunning ? store.beforePlaySnakes : store.snakes;
+  const json = exportJsonV2(Object.values(snakes));
   const baseUrl = "https://twitter.com/intent/tweet?";
   const text = ["text", t("twitterShare")];
   const origin = location.origin.includes("localhost")

@@ -438,6 +438,7 @@ export const useStore = defineStore("main", () => {
   };
   return {
     snakes: readonly(snakes),
+    beforePlaySnakes: readonly(beforePlaySnakes),
     draggingSnake,
     addTempBlock,
     clearDraggingSnake,

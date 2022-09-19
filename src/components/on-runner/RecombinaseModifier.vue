@@ -12,10 +12,7 @@ export default {
 <script setup lang="ts">
 import { onUnmounted, toRefs, watch } from "vue";
 import { useStore } from "@/store";
-import {
-  RecombinaseARecognitionSeqBlock,
-  RecombinaseBRecognitionSeqBlock,
-} from "@/utils/block";
+import { RecombinaseRecognitionSeqBlock } from "@/utils/block";
 
 const store = useStore();
 const {
@@ -30,11 +27,11 @@ const {
 const recombinases = [
   {
     name: "protein-RecombinaseI",
-    recogSeqBlock: RecombinaseARecognitionSeqBlock,
+    matterName: "matter.metaRecombA.name",
   },
   {
     name: "protein-RecombinaseII",
-    recogSeqBlock: RecombinaseBRecognitionSeqBlock,
+    matterName: "matter.metaRecombB.name",
   },
 ] as const;
 
@@ -75,7 +72,11 @@ function tick() {
         for (const snake of Object.values(snakes.value)) {
           if (snake.isLoop) continue;
           for (let i = 0; i < snake.blocks.length; i++) {
-            if (snake.blocks[i] instanceof recombinase.recogSeqBlock) {
+            const block = snake.blocks[i];
+            if (
+              block instanceof RecombinaseRecognitionSeqBlock &&
+              block.params.recombinase.value === recombinase.matterName
+            ) {
               recogSeqUUIDs.push({
                 snakeUUID: snake.uuid,
                 index: i,
@@ -113,7 +114,11 @@ function tick() {
         for (const snake of Object.values(snakes.value)) {
           if (snake.isLoop) continue;
           for (let i = 0; i < snake.blocks.length; i++) {
-            if (snake.blocks[i] instanceof recombinase.recogSeqBlock) {
+            const block = snake.blocks[i];
+            if (
+              block instanceof RecombinaseRecognitionSeqBlock &&
+              block.params.recombinase.value === recombinase.matterName
+            ) {
               if (!recogSeqUUIDs[snake.uuid]) {
                 recogSeqUUIDs[snake.uuid] = [];
               }
