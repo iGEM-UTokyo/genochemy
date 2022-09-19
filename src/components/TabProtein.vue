@@ -29,7 +29,7 @@ const { t } = useI18n();
 
 const store = useStore();
 
-const measurableProteins = ["mCherry", "GFP"];
+const measurableProteins = ["matter.visiMCherry.name", "matter.visiGFP.name"];
 
 const proteinNames = computed(() =>
   store.proteins.map((protein) => protein.displayName)
