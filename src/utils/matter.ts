@@ -129,7 +129,7 @@ export class OperonMessengerRNA extends Matter {
   }
   getDisplayName(t: (a: string) => string) {
     return `${this.codingBlocks
-      .map((block) => t(block.design.displayName))
+      .map((block) => t(block.getProtein().displayName))
       .join(",")}`;
   }
   buildDE(matterEquations: MatterEquations) {

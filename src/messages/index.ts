@@ -21,21 +21,15 @@ export interface Messages {
   };
   block: {
     promConst1: BlockMessages;
-    promReprRepressorADrugA: BlockMessages;
-    promActivEL222dim: BlockMessages;
-    promActivPhyBPIF3: BlockMessages;
-    visiMCherry: BlockMessages;
-    visiGFP: BlockMessages;
-    ctrlRepressorA: BlockMessages;
-    ctrlEL222: BlockMessages;
-    ctrlPhyB: BlockMessages;
-    ctrlPIF3: BlockMessages;
+    promRepressor: BlockMessages;
+    promActivator: BlockMessages;
+    visiFluorescence: BlockMessages;
+    ctrlRepressor: BlockMessages;
+    ctrlActivator: BlockMessages;
     term1: BlockMessages;
     // todo
-    metaRecomb1: BlockMessages;
-    metaRecomb2: BlockMessages;
-    seqRecogRecomb1: BlockMessages;
-    seqRecogRecomb2: BlockMessages;
+    metaRecomb: BlockMessages;
+    seqRecogRecomb: BlockMessages;
     metaKill: BlockMessages;
   };
   tutorial: {

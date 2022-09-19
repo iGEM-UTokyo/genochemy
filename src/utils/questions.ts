@@ -1,11 +1,11 @@
 import { MessagesAddresses } from "@/messages";
-import { JsonFormat } from "./importer";
+import { JsonFormatV1 } from "./importer";
 
 interface Question {
   name: MessagesAddresses;
   imgs: string[];
-  answer?: JsonFormat;
-  hint?: JsonFormat;
+  answer?: JsonFormatV1;
+  hint?: JsonFormatV1;
   assert?: {
     inputs: string[];
     outputs: string[];

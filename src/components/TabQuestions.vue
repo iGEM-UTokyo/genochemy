@@ -76,7 +76,7 @@ function decrementImage() {
 }
 function showAnswer() {
   if (currentQuestion.value.answer) {
-    addSnake(...importJson(currentQuestion.value.answer));
+    addSnake(...importJson(currentQuestion.value.answer, 1));
   }
 }
 </script>
