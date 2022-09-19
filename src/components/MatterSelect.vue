@@ -30,7 +30,7 @@
     :show="showHint"
     show-to-side
     :width="150"
-    :height="200"
+    :height="150"
   >
     <matter-description :matterName="matterName" />
   </tooltip>
@@ -56,18 +56,19 @@ const rect = computed(() => {
   return selectElem.value?.getBoundingClientRect() ?? null;
 });
 const showOptions = ref(false);
-const toggleShowOptions = (e: MouseEvent) => {
+const toggleShowOptions = () => {
   if (!showOptions.value) {
     showOptions.value = true;
-    e.stopPropagation();
     window.addEventListener("click", hideOptions);
   } else {
     hideOptions();
   }
 };
-const hideOptions = () => {
-  showOptions.value = false;
-  window.removeEventListener("click", hideOptions);
+const hideOptions = (e?: MouseEvent) => {
+  if (!e || e.target !== selectElem.value) {
+    showOptions.value = false;
+    window.removeEventListener("click", hideOptions);
+  }
 };
 const select = (newValue: string) => {
   emit("update:modelValue", newValue);
@@ -121,10 +122,12 @@ const pointerleave = () => {
 }
 .select-inner {
   flex: 1;
+  pointer-events: none;
 }
 .select-icon {
   margin-right: 1px;
   color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
 }
 
 .options {
