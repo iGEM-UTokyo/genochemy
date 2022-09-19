@@ -266,14 +266,14 @@ export const useStore = defineStore("main", () => {
         } else if (block instanceof TerminatorBlock) {
           if (promoterBlock !== null && codingBlocks.length > 0) {
             const newMessengerRNA = new OperonMessengerRNA(
-              [promoterBlock.promoter],
+              [promoterBlock.getPromoter()],
               codingBlocks
             );
             if (!mRNAs[newMessengerRNA.name]) {
               mRNAs[newMessengerRNA.name] = newMessengerRNA;
             } else {
               mRNAs[newMessengerRNA.name].promoters.push(
-                promoterBlock.promoter
+                promoterBlock.getPromoter()
               );
             }
           }
@@ -290,11 +290,11 @@ export const useStore = defineStore("main", () => {
     const proteins: Record<string, Protein> = {};
     for (const mRNA of operonMessengerRNAs.value) {
       for (const block of mRNA.codingBlocks) {
-        if (!proteins[block.name]) {
-          proteins[block.name] = new block.ProteinClass(block.name, [mRNA]);
-        } else {
-          proteins[block.name].messengerRNAs.push(mRNA);
+        const protein = block.getProtein();
+        if (!proteins[protein.name]) {
+          proteins[protein.name] = protein;
         }
+        proteins[protein.name].messengerRNAs.push(mRNA);
       }
     }
     return Object.values(proteins);

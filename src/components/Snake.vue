@@ -99,10 +99,10 @@ const mousemove = (blockUUID: string, e: PointerEvent) => {
     touchingBlockUUID !== null &&
     Math.abs(e.movementX ** 2 + e.movementY ** 2) > 0.1
   ) {
-    if (timeoutId !== null) {
-      clearTimeout(timeoutId);
-    }
     if (isDown) {
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
       touchingBlockUUID = null;
       down(blockUUID);
     }

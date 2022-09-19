@@ -92,7 +92,7 @@ export abstract class Block {
 
 export abstract class PromoterBlock extends Block {
   type = "promoter" as const;
-  abstract get promoter(): Promoter;
+  abstract getPromoter(): Promoter;
   constructor(args: Pick<Block, "uuid">) {
     super({
       uuid: args.uuid,
@@ -101,9 +101,7 @@ export abstract class PromoterBlock extends Block {
 }
 
 export abstract class CodingBlock extends Block {
-  get ProteinClass(): ProteinImpl {
-    return Protein;
-  }
+  abstract getProtein(): Protein;
 }
 export abstract class VisibilityBlock extends CodingBlock {
   type = "visibility" as const;
@@ -145,10 +143,6 @@ export type FinalBlock = {
   new (): Block;
 };
 
-export type ProteinImpl = {
-  new (_name: string, messengerRNAs: OperonMessengerRNA[]): Protein;
-};
-
 export class T7PromoterBlock extends PromoterBlock {
   name = "T7 promoter" as const;
   uniqueName = "prom-const-1" as const;
@@ -159,7 +153,9 @@ export class T7PromoterBlock extends PromoterBlock {
     displayName: "block.promConst1.displayName",
     description: "block.promConst1.description",
   });
-  promoter = new T7Promoter();
+  getPromoter() {
+    return new T7Promoter();
+  }
   params = null;
   constructor() {
     super({});
@@ -176,7 +172,6 @@ export class DrugRepressiblePromoterBlock extends PromoterBlock {
     displayName: "block.promReprRepressorADrugA.displayName",
     description: "block.promReprRepressorADrugA.description",
   });
-  promoter = new DrugRepressiblePromoter();
   params: {
     repressor: {
       value: typeof repressorNames[number];
@@ -185,6 +180,12 @@ export class DrugRepressiblePromoterBlock extends PromoterBlock {
   } = {
     repressor: { value: "matter.ctrlRepressorA.name", list: repressorNames },
   };
+  getPromoter() {
+    switch (this.params.repressor.value) {
+      case "matter.ctrlRepressorA.name":
+        return new DrugRepressiblePromoter();
+    }
+  }
   constructor() {
     super({});
   }
@@ -206,7 +207,14 @@ export class EL222ActivatedPromoterBlock extends PromoterBlock {
       list: typeof activatorNames;
     };
   } = { activator: { value: "matter.ctrlEL222.name", list: activatorNames } };
-  promoter = new EL222ActivatedPromoter();
+  getPromoter() {
+    switch (this.params.activator.value) {
+      case "matter.ctrlEL222.name":
+        return new EL222ActivatedPromoter();
+      case "matter.ctrlPhyBPIF3.name":
+        return new PhyBPIF3ActivatedPromoter();
+    }
+  }
   constructor() {
     super({});
   }
@@ -246,8 +254,12 @@ export class MCherryBlock extends VisibilityBlock {
   } = {
     protein: { value: "matter.visiGFP.name", list: fluorescenceProteinNames },
   };
-  get ProteinClass(): ProteinImpl {
-    return mCherry;
+  getProtein() {
+    if (this.params.protein.value === "matter.visiGFP.name") {
+      return new GFP();
+    } else {
+      return new mCherry();
+    }
   }
   constructor() {
     super({});
@@ -293,8 +305,8 @@ export class RepressorBlock extends VisibilityBlock {
       list: repressorPartsNames,
     },
   };
-  get ProteinClass(): ProteinImpl {
-    return RepressorA;
+  getProtein() {
+    return new RepressorA();
   }
   constructor() {
     super({});
@@ -322,8 +334,15 @@ export class EL222Block extends VisibilityBlock {
       list: activatorPartsNames,
     },
   };
-  get ProteinClass(): ProteinImpl {
-    return EL222;
+  getProtein() {
+    switch (this.params.activator.value) {
+      case "matter.ctrlEL222.name":
+        return new EL222();
+      case "matter.ctrlPhyB.name":
+        return new PhyB();
+      case "matter.ctrlPIF3.name":
+        return new PIF3();
+    }
   }
   constructor() {
     super({});
@@ -435,8 +454,13 @@ export class RecombinaseABlock extends MetaModifierBlock {
       list: recombinaseNames,
     },
   };
-  get ProteinClass(): ProteinImpl {
-    return RecombinaseA;
+  getProtein() {
+    switch (this.params.recombinase.value) {
+      case "matter.metaRecombA.name":
+        return new RecombinaseA();
+      case "matter.metaRecombB.name":
+        return new RecombinaseB();
+    }
   }
   constructor() {
     super({});
@@ -515,8 +539,8 @@ export class KillSwitchBlock extends MetaModifierBlock {
     description: "block.metaKill.description",
   });
   params = null;
-  get ProteinClass(): ProteinImpl {
-    return KillSwitch;
+  getProtein() {
+    return new KillSwitch();
   }
   constructor() {
     super({});

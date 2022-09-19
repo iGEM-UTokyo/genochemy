@@ -134,7 +134,7 @@ export class OperonMessengerRNA extends Matter {
   }
   buildDE(matterEquations: MatterEquations) {
     for (const block of this.codingBlocks) {
-      const protein = new block.ProteinClass(block.name, [this]);
+      const protein = block.getProtein();
       if (!matterEquations[protein.name]) {
         matterEquations[protein.name] = [];
       }
@@ -153,10 +153,8 @@ export class OperonMessengerRNA extends Matter {
 
 export class Protein extends Matter {
   displayName: MessagesAddresses | "" = "";
-  constructor(
-    private _name: string,
-    public messengerRNAs: OperonMessengerRNA[]
-  ) {
+  messengerRNAs: OperonMessengerRNA[] = [];
+  constructor(private _name: string) {
     super();
   }
   get name() {
@@ -170,8 +168,8 @@ export class mCherry extends Protein {
   stageSettings = [Fluorescence];
   displayName = "matter.visiMCherry.name" as const;
   description = "matter.visiMCherry.description" as const;
-  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
-    super(_name, messengerRNAs);
+  constructor() {
+    super("mCherry");
   }
 }
 
@@ -179,8 +177,8 @@ export class GFP extends Protein {
   stageSettings = [Fluorescence];
   displayName = "matter.visiGFP.name" as const;
   description = "matter.visiGFP.description" as const;
-  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
-    super(_name, messengerRNAs);
+  constructor() {
+    super("GFP");
   }
 }
 
@@ -188,8 +186,8 @@ export class RepressorA extends Protein {
   guiViews = [DrugA];
   displayName = "matter.ctrlRepressorA.name" as const;
   description = "matter.ctrlRepressorA.description" as const;
-  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
-    super(_name, messengerRNAs);
+  constructor() {
+    super("RepressorA");
   }
   buildDE(matterEquations: MatterEquations) {
     if (!matterEquations[this.name]) {
@@ -259,8 +257,8 @@ export class EL222 extends Protein {
   guiViews = [BlueLightSwitch];
   displayName = "matter.ctrlEL222.name" as const;
   description = "matter.ctrlEL222.description" as const;
-  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
-    super(_name, messengerRNAs);
+  constructor() {
+    super("EL222");
   }
   buildDE(matterEquations: MatterEquations) {
     if (!matterEquations[this.name]) {
@@ -342,8 +340,8 @@ export class PhyB extends Protein {
   guiViews = [RedLightSwitch];
   displayName = "matter.ctrlPhyB.name" as const;
   description = "matter.ctrlPhyB.description" as const;
-  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
-    super(_name, messengerRNAs);
+  constructor() {
+    super("PhyB");
   }
   buildDE(matterEquations: MatterEquations) {
     if (!matterEquations[this.name]) {
@@ -425,8 +423,8 @@ export class PIF3 extends Protein {
   guiViews = [RedLightSwitch];
   displayName = "matter.ctrlPIF3.name" as const;
   description = "matter.ctrlPIF3.description" as const;
-  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
-    super(_name, messengerRNAs);
+  constructor() {
+    super("PIF3");
   }
   buildDE(matterEquations: MatterEquations) {
     if (!matterEquations[this.name]) {
@@ -476,8 +474,8 @@ export class RecombinaseA extends Protein {
   stageSettings = [RecombinaseModifier];
   displayName = "matter.metaRecombA.name" as const;
   description = "matter.metaRecombA.description" as const;
-  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
-    super(_name, messengerRNAs);
+  constructor() {
+    super("RecombinaseI");
   }
 }
 
@@ -485,8 +483,8 @@ export class RecombinaseB extends Protein {
   stageSettings = [RecombinaseModifier];
   displayName = "matter.metaRecombB.name" as const;
   description = "matter.metaRecombB.description" as const;
-  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
-    super(_name, messengerRNAs);
+  constructor() {
+    super("RecombinaseII");
   }
 }
 
@@ -494,8 +492,8 @@ export class KillSwitch extends Protein {
   stageSettings = [KillSwitchVue];
   displayName = "matter.metaKill.name" as const;
   description = "matter.metaKill.description" as const;
-  constructor(_name: string, messengerRNAs: OperonMessengerRNA[]) {
-    super(_name, messengerRNAs);
+  constructor() {
+    super("KillSwitch");
   }
 }
 
