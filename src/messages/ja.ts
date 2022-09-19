@@ -69,65 +69,39 @@ const ja: Messages = {
       displayName: "常に発現",
       description: "常に一定の割合で下流を転写します。",
     },
-    promReprRepressorADrugA: {
+    promRepressor: {
       displayName: "<repressor,リプレッサー>抑制",
       description:
-        "活性化されたリプレッサーAが結合すると下流の転写が抑制されます。",
+        "活性化されたリプレッサーが結合すると下流の転写が抑制されます。",
     },
-    promActivEL222dim: {
+    promActivator: {
       displayName: "<activator,アクチベーター>促進",
       description:
-        "青センサーの二量体が結合し、それにより下流の転写が促進されます。",
+        "活性化されたアクチベーターが結合すると下流の転写が促進されます。",
     },
-    promActivPhyBPIF3: {
-      displayName: "赤センサーab促進",
-      description:
-        "赤センサーa,bのヘテロ二量体が結合し、それにより下流の転写が促進されます。",
-    },
-    visiMCherry: {
+    visiFluorescence: {
       displayName: "<protein,蛍光タンパク質>",
-      description: "赤色の蛍光を発します。",
+      description: "蛍光を発するタンパク質です。",
     },
-    visiGFP: {
-      displayName: "GFP",
-      description: "緑色の蛍光を発します。",
-    },
-    ctrlRepressorA: {
+    ctrlRepressor: {
       displayName: "<repressor,リプレッサー>",
-      description:
-        "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
+      description: "プロモーターの転写を抑制します。",
     },
-    ctrlEL222: {
+    ctrlActivator: {
       displayName: "<activator,アクチベーター>",
-      description: "青色光によって二量体を形成します。",
-    },
-    ctrlPhyB: {
-      displayName: "赤センサーa",
-      description: "赤色光によって赤センサーbとヘテロ二量体を形成します。",
-    },
-    ctrlPIF3: {
-      displayName: "赤センサーb",
-      description: "赤色光によって赤センサーaとヘテロ二量体を形成します。",
+      description: "プロモーターの転写を促進します。",
     },
     term1: {
       displayName: "ターミネーター",
       description: "転写を終了します。これ以降のブロックは転写されません。",
     },
-    metaRecomb1: {
+    metaRecomb: {
       displayName: "<recombinase,リコンビナーゼ>",
-      description: "認識配列Iに挟まれた配列を切り出します。",
+      description: "対応する認識配列に挟まれた配列を切り出します。",
     },
-    metaRecomb2: {
-      displayName: "リコンビナーゼⅡ",
-      description: "認識配列IIに挟まれた配列を切り出します。",
-    },
-    seqRecogRecomb1: {
+    seqRecogRecomb: {
       displayName: "<recombinase,リコンビナーゼ>認識配列",
-      description: "リコンビナーゼIに認識される配列です。",
-    },
-    seqRecogRecomb2: {
-      displayName: "認識配列Ⅱ",
-      description: "リコンビナーゼIIに認識される配列です。",
+      description: "リコンビナーゼに認識される配列です。",
     },
     metaKill: {
       displayName: "キルスイッチ",

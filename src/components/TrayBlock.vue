@@ -13,7 +13,7 @@
         class="description"
         :style="{ top: `${y}px`, left: `${x}px`, width: `${width}px` }"
       >
-        <h2>{{ t(block.design.displayName) }}</h2>
+        <h2>{{ displayName }}</h2>
         {{ t(block.design.description) }}
       </div>
     </teleport>
@@ -53,7 +53,7 @@ h2 {
 
 <script setup lang="ts">
 import { useStore } from "../store";
-import { Ref, ref, defineProps } from "vue";
+import { Ref, ref, defineProps, computed } from "vue";
 import BlockVue from "@/components/Block.vue";
 import type { FinalBlock } from "@/utils/block";
 import { useI18n } from "vue-i18n";
@@ -100,4 +100,7 @@ const pointerleave = () => {
   }
   showDescription.value = false;
 };
+const displayName = computed(() =>
+  t(block.value.design.displayName).replace(/<[^,]+,([^>]+)>/g, "$1")
+);
 </script>

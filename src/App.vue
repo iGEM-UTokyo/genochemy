@@ -41,7 +41,8 @@ onMounted(() => {
     const circuit = searchParams.get("c");
     if (circuit) {
       console.log(circuit);
-      const snakes = importJson(JSON.parse(atob(circuit)));
+      const version = searchParams.get("v") ?? "1";
+      const snakes = importJson(JSON.parse(atob(circuit)), parseInt(version));
       store.addSnake(...snakes);
     }
   } catch (e) {

@@ -3,9 +3,13 @@
   <g>
     <image :href="src" :width="props.block.design.width" :x="props.x" :y="_y" />
     <foreignObject
-      :x="props.x"
+      :x="props.x + props.block.design.marginLeft"
       :y="props.y - 30"
-      :width="props.block.design.width"
+      :width="
+        props.block.design.width -
+        props.block.design.marginLeft -
+        props.block.design.marginRight
+      "
       :height="30"
     >
       <div>
@@ -24,7 +28,9 @@
 
 <style scoped>
 div {
-  margin: 2px 10px 0 10px;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 2px 10px 4px 10px;
   color: white;
   user-select: none;
   display: flex;
@@ -34,9 +40,13 @@ select {
   background-color: inherit;
   flex: 1;
   min-width: 0;
-  border: 1px solid white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   color: white;
   margin-top: 2px;
+  font-family: inherit;
+}
+select:focus-visible {
+  outline: none;
 }
 option {
   color: black;
