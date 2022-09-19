@@ -12,7 +12,12 @@
       "
       :height="30"
     >
-      <div>
+      <div
+        class="block-inner"
+        ref="blockElem"
+        @pointerenter="pointerenter"
+        @pointerleave="pointerleave"
+      >
         <template v-for="(element, index) of elements" :key="index">
           <select v-if="element.type === 'options'" v-model="paramValue">
             <option v-for="item of element.items" :key="item" :value="item">
@@ -22,12 +27,15 @@
           <span v-else>{{ element.text }}</span>
         </template>
       </div>
+      <tooltip :rect="rect" :show="Boolean(showTooltip) && showDescription">
+        <block-description :block="props.block" />
+      </tooltip>
     </foreignObject>
   </g>
 </template>
 
-<style scoped>
-div {
+<style>
+.block-inner {
   box-sizing: border-box;
   height: 100%;
   padding: 2px 10px 4px 10px;
@@ -36,7 +44,7 @@ div {
   display: flex;
   gap: 5px;
 }
-select {
+.block-inner select {
   background-color: inherit;
   flex: 1;
   min-width: 0;
@@ -45,18 +53,20 @@ select {
   margin-top: 2px;
   font-family: inherit;
 }
-select:focus-visible {
+.block-inner select:focus-visible {
   outline: none;
 }
-option {
+.block-inner option {
   color: black;
 }
 </style>
 
 <script setup lang="ts">
 import { Block, BlockWithUUID } from "../utils/block";
-import { defineProps, computed } from "vue";
+import { defineProps, computed, ref, Ref } from "vue";
 import { useI18n } from "vue-i18n";
+import Tooltip from "./tooltip/Tooltip.vue";
+import BlockDescription from "./tooltip/BlockDescription.vue";
 
 const { t } = useI18n();
 
@@ -67,7 +77,9 @@ const props = defineProps<{
   updateBlock: (
     updater: <T extends Block | BlockWithUUID>(block: T) => T
   ) => void;
+  showTooltip?: boolean;
 }>();
+const blockElem: Ref<HTMLElement | null> = ref(null);
 const src = computed(() => props.block.design.imageSrc);
 const displayName = computed(() => props.block.design.displayName);
 const _y = computed(
@@ -133,4 +145,30 @@ const paramValue = computed({
     });
   },
 });
+const rect = computed(() => {
+  return blockElem.value?.getBoundingClientRect() ?? null;
+});
+const showDescription = ref(false);
+let enterTimeoutId: number | null = null;
+let leaveTimeoutId: number | null = null;
+const pointerenter = () => {
+  if (leaveTimeoutId !== null) {
+    clearTimeout(leaveTimeoutId);
+    leaveTimeoutId = null;
+  }
+  enterTimeoutId = setTimeout(() => {
+    enterTimeoutId = null;
+    showDescription.value = true;
+  }, 300);
+};
+const pointerleave = () => {
+  if (enterTimeoutId !== null) {
+    clearTimeout(enterTimeoutId);
+    enterTimeoutId = null;
+  }
+  leaveTimeoutId = setTimeout(() => {
+    leaveTimeoutId = null;
+    showDescription.value = false;
+  }, 100);
+};
 </script>
