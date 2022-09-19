@@ -17,6 +17,7 @@
         "
         :x="x"
         :y="0"
+        show-tooltip
       />
     </g>
     <teleport to=".program-inner-back">
