@@ -11,7 +11,7 @@ import IconButton from "./IconButton.vue";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { useI18n } from "vue-i18n";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const store = useStore();
 function share() {
   const version = 2;
@@ -24,7 +24,7 @@ function share() {
     : location.origin;
   const url = [
     "url",
-    `${origin}/?c=${btoa(JSON.stringify(json))}&v=${version}`,
+    `${origin}/?c=${btoa(JSON.stringify(json))}&v=${version}&l=${locale.value}`,
   ];
   const hashtags = ["hashtags", "genochemy"];
   const query = new URLSearchParams([text, url, hashtags]).toString();

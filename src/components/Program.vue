@@ -35,6 +35,7 @@
       <img src="/logo.svg" />
       <div style="flex: 1" />
       v0.6.0
+      <ChangeLocale />
       <ShareTwitter />
     </div>
   </div>
@@ -59,6 +60,7 @@ import VScrollBar from "@/components/VScrollBar.vue";
 import { Snake } from "@/utils/snake";
 import SnakeVue from "@/components/Snake.vue";
 import ShareTwitter from "@/components/ShareTwitter.vue";
+import ChangeLocale from "@/components/ChangeLocale.vue";
 
 export const getFixedPositionKey: InjectionKey<
   (absolutePos: DeepReadonly<Vector2>) => Vector2

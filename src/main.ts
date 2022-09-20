@@ -37,9 +37,13 @@ app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(createPinia());
 
+const searchParams = new URLSearchParams(location.search);
+const lang = searchParams.get("l");
+
 const i18n = createI18n<[Messages], "en">({
   legacy: false,
-  locale: "en",
+  locale: lang ?? "en",
+  fallbackLocale: "en",
   messages,
 });
 app.use(i18n);
