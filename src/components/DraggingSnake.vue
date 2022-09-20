@@ -9,6 +9,7 @@
           v-for="[x, block] in blockWithPosition"
           :key="block.uuid"
           :block="block"
+          :update-block="() => {}"
           :x="x"
           :y="0"
         />

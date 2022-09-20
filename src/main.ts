@@ -11,6 +11,8 @@ import {
   faArrowsUpDownLeftRight,
   faArrowDown,
   faArrowUp,
+  faCaretDown,
+  faCaretUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -28,14 +30,20 @@ library.add(faArrowsUpDownLeftRight);
 library.add(faWaveSquare);
 library.add(faArrowDown);
 library.add(faArrowUp);
+library.add(faCaretDown);
+library.add(faCaretUp);
 library.add(faTwitter as IconDefinition);
 app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(createPinia());
 
-const i18n = createI18n<[Messages], "ja">({
+const searchParams = new URLSearchParams(location.search);
+const lang = searchParams.get("l");
+
+const i18n = createI18n<[Messages], "en">({
   legacy: false,
-  locale: "ja",
+  locale: lang ?? "en",
+  fallbackLocale: "en",
   messages,
 });
 app.use(i18n);

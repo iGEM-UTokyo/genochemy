@@ -4,12 +4,20 @@
       <Block
         v-for="[x, block] in blockWithPosition"
         @pointerdown="mousedown(block.uuid)"
-        @pointermove="mousemove(block.uuid)"
+        @pointermove="
+          (e) => {
+            mousemove(block.uuid, e);
+          }
+        "
         @pointerup="mouseup(block.uuid)"
         :key="block.uuid"
         :block="block"
+        :update-block="
+          (updater) => updateBlock(currentSnake.uuid, block.uuid, updater)
+        "
         :x="x"
         :y="0"
+        show-tooltip
       />
     </g>
     <teleport to=".program-inner-back">
@@ -55,7 +63,8 @@ watch(
   { flush: "post" }
 );
 
-const { splitHead, splitTail, wrapSnake, setGrabbing, snakes } = useStore();
+const { splitHead, splitTail, wrapSnake, setGrabbing, snakes, updateBlock } =
+  useStore();
 const wrapInfo = computed<DeepReadonly<[Vector2, Vector2]> | null>(() => {
   const head = currentSnake.value.blocks[currentSnake.value.blocks.length - 1];
   if (head instanceof WrapTailBlock) {
@@ -89,12 +98,15 @@ const mousedown = (blockUUID: string) => {
 const mouseup = (blockUUID: string) => {
   isDown = false;
 };
-const mousemove = (blockUUID: string) => {
-  if (touchingBlockUUID !== null) {
-    if (timeoutId !== null) {
-      clearTimeout(timeoutId);
-    }
+const mousemove = (blockUUID: string, e: PointerEvent) => {
+  if (
+    touchingBlockUUID !== null &&
+    Math.abs(e.movementX ** 2 + e.movementY ** 2) > 0.1
+  ) {
     if (isDown) {
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
       touchingBlockUUID = null;
       down(blockUUID);
     }

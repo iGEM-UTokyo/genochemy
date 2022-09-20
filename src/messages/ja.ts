@@ -27,8 +27,7 @@ const ja: Messages = {
     },
     visiMCherry: {
       name: "mCherry",
-      description:
-        "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
+      description: "ピンク色の蛍光を発します。",
     },
     ctrlRepressorA: {
       name: "リプレッサーA",
@@ -47,6 +46,14 @@ const ja: Messages = {
       name: "赤センサーb",
       description: "赤色光によって赤センサーaとヘテロ二量体を形成します。",
     },
+    ctrlEL222dim: {
+      name: "青センサー二量体",
+      description: "青色光によって二量体化した青センサーです。",
+    },
+    ctrlPhyBPIF3: {
+      name: "赤センサーab",
+      description: "赤センサーaと赤センサーbのヘテロ二量体です。",
+    },
     metaRecombA: {
       name: "リコンビナーゼI",
       description: "認識配列Iに挟まれた配列を切り出します。",
@@ -54,6 +61,14 @@ const ja: Messages = {
     metaRecombB: {
       name: "リコンビナーゼII",
       description: "認識配列IIに挟まれた配列を切り出します。",
+    },
+    seqRecogRecombA: {
+      name: "I",
+      description: "リコンビナーゼIに認識される配列です。",
+    },
+    seqRecogRecombB: {
+      name: "II",
+      description: "リコンビナーゼIIに認識される配列です。",
     },
     metaKill: {
       name: "キルスイッチ",
@@ -65,65 +80,39 @@ const ja: Messages = {
       displayName: "常に発現",
       description: "常に一定の割合で下流を転写します。",
     },
-    promReprRepressorADrugA: {
-      displayName: "活性リプレッサーA抑制",
+    promRepressor: {
+      displayName: "<repressor,リプレッサー>抑制",
       description:
-        "活性化されたリプレッサーAが結合すると下流の転写が抑制されます。",
+        "活性化されたリプレッサーが結合すると下流の転写が抑制されます。",
     },
-    promActivEL222dim: {
-      displayName: "青センサー促進",
+    promActivator: {
+      displayName: "<activator,アクチベーター>促進",
       description:
-        "青センサーの二量体が結合し、それにより下流の転写が促進されます。",
+        "活性化されたアクチベーターが結合すると下流の転写が促進されます。",
     },
-    promActivPhyBPIF3: {
-      displayName: "赤センサーab促進",
-      description:
-        "赤センサーa,bのヘテロ二量体が結合し、それにより下流の転写が促進されます。",
+    visiFluorescence: {
+      displayName: "<protein,蛍光タンパク質>",
+      description: "蛍光を発するタンパク質です。",
     },
-    visiMCherry: {
-      displayName: "mCherry",
-      description: "赤色の蛍光を発します。",
+    ctrlRepressor: {
+      displayName: "<repressor,リプレッサー>",
+      description: "プロモーターの転写を抑制します。",
     },
-    visiGFP: {
-      displayName: "GFP",
-      description: "緑色の蛍光を発します。",
-    },
-    ctrlRepressorA: {
-      displayName: "リプレッサーA",
-      description:
-        "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
-    },
-    ctrlEL222: {
-      displayName: "青センサー",
-      description: "青色光によって二量体を形成します。",
-    },
-    ctrlPhyB: {
-      displayName: "赤センサーa",
-      description: "赤色光によって赤センサーbとヘテロ二量体を形成します。",
-    },
-    ctrlPIF3: {
-      displayName: "赤センサーb",
-      description: "赤色光によって赤センサーaとヘテロ二量体を形成します。",
+    ctrlActivator: {
+      displayName: "<activator,アクチベーター>",
+      description: "プロモーターの転写を促進します。",
     },
     term1: {
       displayName: "ターミネーター",
       description: "転写を終了します。これ以降のブロックは転写されません。",
     },
-    metaRecomb1: {
-      displayName: "リコンビナーゼⅠ",
-      description: "認識配列Iに挟まれた配列を切り出します。",
+    metaRecomb: {
+      displayName: "<recombinase,リコンビナーゼ>",
+      description: "対応する認識配列に挟まれた配列を切り出します。",
     },
-    metaRecomb2: {
-      displayName: "リコンビナーゼⅡ",
-      description: "認識配列IIに挟まれた配列を切り出します。",
-    },
-    seqRecogRecomb1: {
-      displayName: "認識配列Ⅰ",
-      description: "リコンビナーゼIに認識される配列です。",
-    },
-    seqRecogRecomb2: {
-      displayName: "認識配列Ⅱ",
-      description: "リコンビナーゼIIに認識される配列です。",
+    seqRecogRecomb: {
+      displayName: "認識配列<recombinase,>",
+      description: "リコンビナーゼに認識される配列です。",
     },
     metaKill: {
       displayName: "キルスイッチ",
@@ -132,18 +121,18 @@ const ja: Messages = {
   },
   tutorial: {
     tutorial: "チュートリアル",
-    "1": `Genochemy は、オリジナル微生物「Genomy」をプログラミングすることによって、遺伝子設計や合成生物学を体験できるソフトウェアです。
-ビジュアルプログラミングの直感的なUIを採用しつつ、遺伝子設計でのモデリングと同様の水準の微分方程式シミュレーションを備えています。`,
+    "1": `Genochemy は、オリジナル微生物「Genomy」をプログラミングすることによって、遺伝子回路設計や合成生物学を体験できるソフトウェアです。
+ビジュアルプログラミングの直感的なUIを採用しつつ、遺伝子回路設計でのモデリングと同様の水準の微分方程式シミュレーションを備えています。`,
     "2": `Genochemyアプリには4つの領域があります。
 塩基配列トレイ（左下）、プログラム（左上）、Genochemy Lab（右上）、情報タブと実行ボタン（右下）の4つです。`,
     "3": `トレイには塩基配列ブロックがあり、それぞれがプロモーター、タンパク質コーディング領域、ターミネーターなどという特定の役割を持つ配列を表しています。
 プロモーターブロックは青色で、矢印型の付属物が付いています。
 タンパク質コーディング領域は単純に細長い形をしています。
 ターミネーターは赤色で、T字型の付属物があります。`,
-    "4": `プログラムでは、塩基配列ブロックを組み合わせて、遺伝子モデルを作成することができます。`,
+    "4": `プログラムでは、塩基配列ブロックを組み合わせて、遺伝子回路を作成することができます。`,
     "5": `Genochemy Lab では、シミュレーション前とシミュレーション中に環境パラメータを制御することができます。Genomy の蛍光強度もここで観察することができます。`,
     "6": `情報タブは5つのタブで構成されています。Tutorial、Protein、RNA、Questions、Loadの5つのタブで構成されています。
-ProteinタブとRNAタブは、Genomyで生成されたタンパク質とmRNAの情報を表示します。蛍光タンパク質の場合は、その生産量もグラフで見ることができます。
+ProteinタブとRNAタブは、Genomy内で作られるタンパク質とmRNAの情報を表示します。蛍光タンパク質の場合は、その生産量もグラフで見ることができます。
 Questions タブでは、いくつかの遺伝子回路クイズが用意されています。
 Loadタブから、iGEMプロジェクトを模した配列を読み込むことができます。現在、iGEM UTokyo 2022のプロジェクト「Optopass」が読み込みできます。`,
     "7": `それでは、Genochemyの操作の流れを確認してみましょう。
@@ -160,7 +149,7 @@ Loadタブから、iGEMプロジェクトを模した配列を読み込むこと
     "11": `実行ボタンを押し、環境調整も終わったら次は実験結果の観察と評価です。
 LabにあるGenomyのイラストを見ると蛍光タンパク質の発現量と種類を大まかに目で確認することができます。
 前述したとおり、ProteinタブとRNAタブでは生産中の物質の情報について知ることができ、特に蛍光タンパク質については発現量も見ることができます。`,
-    "12": `それでは、Questionsタブにある問題に取り組んで、遺伝子回路設計を練習しましょう！
+    "12": `それでは、問題タブにある問題に取り組んで、遺伝子回路設計を練習しましょう！
 問題は簡単なイラストで表示されています。
 一部の問題は、Show Answerボタンで模範解答を見ることができます。別解を作ってみるのも良いでしょう。`,
   },
