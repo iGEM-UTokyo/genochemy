@@ -52,12 +52,11 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
 }>();
 const selectElem: Ref<HTMLElement | null> = ref(null);
-const rect = computed(() => {
-  return selectElem.value?.getBoundingClientRect() ?? null;
-});
+const rect: Ref<DOMRect | null> = ref(null);
 const showOptions = ref(false);
 const toggleShowOptions = () => {
   if (!showOptions.value) {
+    rect.value = selectElem.value?.getBoundingClientRect() ?? null;
     showOptions.value = true;
     window.addEventListener("click", hideOptions);
   } else {
@@ -93,6 +92,7 @@ const pointerenter = (_matterName: string) => {
   }
   enterTimeoutId = setTimeout(() => {
     enterTimeoutId = null;
+    rect.value = selectElem.value?.getBoundingClientRect() ?? null;
     showHint.value = true;
     matterName.value = _matterName;
   }, 100);

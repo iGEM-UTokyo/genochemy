@@ -75,9 +75,7 @@ const move = (e: PointerEvent) => {
 const up = () => {
   isDown = false;
 };
-const blockRect = computed(
-  () => blockElem.value?.getBoundingClientRect() ?? null
-);
+const blockRect: Ref<DOMRect | null> = ref(null);
 const showDescription = ref(false);
 let enterTimeoutId: number | null = null;
 let leaveTimeoutId: number | null = null;
@@ -88,6 +86,7 @@ const pointerenter = () => {
   }
   enterTimeoutId = setTimeout(() => {
     enterTimeoutId = null;
+    blockRect.value = blockElem.value?.getBoundingClientRect() ?? null;
     showDescription.value = true;
   }, 300);
 };

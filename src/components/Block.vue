@@ -131,9 +131,7 @@ const paramValue = computed({
     });
   },
 });
-const rect = computed(() => {
-  return blockElem.value?.getBoundingClientRect() ?? null;
-});
+const rect: Ref<DOMRect | null> = ref(null);
 const showDescription = ref(false);
 let enterTimeoutId: number | null = null;
 let leaveTimeoutId: number | null = null;
@@ -144,6 +142,7 @@ const pointerenter = () => {
   }
   enterTimeoutId = setTimeout(() => {
     enterTimeoutId = null;
+    rect.value = blockElem.value?.getBoundingClientRect() ?? null;
     showDescription.value = true;
   }, 300);
 };
