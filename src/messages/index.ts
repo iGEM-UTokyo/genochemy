@@ -1,4 +1,5 @@
 import ja from "./ja";
+import en from "./en";
 
 export type MatterMessages = { name: string; description: string };
 export type BlockMessages = { displayName: string; description: string };
@@ -97,6 +98,7 @@ export type MessagesAddresses = B<Messages>;
 
 const messages = {
   ja,
+  en,
 };
 
 export default messages;
