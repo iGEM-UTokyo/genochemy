@@ -2,17 +2,17 @@
   <div class="tab-content">
     <list-box
       :list="proteinNames"
-      v-model="activeProteinName"
+      v-model="activeProteinDisplayName"
       class="protein-list"
     />
     <div class="protein-settings" v-if="activeProtein">
-      <h3>{{ t(activeProteinName) }}</h3>
+      <h3>{{ t(activeProteinDisplayName) }}</h3>
       {{ t(activeProtein.description) }}<br />
       mRNA(s):<br />
       <list-box :list="activeProteinMessengerRNAs" localized />
       <Logger
-        v-if="measurableProteins.includes(activeProteinName)"
-        :target="`protein-${activeProteinName}`"
+        v-if="measurableProteins.includes(activeProteinDisplayName)"
+        :target="activeProteinName"
       />
     </div>
   </div>
@@ -34,11 +34,11 @@ const measurableProteins = ["matter.visiMCherry.name", "matter.visiGFP.name"];
 const proteinNames = computed(() =>
   store.proteins.map((protein) => protein.displayName)
 );
-const activeProteinName = ref("");
+const activeProteinDisplayName = ref("");
 const activeProtein = computed(() => {
-  if (activeProteinName.value === "") return null;
+  if (activeProteinDisplayName.value === "") return null;
   const protein = store.proteins.filter(
-    (protein) => protein.displayName === activeProteinName.value
+    (protein) => protein.displayName === activeProteinDisplayName.value
   );
   if (protein.length !== 1) {
     // throw new Error(`Protein: ${activeProteinName.value} does not exist or duplicates.`)
@@ -46,6 +46,7 @@ const activeProtein = computed(() => {
   }
   return protein[0];
 });
+const activeProteinName = computed(() => activeProtein.value?.name ?? "");
 const activeProteinMessengerRNAs = computed(() => {
   if (activeProtein.value === null) return [];
   return activeProtein.value.messengerRNAs.map((mRNA) =>
