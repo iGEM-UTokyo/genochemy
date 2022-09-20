@@ -10,8 +10,9 @@
         :style="{
           top: `${optionsY}px`,
           left: `${optionsX}px`,
-          width: `${optionsWidth}px`,
+          minWidth: `${optionsWidth}px`,
         }"
+        ref="optionElem"
       >
         <li
           v-for="item of list"
@@ -26,7 +27,7 @@
     </teleport>
   </div>
   <tooltip
-    :rect="rect"
+    :rect="optionRect"
     :show="showHint"
     show-to-side
     :width="150"
@@ -52,11 +53,13 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
 }>();
 const selectElem: Ref<HTMLElement | null> = ref(null);
-const rect: Ref<DOMRect | null> = ref(null);
+const optionElem: Ref<HTMLElement | null> = ref(null);
+const selectRect: Ref<DOMRect | null> = ref(null);
+const optionRect: Ref<DOMRect | null> = ref(null);
 const showOptions = ref(false);
 const toggleShowOptions = () => {
   if (!showOptions.value) {
-    rect.value = selectElem.value?.getBoundingClientRect() ?? null;
+    selectRect.value = selectElem.value?.getBoundingClientRect() ?? null;
     showOptions.value = true;
     window.addEventListener("click", hideOptions);
   } else {
@@ -73,11 +76,11 @@ const select = (newValue: string) => {
   emit("update:modelValue", newValue);
   showHint.value = false;
 };
-const optionsX = computed(() => rect.value?.x ?? 0);
+const optionsX = computed(() => selectRect.value?.x ?? 0);
 const optionsY = computed(() =>
-  !rect.value ? 0 : rect.value.y + rect.value.height
+  !selectRect.value ? 0 : selectRect.value.y + selectRect.value.height
 );
-const optionsWidth = computed(() => rect.value?.width ?? 0);
+const optionsWidth = computed(() => selectRect.value?.width ?? 0);
 const matterName = ref("");
 const showHint = ref(false);
 let enterTimeoutId: number | null = null;
@@ -92,7 +95,7 @@ const pointerenter = (_matterName: string) => {
   }
   enterTimeoutId = setTimeout(() => {
     enterTimeoutId = null;
-    rect.value = selectElem.value?.getBoundingClientRect() ?? null;
+    optionRect.value = optionElem.value?.getBoundingClientRect() ?? null;
     showHint.value = true;
     matterName.value = _matterName;
   }, 100);
@@ -119,10 +122,15 @@ const pointerleave = () => {
   align-items: center;
   position: relative;
   user-select: none;
+  white-space: nowrap;
+  min-width: 20px;
 }
 .select-inner {
   flex: 1;
   pointer-events: none;
+  min-width: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .select-icon {
   margin-right: 1px;
@@ -144,6 +152,7 @@ const pointerleave = () => {
 }
 .options li {
   padding: 0 3px;
+  white-space: nowrap;
 }
 .options li:hover {
   background-color: #eee;

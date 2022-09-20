@@ -1,203 +1,201 @@
-// import { Messages } from ".";
+import { Messages } from ".";
 
-// const en: Messages = {
-//   matter: {
-//     promT7: {
-//       name: "常に発現",
-//       description: "常に一定の割合で下流を転写します。",
-//     },
-//     promReprRepressorADrugA: {
-//       name: "リプレッサーA結合性プロモーター",
-//       description:
-//         "活性化されたリプレッサーAが結合すると下流の転写が抑制されます。",
-//     },
-//     promActivEL222dim: {
-//       name: "青センサー促進プロモーター",
-//       description:
-//         "青センサーの二量体が結合し、それにより下流の転写が促進されます。",
-//     },
-//     promActivPhyBPIF3: {
-//       name: "赤センサーab促進プロモーター",
-//       description:
-//         "赤センサーa,bのヘテロ二量体が結合し、それにより下流の転写が促進されます。",
-//     },
-//     visiGFP: {
-//       name: "GFP",
-//       description: "緑色の蛍光を発します。",
-//     },
-//     visiMCherry: {
-//       name: "mCherry",
-//       description:
-//         "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
-//     },
-//     ctrlRepressorA: {
-//       name: "リプレッサーA",
-//       description:
-//         "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
-//     },
-//     ctrlEL222: {
-//       name: "青センサー",
-//       description: "青色光によって二量体を形成します。",
-//     },
-//     ctrlPhyB: {
-//       name: "赤センサーa",
-//       description: "赤色光によって赤センサーbとヘテロ二量体を形成します。",
-//     },
-//     ctrlPIF3: {
-//       name: "赤センサーb",
-//       description: "赤色光によって赤センサーaとヘテロ二量体を形成します。",
-//     },
-//     metaRecombA: {
-//       name: "リコンビナーゼI",
-//       description: "認識配列Iに挟まれた配列を切り出します。",
-//     },
-//     metaRecombB: {
-//       name: "リコンビナーゼII",
-//       description: "認識配列IIに挟まれた配列を切り出します。",
-//     },
-//     metaKill: {
-//       name: "キルスイッチ",
-//       description: "標的生物を死滅させます。",
-//     },
-//   },
-//   block: {
-//     promConst1: {
-//       displayName: "常に発現",
-//       description: "常に一定の割合で下流を転写します。",
-//     },
-//     promReprRepressorADrugA: {
-//       displayName: "活性リプレッサーA抑制",
-//       description:
-//         "活性化されたリプレッサーAが結合すると下流の転写が抑制されます。",
-//     },
-//     promActivEL222dim: {
-//       displayName: "青センサー促進",
-//       description:
-//         "青センサーの二量体が結合し、それにより下流の転写が促進されます。",
-//     },
-//     promActivPhyBPIF3: {
-//       displayName: "赤センサーab促進",
-//       description:
-//         "赤センサーa,bのヘテロ二量体が結合し、それにより下流の転写が促進されます。",
-//     },
-//     visiMCherry: {
-//       displayName: "mCherry",
-//       description: "赤色の蛍光を発します。",
-//     },
-//     visiGFP: {
-//       displayName: "GFP",
-//       description: "緑色の蛍光を発します。",
-//     },
-//     ctrlRepressorA: {
-//       displayName: "リプレッサーA",
-//       description:
-//         "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
-//     },
-//     ctrlEL222: {
-//       displayName: "青センサー",
-//       description: "青色光によって二量体を形成します。",
-//     },
-//     ctrlPhyB: {
-//       displayName: "赤センサーa",
-//       description: "赤色光によって赤センサーbとヘテロ二量体を形成します。",
-//     },
-//     ctrlPIF3: {
-//       displayName: "赤センサーb",
-//       description: "赤色光によって赤センサーaとヘテロ二量体を形成します。",
-//     },
-//     term1: {
-//       displayName: "ターミネーター",
-//       description: "転写を終了します。これ以降のブロックは転写されません。",
-//     },
-//     metaRecomb1: {
-//       displayName: "リコンビナーゼⅠ",
-//       description: "認識配列Iに挟まれた配列を切り出します。",
-//     },
-//     metaRecomb2: {
-//       displayName: "リコンビナーゼⅡ",
-//       description: "認識配列IIに挟まれた配列を切り出します。",
-//     },
-//     seqRecogRecomb1: {
-//       displayName: "認識配列Ⅰ",
-//       description: "リコンビナーゼIに認識される配列です。",
-//     },
-//     seqRecogRecomb2: {
-//       displayName: "認識配列Ⅱ",
-//       description: "リコンビナーゼIIに認識される配列です。",
-//     },
-//     metaKill: {
-//       displayName: "キルスイッチ",
-//       description: "標的生物を死滅させます。",
-//     },
-//   },
-//   tutorial: {
-//     tutorial: "チュートリアル",
-//     "1": `Genochemy は、オリジナル微生物「Genomy」をプログラミングすることによって、遺伝子設計や合成生物学を体験できるソフトウェアです。
-// ビジュアルプログラミングの直感的なUIを採用しつつ、遺伝子設計でのモデリングと同様の水準の微分方程式シミュレーションを備えています。`,
-//     "2": `Genochemyアプリには4つの領域があります。
-// 塩基配列トレイ（左下）、プログラム（左上）、Genochemy Lab（右上）、情報タブと実行ボタン（右下）の4つです。`,
-//     "3": `トレイには塩基配列ブロックがあり、それぞれがプロモーター、タンパク質コーディング領域、ターミネーターなどという特定の役割を持つ配列を表しています。
-// プロモーターブロックは青色で、矢印型の付属物が付いています。
-// タンパク質コーディング領域は単純に細長い形をしています。
-// ターミネーターは赤色で、T字型の付属物があります。`,
-//     "4": `プログラムでは、塩基配列ブロックを組み合わせて、遺伝子モデルを作成することができます。`,
-//     "5": `Genochemy Lab では、シミュレーション前とシミュレーション中に環境パラメータを制御することができます。Genomy の蛍光強度もここで観察することができます。`,
-//     "6": `情報タブは5つのタブで構成されています。Tutorial、Protein、RNA、Questions、Loadの5つのタブで構成されています。
-// ProteinタブとRNAタブは、Genomyで生成されたタンパク質とmRNAの情報を表示します。蛍光タンパク質の場合は、その生産量もグラフで見ることができます。
-// Questions タブでは、いくつかの遺伝子回路クイズが用意されています。
-// Loadタブから、iGEMプロジェクトを模した配列を読み込むことができます。現在、iGEM UTokyo 2022のプロジェクト「Optopass」が読み込みできます。`,
-//     "7": `それでは、Genochemyの操作の流れを確認してみましょう。
-// 上の図は基本的な流れを表しています。`,
-//     "8": `まず、ブロックをドラッグ&ドロップでトレイからプログラムに移動します。
-// 移動中のブロックを既にプログラムにあるブロックに近づけることによって両者を結合させることができます。
-// もしプログラムの特定のブロックを他から切り離したい場合は、そのブロックをダブルクリックしてください。
-// 要らなくなったブロックはドラッグ＆ドロップでトレイに戻せばよいです。`,
-//     "9": `トレイから取ったブロックを結合することによって、好きなように遺伝子回路を構築してみましょう！
-// 標準的な遺伝子はプロモーター、タンパク質コーディング領域、ターミネーターがこの順に並んだ形になります。試しに、「常時発現」プロモーターと「GFP」「ターミネーター」をこの順で繋げてみましょう。
-// 回路構築が終わったら、右端の「実行」ボタンを押しましょう。実験開始です。シミュレーションが始まります。`,
-//     "10": `Labでは、3パラメーター: 薬剤Aの量と赤色光、青色光それぞれの照射の有無を調整することができます。
-// 前ページで繋げた回路は薬剤や光には依存しないためここでの調整は変化をもたらしませんが、もっと複雑な回路になってくると効いてくる要素です。`,
-//     "11": `実行ボタンを押し、環境調整も終わったら次は実験結果の観察と評価です。
-// LabにあるGenomyのイラストを見ると蛍光タンパク質の発現量と種類を大まかに目で確認することができます。
-// 前述したとおり、ProteinタブとRNAタブでは生産中の物質の情報について知ることができ、特に蛍光タンパク質については発現量も見ることができます。`,
-//     "12": `それでは、Questionsタブにある問題に取り組んで、遺伝子回路設計を練習しましょう！
-// 問題は簡単なイラストで表示されています。
-// 一部の問題は、Show Answerボタンで模範解答を見ることができます。別解を作ってみるのも良いでしょう。`,
-//   },
-//   tabs: {
-//     tutorial: "チュートリアル",
-//     protein: "タンパク質",
-//     rna: "RNA",
-//     questions: "問題",
-//     load: "読み込み",
-//   },
-//   runner: {
-//     drugA: "薬剤A",
-//     redLight: "赤色光",
-//     blueLight: "青色光",
-//   },
-//   view: {
-//     show: "表示する",
-//     hide: "隠す",
-//   },
-//   questions: {
-//     question: "問題",
-//     showAnswer: "答えを見る",
-//     image: "画像",
-//     "1": "Green Creature",
-//     "2": "Blue makes green",
-//     "3": "Killer Light",
-//     "4": "Drug Addict",
-//     "5": "NAND Gate",
-//     "6": "Short Temper",
-//     "7": "Blue makes infinitely green",
-//     "8": "Green to Red",
-//     "9": "Optopass Mini",
-//   },
-//   load: {
-//     loadUTokyo2022Project: "UTokyo 2022のプロジェクトを読み込む",
-//   },
-//   twitterShare: "Genochemy で遺伝子回路を作りました！",
-// };
+const en: Messages = {
+  matter: {
+    promT7: {
+      name: "Constitutive promoter",
+      description: "Always expresses the downstream gene at a certain rate.",
+    },
+    promReprRepressorADrugA: {
+      name: "Repressor A-binding promoter",
+      description:
+        "Represses transcription of the downstream gene when an activated repressor A binds.",
+    },
+    promActivEL222dim: {
+      name: "Blue-light-sensor inducing promoter",
+      description:
+        "Induces transcription of the downstream gene when the blue-light-sensor dimer binds.",
+    },
+    promActivPhyBPIF3: {
+      name: "Red-light-sensor ab inducing promoter",
+      description:
+        "Induces transcription of the downstream gene when heterodimer of red-light-sensors a and b binds.",
+    },
+    visiGFP: {
+      name: "GFP",
+      description: "Emits green fluorescence.",
+    },
+    visiMCherry: {
+      name: "mCherry",
+      description: "Emits red fluorescence.",
+    },
+    ctrlRepressorA: {
+      name: "Repressor A",
+      description:
+        "Inhibits transcription of the downstream gene of repressor A-binding promoter when activated, bound to drug A.",
+    },
+    ctrlEL222: {
+      name: "Blue-light-sensor",
+      description: "Dimers are formed when blue light is shone.",
+    },
+    ctrlPhyB: {
+      name: "Red-light-sensor a",
+      description:
+        "Forms a heterodimer with red-light-sensor b when red light is shone.",
+    },
+    ctrlPIF3: {
+      name: "Red-light-sensor b", //"赤センサーb"
+      description:
+        "Forms a heterodimer with red-light-sensor a when red light is shone.",
+    },
+    ctrlEL222dim: {
+      name: "Blue-light-sensor dimer",
+      description: "Blue-light-sensor dimerized by blue light.",
+    },
+    ctrlPhyBPIF3: {
+      name: "Red-light-sensor ab",
+      description: "Red-light-sensor a and b hetero-dimerized by red light.",
+    },
+    metaRecombA: {
+      name: "Recombinase I",
+      description:
+        "Cuts out the sequence sandwiched between recognition sequences I.",
+    },
+    metaRecombB: {
+      name: "Recombinase II",
+      description:
+        "Cuts out the sequence sandwiched between recognition sequences II.",
+    },
+    seqRecogRecombA: {
+      name: "I",
+      description: "Sequence recognized by Recombinase I.",
+    },
+    seqRecogRecombB: {
+      name: "II",
+      description: "Sequence recognized by Recombinase II.",
+    },
+    metaKill: {
+      name: "Kill Switch",
+      description: "Kills target organism.",
+    },
+  },
+  block: {
+    promConst1: {
+      displayName: "Constitutive",
+      description: "Always expresses the downstream gene at a certain rate.",
+    },
+    promRepressor: {
+      displayName: "<repressor,> repressed",
+      description:
+        "Represses transcription of the downstream gene when an activated repressor binds.",
+    },
+    promActivator: {
+      displayName: "<activator,> activated",
+      description:
+        "Promotes transcription of the downstream gene when an enabled activator binds.",
+    },
+    visiFluorescence: {
+      displayName: "<protein,Fluorescence Protein>",
+      description: "Protein which emits fluorescence.",
+    },
+    ctrlRepressor: {
+      displayName: "<repressor,Repressor>",
+      description:
+        "Inhibits transcription of the downstream gene of specific promoters.",
+    },
+    ctrlActivator: {
+      displayName: "<activator,Activator>",
+      description:
+        "Induces transcription of the downstream gene of specific promoters.",
+    },
+    term1: {
+      displayName: "Terminator",
+      description:
+        "Transcription is terminated. Downstream blocks will not be transcribed.",
+    },
+    metaRecomb: {
+      displayName: "<recombinase,Recombinase>",
+      description:
+        "Cuts out the sequence sandwiched between recognition sequences.",
+    },
+    seqRecogRecomb: {
+      displayName: "Recognition Sequence <recombinase,>",
+      description: "Sequence recognized by recombinase.",
+    },
+    metaKill: {
+      displayName: "Kill Switch",
+      description: "Kills target organism.",
+    },
+  },
+  tutorial: {
+    tutorial: "Tutorial",
+    "1": `Genochemy is a software that allows users to experience genetic circuit design and synthetic biology by programming an original microorganism, Genomy.
+It has the same level of differential equation simulation as modeling in genetic circuit design, while employing an intuitive UI for visual programming.`,
+    "2": `The Genochemy application has four domains.
+The nucleotide sequence tray (lower left), the program (upper left), the Genochemy Lab (upper right), and the Info tabs and Run button (lower right).`,
+    "3": `The nucleotide sequence tray has sequence blocks, each representing a sequence with a specific role: promoter, protein coding region, terminator, etc.
+Promoter blocks are blue with arrow-shaped appendages.
+Protein coding regions are shown by elongated rectangles.
+Terminators are red and have T-shaped appendages.`,
+    "4": `In the program domain, you can combine sequence blocks to create genetic circuits.`,
+    "5": `In the Genochemy Lab, environment parameters can be controlled before and during the simulation. The fluorescence intensity of Genomy can also be observed here.`,
+    "6": `The Information tab consists of five tabs: Tutorial, Protein, RNA, Questions, and Load.
+The Tutorial tab allows users to take tutorials on Genochemy.
+The Protein and RNA tabs display information on proteins and mRNAs produced in Genomy. You can also view graphs showing changes in fluorescent protein production over time. 
+The Questions tab provides several genetic circuit quizzes.
+From the Load tab, you can load sequences that mimic iGEM projects. Currently, you can load the project "Optopass" from iGEM UTokyo 2022.`,
+    "7": `Let's check out the flow of Genochemy operations.
+The figure above shows the basic flow.`,
+    "8": `First, drag and drop the block from the tray to the program domain.
+You can combine two blocks by bringing the one you are moving closer to the one already in the program domain.
+If you want to detach a particular block from the others in the program, double-click on it.
+Blocks that are no longer needed can be dragged and dropped back into the tray.`,
+    "9": `By joining the blocks together, you can build a genetic circuit any way you like!
+A standard gene consists of a promoter, protein coding region, and terminator in this order. As a test, let's connect "Constitutive promoter", "GFP" and "Terminator" in this order.
+After completing the circuit construction, click the "Run" button. The simulation will start.`,
+    "10": `In the Lab domain, you can adjust three parameters: the amount of drug A and the presence or absence of red and blue light irradiation, respectively.
+The circuit created on the previous page does not depend on drug A or the light, so the parameters will not make any difference in this case, but this is a factor that becomes important when the circuit becomes more complex.`,
+    "11": `After pressing the Run button and adjusting the environment, the next step is to observe and evaluate the results of the experiment.
+The Genomy in the Lab roughly shows you the amount and type of fluorescent protein expression.
+As mentioned before, the Protein and RNA tabs provide information about the substances being produced and the expression amount of the fluorescent proteins.`,
+    "12": `Now, let's practice designing a genetic circuit by working through the questions on the Questions tab!
+The questions are presented with simple illustrations.
+For some of the questions, you can view a model answer by clicking the 'Show Answer' button. You can also try to make alternative solutions.`,
+  },
+  tabs: {
+    tutorial: "Tutorial",
+    protein: "Protein",
+    rna: "RNA",
+    questions: "Questions",
+    load: "Load",
+  },
+  runner: {
+    drugA: "Drug A",
+    redLight: "Red light",
+    blueLight: "Blue light",
+  },
+  view: {
+    show: "Show",
+    hide: "Hide",
+  },
+  questions: {
+    question: "Questions",
+    showAnswer: "Show Answer",
+    image: "Image",
+    "1": "Green Creature",
+    "2": "Blue makes green",
+    "3": "Killer Light",
+    "4": "Drug Addict",
+    "5": "NAND Gate",
+    "6": "Short Temper",
+    "7": "Blue makes infinitely green",
+    "8": "Green to Red",
+    "9": "Optopass",
+  },
+  load: {
+    loadUTokyo2022Project: "Load the UTokyo 2022 project",
+  },
+  twitterShare: "I made a genetic circuit on Genochemy!",
+};
 
-// export default en;
+export default en;

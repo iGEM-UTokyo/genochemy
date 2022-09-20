@@ -37,9 +37,9 @@ app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(createPinia());
 
-const i18n = createI18n<[Messages], "ja">({
+const i18n = createI18n<[Messages], "en">({
   legacy: false,
-  locale: "ja",
+  locale: "en",
   messages,
 });
 app.use(i18n);
