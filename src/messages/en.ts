@@ -190,7 +190,7 @@ For some of the questions, you can view a model answer by clicking the 'Show Ans
     "6": "Short Temper",
     "7": "Blue makes infinitely green",
     "8": "Green to Red",
-    "9": "Optopass",
+    "9": "Optopass Mini",
   },
   load: {
     loadUTokyo2022Project: "Load the UTokyo 2022 project",
