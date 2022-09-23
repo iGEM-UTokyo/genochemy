@@ -66,17 +66,24 @@ const en: Messages = {
       description:
         "Cuts out the sequence sandwiched between recognition sequences II.",
     },
-    seqRecogRecombA: {
-      name: "I",
-      description: "Sequence recognized by Recombinase I.",
-    },
-    seqRecogRecombB: {
-      name: "II",
-      description: "Sequence recognized by Recombinase II.",
-    },
     metaKill: {
       name: "Kill Switch",
       description: "Kills target organism.",
+    },
+  },
+  sequence: {
+    recogRecombA: {
+      name: "I",
+      description: "Sequence recognized by Recombinase I.",
+    },
+    recogRecombB: {
+      name: "II",
+      description: "Sequence recognized by Recombinase II.",
+    },
+    term1: {
+      name: "Terminator",
+      description:
+        "Transcription is terminated. Downstream blocks will not be transcribed.",
     },
   },
   block: {
@@ -196,6 +203,10 @@ For some of the questions, you can view a model answer by clicking the 'Show Ans
     loadUTokyo2022Project: "Load the UTokyo 2022 project",
   },
   twitterShare: "I made a genetic circuit on Genochemy!",
+  vDNA: {
+    title: "Show vDNA",
+    description: "",
+  },
 };
 
 export default en;

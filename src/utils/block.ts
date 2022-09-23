@@ -406,7 +406,7 @@ export class RecombinaseRecognitionSeqBlock extends SpecialSequenceBlock {
     };
   } = {
     recombinase: {
-      value: "matter.seqRecogRecombA.name",
+      value: "sequence.recogRecombA.name",
       list: recombinaseSequenceNames,
     },
   };
@@ -511,12 +511,12 @@ export function uniqueNameToBlockV1(uniqueName: string): Block {
     }
     case "seq-recog-recomb1": {
       const block = new RecombinaseRecognitionSeqBlock();
-      block.params.recombinase.value = "matter.seqRecogRecombA.name";
+      block.params.recombinase.value = "sequence.recogRecombA.name";
       return block;
     }
     case "seq-recog-recomb2": {
       const block = new RecombinaseRecognitionSeqBlock();
-      block.params.recombinase.value = "matter.seqRecogRecombB.name";
+      block.params.recombinase.value = "sequence.recogRecombB.name";
       return block;
     }
     case "meta-kill":
