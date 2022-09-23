@@ -19,8 +19,6 @@ export interface Messages {
     ctrlPhyBPIF3: MatterMessages;
     metaRecombA: MatterMessages;
     metaRecombB: MatterMessages;
-    seqRecogRecombA: MatterMessages;
-    seqRecogRecombB: MatterMessages;
     metaKill: MatterMessages;
   };
   block: {
@@ -35,6 +33,11 @@ export interface Messages {
     metaRecomb: BlockMessages;
     seqRecogRecomb: BlockMessages;
     metaKill: BlockMessages;
+  };
+  sequence: {
+    recogRecombA: MatterMessages;
+    recogRecombB: MatterMessages;
+    term1: MatterMessages;
   };
   tutorial: {
     tutorial: string;
@@ -85,6 +88,10 @@ export interface Messages {
     loadUTokyo2022Project: string;
   };
   twitterShare: string;
+  vDNA: {
+    title: string;
+    description: string;
+  };
 }
 
 type A<T> = {

@@ -62,17 +62,23 @@ const ja: Messages = {
       name: "リコンビナーゼII",
       description: "認識配列IIに挟まれた配列を切り出します。",
     },
-    seqRecogRecombA: {
-      name: "I",
-      description: "リコンビナーゼIに認識される配列です。",
-    },
-    seqRecogRecombB: {
-      name: "II",
-      description: "リコンビナーゼIIに認識される配列です。",
-    },
     metaKill: {
       name: "キルスイッチ",
       description: "標的生物を死滅させます。",
+    },
+  },
+  sequence: {
+    recogRecombA: {
+      name: "I",
+      description: "リコンビナーゼIに認識される配列です。",
+    },
+    recogRecombB: {
+      name: "II",
+      description: "リコンビナーゼIIに認識される配列です。",
+    },
+    term1: {
+      name: "ターミネーター",
+      description: "転写を終了します。これ以降のブロックは転写されません。",
     },
   },
   block: {
@@ -187,6 +193,11 @@ LabにあるGenomyのイラストを見ると蛍光タンパク質の発現量�
     loadUTokyo2022Project: "UTokyo 2022のプロジェクトを読み込む",
   },
   twitterShare: "Genochemy で遺伝子回路を作りました！",
+  vDNA: {
+    title: "vDNAを表示",
+    description:
+      "ブロックがどのようにDNA配列(vDNA, Virtual DNA)に変換されるかを示しています。DNA配列はGenomy向けですが、実際の生物の遺伝子の配列がモチーフになっています。",
+  },
 };
 
 export default ja;
