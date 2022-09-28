@@ -9,10 +9,10 @@
       </div>
     </tabs>
     <div class="tab">
-      <tab-tutorial v-if="activeTab === 'tabs.tutorial'" />
+      <tab-tutorial v-show="activeTab === 'tabs.tutorial'" />
       <tab-messenger-r-n-a v-if="activeTab === 'tabs.rna'" />
       <tab-protein v-if="activeTab === 'tabs.protein'" />
-      <tab-questions v-if="activeTab === 'tabs.questions'" />
+      <tab-questions v-show="activeTab === 'tabs.questions'" />
       <tab-load v-if="activeTab === 'tabs.load'" />
     </div>
   </div>

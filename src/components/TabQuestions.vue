@@ -92,6 +92,9 @@ button {
   border-radius: 10px;
   font-family: inherit;
 }
+.q-nav {
+  user-select: none;
+}
 .q-nav.disabled {
   color: #ddd;
 }
