@@ -19,6 +19,36 @@
         </div>
       </div>
     </div>
+    <div class="helps">
+      <div
+        class="help"
+        ref="help1Ref"
+        @pointerenter="showHelp1 = true"
+        @pointerleave="showHelp1 = false"
+      >
+        {{ t("vDNA.whatThisMeans") }}
+      </div>
+      <div
+        class="help"
+        ref="help2Ref"
+        @pointerenter="showHelp2 = true"
+        @pointerleave="showHelp2 = false"
+      >
+        {{ t("vDNA.howUsed") }}
+      </div>
+      <tooltip
+        :rect="help1Ref?.getBoundingClientRect() ?? null"
+        :show="showHelp1"
+      >
+        {{ t("vDNA.whatThisMeansDescription") }}
+      </tooltip>
+      <tooltip
+        :rect="help2Ref?.getBoundingClientRect() ?? null"
+        :show="showHelp2"
+      >
+        {{ t("vDNA.howUsedDescription") }}
+      </tooltip>
+    </div>
   </Dialog>
 </template>
 
@@ -29,6 +59,7 @@ import { computed, Ref, ref, toRefs } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "@/store";
 import { VDNA, toVDNAs } from "@/utils/v-dna";
+import Tooltip from "./tooltip/Tooltip.vue";
 
 const { t } = useI18n();
 const showDialog = ref(false);
@@ -80,13 +111,18 @@ const vDNASequences = computed(() => {
         });
         currentAnnotationIndex++;
       }
-      console.log(text);
       lines.push({ text, annotations });
     }
     result = [...result, ...lines];
   }
   return result;
 });
+
+const help1Ref: Ref<HTMLElement | null> = ref(null);
+const help2Ref: Ref<HTMLElement | null> = ref(null);
+
+const showHelp1 = ref(false);
+const showHelp2 = ref(false);
 </script>
 
 <style scoped>
@@ -106,11 +142,24 @@ const vDNASequences = computed(() => {
 }
 .annotation {
   position: absolute;
-  border: 1px solid black;
+  border: 1px solid #aaa;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   user-select: none;
+  font-family: "Zen Maru Gothic", sans-serif;
+}
+.helps {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+}
+.help {
+  padding: 10px;
+  flex: 1;
+  border: 1px solid #aaa;
+  text-align: center;
+  border-radius: 10px;
 }
 </style>

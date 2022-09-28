@@ -205,7 +205,14 @@ For some of the questions, you can view a model answer by clicking the 'Show Ans
   twitterShare: "I made a genetic circuit on Genochemy!",
   vDNA: {
     title: "Show vDNA",
-    description: "",
+    description:
+      "It shows how a block is transformed into a DNA sequence (vDNA, Virtual DNA) consisting of A(a), T(t), G(g), and C(c). The DNA sequence is for Genomy, but the motif is the gene sequence of a real organism.",
+    whatThisMeans: "Learn the sequence meaning",
+    howUsed: "How the sequence is used",
+    whatThisMeansDescription:
+      "The sequences in each block are not random, but are inspired by the sequences of real organisms; use tools such as BLAST to decipher the meaning of the sequences.",
+    howUsedDescription:
+      "In actual synthetic biology, the DNA sequence like this can be ordered from a company, which will synthesize the entire sequence as an actual DNA molecule. The DNA molecules received can be put into the organism to make the genetic circuit work in the organism.",
   },
 };
 

@@ -1,17 +1,19 @@
 <template>
-  <div class="background" v-if="modelValue">
-    <div class="dialog">
-      <div class="dialog-title">
-        <h1 class="title">
-          {{ t(title) }}
-        </h1>
-        <h1 @click="close">
-          <font-awesome-icon icon="close" />
-        </h1>
+  <teleport to=".app" v-if="modelValue">
+    <div class="background">
+      <div class="dialog">
+        <div class="dialog-title">
+          <h1 class="title">
+            {{ t(title) }}
+          </h1>
+          <h1 @click="close">
+            <font-awesome-icon icon="close" />
+          </h1>
+        </div>
+        <slot />
       </div>
-      <slot />
     </div>
-  </div>
+  </teleport>
 </template>
 
 <script lang="ts" setup>
@@ -50,7 +52,6 @@ const close = () => {
   border-radius: 30px;
   padding: 20px;
   box-sizing: border-box;
-  pointer-events: all;
   display: flex;
   flex-direction: column;
 }

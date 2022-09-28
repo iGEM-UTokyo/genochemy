@@ -91,6 +91,10 @@ export interface Messages {
   vDNA: {
     title: string;
     description: string;
+    whatThisMeans: string;
+    howUsed: string;
+    whatThisMeansDescription: string;
+    howUsedDescription: string;
   };
 }
 
