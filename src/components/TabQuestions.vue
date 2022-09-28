@@ -82,12 +82,18 @@ function showAnswer() {
 </script>
 
 <style scoped>
+.tab-content {
+  user-select: text;
+}
 button {
   background-color: white;
   border: 1px solid #aaa;
   padding: 10px;
   border-radius: 10px;
   font-family: inherit;
+}
+.q-nav {
+  user-select: none;
 }
 .q-nav.disabled {
   color: #ddd;

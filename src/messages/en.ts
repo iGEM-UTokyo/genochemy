@@ -66,17 +66,24 @@ const en: Messages = {
       description:
         "Cuts out the sequence sandwiched between recognition sequences II.",
     },
-    seqRecogRecombA: {
-      name: "I",
-      description: "Sequence recognized by Recombinase I.",
-    },
-    seqRecogRecombB: {
-      name: "II",
-      description: "Sequence recognized by Recombinase II.",
-    },
     metaKill: {
       name: "Kill Switch",
       description: "Kills target organism.",
+    },
+  },
+  sequence: {
+    recogRecombA: {
+      name: "I",
+      description: "Sequence recognized by Recombinase I.",
+    },
+    recogRecombB: {
+      name: "II",
+      description: "Sequence recognized by Recombinase II.",
+    },
+    term1: {
+      name: "Terminator",
+      description:
+        "Transcription is terminated. Downstream blocks will not be transcribed.",
     },
   },
   block: {
@@ -95,16 +102,16 @@ const en: Messages = {
         "Promotes transcription of the downstream gene when an enabled activator binds.",
     },
     visiFluorescence: {
-      displayName: "<protein,Fluorescence Protein>",
+      displayName: "<protein,Fluorescence Protein> gene",
       description: "Protein which emits fluorescence.",
     },
     ctrlRepressor: {
-      displayName: "<repressor,Repressor>",
+      displayName: "<repressor,Repressor> gene",
       description:
         "Inhibits transcription of the downstream gene of specific promoters.",
     },
     ctrlActivator: {
-      displayName: "<activator,Activator>",
+      displayName: "<activator,Activator> gene",
       description:
         "Induces transcription of the downstream gene of specific promoters.",
     },
@@ -114,7 +121,7 @@ const en: Messages = {
         "Transcription is terminated. Downstream blocks will not be transcribed.",
     },
     metaRecomb: {
-      displayName: "<recombinase,Recombinase>",
+      displayName: "<recombinase,Recombinase> gene",
       description:
         "Cuts out the sequence sandwiched between recognition sequences.",
     },
@@ -177,6 +184,8 @@ For some of the questions, you can view a model answer by clicking the 'Show Ans
   view: {
     show: "Show",
     hide: "Hide",
+    run: "Run",
+    stop: "Stop",
   },
   questions: {
     question: "Questions",
@@ -196,6 +205,17 @@ For some of the questions, you can view a model answer by clicking the 'Show Ans
     loadUTokyo2022Project: "Load the UTokyo 2022 project",
   },
   twitterShare: "I made a genetic circuit on Genochemy!",
+  vDNA: {
+    title: "Show vDNA",
+    description:
+      "It shows how a block is transformed into a DNA sequence (vDNA, Virtual DNA) consisting of A(a), T(t), G(g), and C(c). The DNA sequence is for Genomy, but the motif is the gene sequence of a real organism.",
+    whatThisMeans: "Learn the meaning of the sequence",
+    howUsed: "How the sequence is used",
+    whatThisMeansDescription:
+      "The sequences in each block are not random, but are inspired by the sequences of real organisms; use tools such as BLAST to decipher the meaning of the sequences.",
+    howUsedDescription:
+      "In actual synthetic biology, the DNA sequence like this can be ordered from a company, which will synthesize the entire sequence as an actual DNA molecule. The DNA molecules received can be put into the organism to make the genetic circuit work in the organism.",
+  },
 };
 
 export default en;

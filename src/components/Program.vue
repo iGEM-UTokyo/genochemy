@@ -37,6 +37,7 @@
       v0.6.1
       <ChangeLocale />
       <ShareTwitter />
+      <ShowVDNA />
     </div>
   </div>
 </template>
@@ -60,6 +61,7 @@ import VScrollBar from "@/components/VScrollBar.vue";
 import { Snake } from "@/utils/snake";
 import SnakeVue from "@/components/Snake.vue";
 import ShareTwitter from "@/components/ShareTwitter.vue";
+import ShowVDNA from "@/components/ShowVDNA.vue";
 import ChangeLocale from "@/components/ChangeLocale.vue";
 
 export const getFixedPositionKey: InjectionKey<

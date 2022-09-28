@@ -535,6 +535,6 @@ export const recombinaseNames = [
   "matter.metaRecombB.name",
 ] as const;
 export const recombinaseSequenceNames = [
-  "matter.seqRecogRecombA.name",
-  "matter.seqRecogRecombB.name",
-];
+  "sequence.recogRecombA.name",
+  "sequence.recogRecombB.name",
+] as const;

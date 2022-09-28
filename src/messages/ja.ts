@@ -62,17 +62,23 @@ const ja: Messages = {
       name: "リコンビナーゼII",
       description: "認識配列IIに挟まれた配列を切り出します。",
     },
-    seqRecogRecombA: {
-      name: "I",
-      description: "リコンビナーゼIに認識される配列です。",
-    },
-    seqRecogRecombB: {
-      name: "II",
-      description: "リコンビナーゼIIに認識される配列です。",
-    },
     metaKill: {
       name: "キルスイッチ",
       description: "標的生物を死滅させます。",
+    },
+  },
+  sequence: {
+    recogRecombA: {
+      name: "I",
+      description: "リコンビナーゼIに認識される配列です。",
+    },
+    recogRecombB: {
+      name: "II",
+      description: "リコンビナーゼIIに認識される配列です。",
+    },
+    term1: {
+      name: "ターミネーター",
+      description: "転写を終了します。これ以降のブロックは転写されません。",
     },
   },
   block: {
@@ -91,15 +97,15 @@ const ja: Messages = {
         "活性化されたアクチベーターが結合すると下流の転写が促進されます。",
     },
     visiFluorescence: {
-      displayName: "<protein,蛍光タンパク質>",
+      displayName: "<protein,蛍光タンパク質>遺伝子",
       description: "蛍光を発するタンパク質です。",
     },
     ctrlRepressor: {
-      displayName: "<repressor,リプレッサー>",
+      displayName: "<repressor,リプレッサー>遺伝子",
       description: "プロモーターの転写を抑制します。",
     },
     ctrlActivator: {
-      displayName: "<activator,アクチベーター>",
+      displayName: "<activator,アクチベーター>遺伝子",
       description: "プロモーターの転写を促進します。",
     },
     term1: {
@@ -107,7 +113,7 @@ const ja: Messages = {
       description: "転写を終了します。これ以降のブロックは転写されません。",
     },
     metaRecomb: {
-      displayName: "<recombinase,リコンビナーゼ>",
+      displayName: "<recombinase,リコンビナーゼ>遺伝子",
       description: "対応する認識配列に挟まれた配列を切り出します。",
     },
     seqRecogRecomb: {
@@ -115,7 +121,7 @@ const ja: Messages = {
       description: "リコンビナーゼに認識される配列です。",
     },
     metaKill: {
-      displayName: "キルスイッチ",
+      displayName: "キルスイッチ遺伝子",
       description: "標的生物を死滅させます。",
     },
   },
@@ -168,6 +174,8 @@ LabにあるGenomyのイラストを見ると蛍光タンパク質の発現量�
   view: {
     show: "表示する",
     hide: "隠す",
+    run: "実行",
+    stop: "", // スペース的に入らない
   },
   questions: {
     question: "問題",
@@ -187,6 +195,17 @@ LabにあるGenomyのイラストを見ると蛍光タンパク質の発現量�
     loadUTokyo2022Project: "UTokyo 2022のプロジェクトを読み込む",
   },
   twitterShare: "Genochemy で遺伝子回路を作りました！",
+  vDNA: {
+    title: "vDNAを表示",
+    description:
+      "ブロックがどのようにA(a)T(t)G(g)C(c)から成るDNA配列(vDNA, Virtual DNA)に変換されるかを示しています。DNA配列はGenomy向けですが、実際の生物の遺伝子の配列がモチーフになっています。",
+    whatThisMeans: "配列の意味を知る",
+    howUsed: "どのようにこの配列を使うか",
+    whatThisMeansDescription:
+      "各ブロックの配列はランダムなものではなく、実際の生物の配列がモチーフになっています。BLASTなどのツールを使って配列の意味を解読してみましょう。",
+    howUsedDescription:
+      "実際の合成生物学では、このように得られたDNA配列を企業に注文すると実際のDNA分子として配列を全合成してくれます。届いたDNA分子を生物内に入れることで遺伝子回路を生物で動かすことが出来ます。",
+  },
 };
 
 export default ja;
