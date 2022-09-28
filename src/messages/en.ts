@@ -102,16 +102,16 @@ const en: Messages = {
         "Promotes transcription of the downstream gene when an enabled activator binds.",
     },
     visiFluorescence: {
-      displayName: "<protein,Fluorescence Protein>",
+      displayName: "<protein,Fluorescence Protein> gene",
       description: "Protein which emits fluorescence.",
     },
     ctrlRepressor: {
-      displayName: "<repressor,Repressor>",
+      displayName: "<repressor,Repressor> gene",
       description:
         "Inhibits transcription of the downstream gene of specific promoters.",
     },
     ctrlActivator: {
-      displayName: "<activator,Activator>",
+      displayName: "<activator,Activator> gene",
       description:
         "Induces transcription of the downstream gene of specific promoters.",
     },
@@ -121,7 +121,7 @@ const en: Messages = {
         "Transcription is terminated. Downstream blocks will not be transcribed.",
     },
     metaRecomb: {
-      displayName: "<recombinase,Recombinase>",
+      displayName: "<recombinase,Recombinase> gene",
       description:
         "Cuts out the sequence sandwiched between recognition sequences.",
     },
