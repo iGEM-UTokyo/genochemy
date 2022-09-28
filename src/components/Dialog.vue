@@ -1,6 +1,6 @@
 <template>
   <teleport to=".app" v-if="modelValue">
-    <div class="background">
+    <div class="background" @click="onClickBackground">
       <div class="dialog">
         <div class="dialog-title">
           <h1 class="title">
@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts" setup>
+import { watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -30,6 +31,26 @@ const emit = defineEmits<{
 const close = () => {
   emit("update:modelValue", false);
 };
+const onClickBackground = (e: MouseEvent) => {
+  if (e.target instanceof HTMLElement && e.target.className === "background") {
+    close();
+  }
+};
+let isRegistered = false;
+const onKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Escape") {
+    close();
+  }
+};
+watch(props, () => {
+  if (props.modelValue && !isRegistered) {
+    window.addEventListener("keydown", onKeydown);
+    isRegistered = true;
+  } else if (!props.modelValue && isRegistered) {
+    window.removeEventListener("keydown", onKeydown);
+    isRegistered = false;
+  }
+});
 </script>
 
 <style scoped>
