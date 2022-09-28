@@ -5,6 +5,7 @@ import {
   RecombinaseRecognitionSeqBlock,
   TerminatorBlock,
 } from "./block";
+import { DeepReadonly } from "./deep-readonly";
 import { Snake } from "./snake";
 
 const vDNA: { [K in MessagesAddresses]?: string } = {
@@ -48,7 +49,7 @@ export type VDNA = {
   annotations: Annotation[];
 };
 
-export function toVDNAs(snakes: Snake[]): VDNA[] {
+export function toVDNAs(snakes: DeepReadonly<Snake>[]): VDNA[] {
   return snakes.map((snake) => {
     const vDNAFragments: string[] = [];
     const annotations: Annotation[] = [];
@@ -72,7 +73,7 @@ export function toVDNAs(snakes: Snake[]): VDNA[] {
         annotations.push({
           label: name,
           from: accumulatedLength,
-          to: _vDNA.length - 1,
+          to: accumulatedLength + _vDNA.length,
         });
         accumulatedLength += _vDNA.length;
       }

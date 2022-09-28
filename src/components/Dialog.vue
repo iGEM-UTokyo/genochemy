@@ -51,6 +51,8 @@ const close = () => {
   padding: 20px;
   box-sizing: border-box;
   pointer-events: all;
+  display: flex;
+  flex-direction: column;
 }
 
 .dialog-title {
