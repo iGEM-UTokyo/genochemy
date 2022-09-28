@@ -13,7 +13,7 @@ export default {
 import { computed, onUnmounted } from "vue";
 import { useStore } from "@/store";
 
-const { runnerOutputs, registerOutput, UnregisterOutput } = useStore();
+const { runnerOutputs, registerOutput, unregisterOutput } = useStore();
 
 type Color = [number, number, number];
 const outputNames = ["protein-GFP", "protein-mCherry"] as const;
@@ -22,7 +22,7 @@ for (const name of outputNames) {
 }
 onUnmounted(() => {
   for (const name of outputNames) {
-    UnregisterOutput(name);
+    unregisterOutput(name);
   }
 });
 

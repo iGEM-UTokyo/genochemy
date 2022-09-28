@@ -18,7 +18,7 @@ const store = useStore();
 const {
   runnerOutputs,
   registerOutput,
-  UnregisterOutput,
+  unregisterOutput,
   cutSnake,
   recombineTwoSnakes,
   updateRunner,
@@ -49,7 +49,7 @@ for (const recombinase of recombinases) {
 }
 onUnmounted(() => {
   for (const recombinase of recombinases) {
-    UnregisterOutput(recombinase.name);
+    unregisterOutput(recombinase.name);
   }
 });
 

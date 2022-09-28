@@ -25,12 +25,12 @@ import { onUnmounted, ref, watch } from "vue";
 import { useStore } from "@/store";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
-const { registerInput, UnregisterInput, runnerInputs, updateRunnerInput } =
+const { registerInput, unregisterInput, runnerInputs, updateRunnerInput } =
   useStore();
 const inputName = "drug";
 registerInput(inputName);
 onUnmounted(() => {
-  UnregisterInput(inputName);
+  unregisterInput(inputName);
 });
 
 const drug = ref(0);

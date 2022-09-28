@@ -44,7 +44,7 @@ const { target } = toRefs(props);
 
 store.registerOutput(target.value);
 onUnmounted(() => {
-  store.UnregisterOutput(target.value);
+  store.unregisterOutput(target.value);
 });
 
 watch(time, () => {

@@ -14,7 +14,7 @@ import { onUnmounted, toRefs, watch } from "vue";
 import { useStore } from "@/store";
 
 const store = useStore();
-const { runnerOutputs, registerOutput, UnregisterOutput, kill } = store;
+const { runnerOutputs, registerOutput, unregisterOutput, kill } = store;
 
 const { isRunning, currentRunner } = toRefs(store);
 watch(currentRunner, () => {
@@ -24,7 +24,7 @@ watch(currentRunner, () => {
 
 registerOutput("protein-KillSwitch");
 onUnmounted(() => {
-  UnregisterOutput("protein-KillSwitch");
+  unregisterOutput("protein-KillSwitch");
 });
 
 let requestAnimationFrameId: number | null = null;

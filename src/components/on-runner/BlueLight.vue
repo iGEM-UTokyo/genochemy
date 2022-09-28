@@ -24,12 +24,12 @@ export default {
 import { computed, onUnmounted } from "vue";
 import { useStore } from "@/store";
 
-const { runnerOutputs, registerOutput, UnregisterOutput } = useStore();
+const { runnerOutputs, registerOutput, unregisterOutput } = useStore();
 
 const outputName = "blue-light";
 registerOutput(outputName);
 onUnmounted(() => {
-  UnregisterOutput(outputName);
+  unregisterOutput(outputName);
 });
 
 const light = computed(() => runnerOutputs[outputName] === 1);

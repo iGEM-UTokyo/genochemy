@@ -307,7 +307,7 @@ export const useStore = defineStore("main", () => {
     // Duplicate outputs are allowed (for the use of unregisteration when unmounted)
     registeredOutputs.push(variable);
   };
-  const UnregisterOutput = (variable: string) => {
+  const unregisterOutput = (variable: string) => {
     const index = registeredOutputs.indexOf(variable);
     if (index !== -1) {
       registeredOutputs.splice(index, 1);
@@ -318,7 +318,7 @@ export const useStore = defineStore("main", () => {
     // Duplicate inputs are allowed (for the use of unregisteration when unmounted)
     registeredInputs.push(variable);
   };
-  const UnregisterInput = (variable: string) => {
+  const unregisterInput = (variable: string) => {
     const index = registeredInputs.indexOf(variable);
     if (index !== -1) {
       registeredInputs.splice(index, 1);
@@ -459,9 +459,9 @@ export const useStore = defineStore("main", () => {
     proteins,
     time,
     registerOutput,
-    UnregisterOutput,
+    unregisterOutput,
     registerInput,
-    UnregisterInput,
+    unregisterInput,
     run,
     updateRunner,
     stop,

@@ -29,7 +29,7 @@ import BlueLightVue from "./on-runner/BlueLight.vue";
 import RedLightVue from "./on-runner/RedLight.vue";
 
 const store = useStore();
-const { registerOutput, UnregisterOutput } = store;
+const { registerOutput, unregisterOutput } = store;
 const { proteins, runnerOutputs, isRunning } = toRefs(store);
 
 const defaultStageSettings: Record<string, RunnerComponent> = {
@@ -94,7 +94,7 @@ watch(isRunning, () => {
 
 registerOutput("kill");
 onUnmounted(() => {
-  UnregisterOutput("kill");
+  unregisterOutput("kill");
 });
 
 const genomyImg = computed(() =>
