@@ -1,4 +1,10 @@
-html, body, #app {
+html,
+body,
+#app {
   margin: 0;
   height: 100%;
+}
+
+*::selection {
+  background-color: #b39ddb;
 }
