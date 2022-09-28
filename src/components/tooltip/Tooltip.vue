@@ -106,6 +106,7 @@ const pointerleave = () => {
   padding: 10px;
   box-sizing: border-box;
   overflow: auto;
+  z-index: 2;
 }
 .tooltip h2 {
   margin: 0 0 10px 0;
