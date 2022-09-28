@@ -97,15 +97,15 @@ const ja: Messages = {
         "活性化されたアクチベーターが結合すると下流の転写が促進されます。",
     },
     visiFluorescence: {
-      displayName: "<protein,蛍光タンパク質>",
+      displayName: "<protein,蛍光タンパク質>遺伝子",
       description: "蛍光を発するタンパク質です。",
     },
     ctrlRepressor: {
-      displayName: "<repressor,リプレッサー>",
+      displayName: "<repressor,リプレッサー>遺伝子",
       description: "プロモーターの転写を抑制します。",
     },
     ctrlActivator: {
-      displayName: "<activator,アクチベーター>",
+      displayName: "<activator,アクチベーター>遺伝子",
       description: "プロモーターの転写を促進します。",
     },
     term1: {
@@ -113,7 +113,7 @@ const ja: Messages = {
       description: "転写を終了します。これ以降のブロックは転写されません。",
     },
     metaRecomb: {
-      displayName: "<recombinase,リコンビナーゼ>",
+      displayName: "<recombinase,リコンビナーゼ>遺伝子",
       description: "対応する認識配列に挟まれた配列を切り出します。",
     },
     seqRecogRecomb: {
@@ -121,7 +121,7 @@ const ja: Messages = {
       description: "リコンビナーゼに認識される配列です。",
     },
     metaKill: {
-      displayName: "キルスイッチ",
+      displayName: "キルスイッチ遺伝子",
       description: "標的生物を死滅させます。",
     },
   },
