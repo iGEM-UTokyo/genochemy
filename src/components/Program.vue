@@ -34,7 +34,7 @@
     <div class="buttons">
       <img src="/logo.svg" />
       <div style="flex: 1" />
-      v0.6.1
+      v0.7.0
       <ChangeLocale />
       <ShareTwitter />
       <ShowVDNA />
