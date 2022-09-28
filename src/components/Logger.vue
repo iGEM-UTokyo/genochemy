@@ -73,5 +73,19 @@ watch(toRefs(props).target, (target, prevTarget) => {
 const chartOptions = ref<ChartOptions>({
   responsive: true,
   animation: false,
+  scales: {
+    x: {
+      title: {
+        display: true,
+        text: "Time",
+      },
+    },
+    y: {
+      title: {
+        display: true,
+        text: "Fluorescence",
+      },
+    },
+  },
 });
 </script>
