@@ -174,6 +174,8 @@ LabにあるGenomyのイラストを見ると蛍光タンパク質の発現量�
   view: {
     show: "表示する",
     hide: "隠す",
+    run: "実行",
+    stop: "", // スペース的に入らない
   },
   questions: {
     question: "問題",

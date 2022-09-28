@@ -3,9 +3,11 @@
     <tabs :tabs="tabItems" v-model="activeTab">
       <div class="tab-button" @click="run">
         <font-awesome-icon :icon="store.isRunning ? 'rotate-left' : 'play'" />
+        {{ !store.isRunning ? t("view.run") : "" }}
       </div>
       <div class="tab-button" @click="stop" v-if="store.isRunning">
         <font-awesome-icon icon="stop" />
+        {{ t("view.stop") }}
       </div>
     </tabs>
     <div class="tab">
@@ -28,7 +30,9 @@ import TabProtein from "@/components/TabProtein.vue";
 import TabQuestions from "@/components/TabQuestions.vue";
 import TabLoad from "@/components/TabLoad.vue";
 import { MessagesAddresses } from "@/messages";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const store = useStore();
 const { run, stop } = store;
 const activeTab = ref<MessagesAddresses>("tabs.tutorial");
