@@ -69,6 +69,8 @@ export interface Messages {
   view: {
     show: string;
     hide: string;
+    run: string;
+    stop: string;
   };
   questions: {
     question: string;

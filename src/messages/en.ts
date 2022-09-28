@@ -184,6 +184,8 @@ For some of the questions, you can view a model answer by clicking the 'Show Ans
   view: {
     show: "Show",
     hide: "Hide",
+    run: "Run",
+    stop: "Stop",
   },
   questions: {
     question: "Questions",
