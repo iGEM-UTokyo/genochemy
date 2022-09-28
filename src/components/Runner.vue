@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { RunnerComponent } from "@/utils/matter";
-import { computed, onUnmounted, toRefs } from "vue";
+import { computed, markRaw, onUnmounted, ref, toRefs, watch } from "vue";
 import { useStore } from "../store";
 import BlueLightSwitchVue from "./on-runner/BlueLightSwitch.vue";
 import RedLightSwitchVue from "./on-runner/RedLightSwitch.vue";
@@ -30,45 +30,66 @@ import RedLightVue from "./on-runner/RedLight.vue";
 
 const store = useStore();
 const { registerOutput, UnregisterOutput } = store;
-const { proteins, runnerOutputs } = toRefs(store);
+const { proteins, runnerOutputs, isRunning } = toRefs(store);
 
 const defaultStageSettings: Record<string, RunnerComponent> = {
-  [BlueLightVue.name]: BlueLightVue,
-  [RedLightVue.name]: RedLightVue,
+  [BlueLightVue.name]: markRaw(BlueLightVue),
+  [RedLightVue.name]: markRaw(RedLightVue),
 };
 const defaultGUIViews: Record<string, RunnerComponent> = {
-  [DrugAVue.name]: DrugAVue,
-  [BlueLightSwitchVue.name]: BlueLightSwitchVue,
-  [RedLightSwitchVue.name]: RedLightSwitchVue,
+  [DrugAVue.name]: markRaw(DrugAVue),
+  [BlueLightSwitchVue.name]: markRaw(BlueLightSwitchVue),
+  [RedLightSwitchVue.name]: markRaw(RedLightSwitchVue),
 };
 
-const stageSettings = computed(() => {
-  const _stageSettings: Record<string, RunnerComponent> = Object.assign(
-    {},
-    defaultStageSettings
-  );
-  for (const protein of proteins.value) {
-    for (const stageSetting of protein.stageSettings) {
-      if (!_stageSettings[stageSetting.name]) {
-        _stageSettings[stageSetting.name] = stageSetting;
-      }
-    }
-  }
-  return Object.values(_stageSettings);
+let accumulatedProteins: string[] = [];
+const stageSettings = ref<Record<string, RunnerComponent>>({
+  ...defaultStageSettings,
 });
-const guiViews = computed(() => {
-  const _guiViews: Record<string, RunnerComponent> = Object.assign(
-    {},
-    defaultGUIViews
-  );
+const guiViews = ref<Record<string, RunnerComponent>>({ ...defaultGUIViews });
+const reset = () => {
+  stageSettings.value = { ...defaultStageSettings };
+  guiViews.value = { ...defaultGUIViews };
+  accumulatedProteins = [];
   for (const protein of proteins.value) {
+    accumulatedProteins.push(protein.name);
+    for (const stageSetting of protein.stageSettings) {
+      if (!stageSettings.value[stageSetting.name]) {
+        stageSettings.value[stageSetting.name] = markRaw(stageSetting);
+      }
+    }
     for (const guiView of protein.guiViews) {
-      if (!_guiViews[guiView.name]) {
-        _guiViews[guiView.name] = guiView;
+      if (!guiViews.value[guiView.name]) {
+        guiViews.value[guiView.name] = markRaw(guiView);
       }
     }
   }
-  return Object.values(_guiViews);
+};
+watch(proteins, () => {
+  if (isRunning.value) {
+    for (const protein of proteins.value) {
+      if (!accumulatedProteins.includes(protein.name)) {
+        accumulatedProteins.push(protein.name);
+        for (const stageSetting of protein.stageSettings) {
+          if (!stageSettings.value[stageSetting.name]) {
+            stageSettings.value[stageSetting.name] = markRaw(stageSetting);
+          }
+        }
+        for (const guiView of protein.guiViews) {
+          if (!guiViews.value[guiView.name]) {
+            guiViews.value[guiView.name] = markRaw(guiView);
+          }
+        }
+      }
+    }
+  } else {
+    reset();
+  }
+});
+watch(isRunning, () => {
+  if (!isRunning.value) {
+    reset();
+  }
 });
 
 registerOutput("kill");
