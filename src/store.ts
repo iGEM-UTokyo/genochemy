@@ -347,12 +347,10 @@ export const useStore = defineStore("main", () => {
     for (const actor of actors) {
       actor.buildDE(matterEquations);
     }
-    console.log(matterEquations);
     currentRunner.value = new Runner(matterEquations, 0.1);
     time.value = 0;
     for (const output of registeredOutputs) {
       runnerOutputs.value[output] = currentRunner.value.variables[output] || 0;
-      runnerOutputDefaults[output] = currentRunner.value.variables[output] || 0;
     }
     for (const input of registeredInputs) {
       if (typeof runnerInputs.value[input] !== "undefined") {
@@ -377,7 +375,12 @@ export const useStore = defineStore("main", () => {
       }
       currentRunner.value.next();
       time.value = currentRunner.value.time;
-      for (const output of registeredOutputs) {
+      const existOutputs = Object.keys(runnerOutputs.value);
+      const outputs = [
+        ...existOutputs,
+        ...registeredOutputs.filter((output) => !existOutputs.includes(output)),
+      ];
+      for (const output of outputs) {
         runnerOutputs.value[output] =
           currentRunner.value.variables[output] || 0;
       }
@@ -407,7 +410,6 @@ export const useStore = defineStore("main", () => {
     for (const actor of actors) {
       actor.buildDE(matterEquations);
     }
-    console.log(matterEquations);
     currentRunner.value.updateEquations(matterEquations);
   };
   const stop = () => {
@@ -420,13 +422,12 @@ export const useStore = defineStore("main", () => {
       cancelAnimationFrame(animationFrame);
       animationFrame = null;
     }
-    for (const output of registeredOutputs) {
-      runnerOutputs.value[output] = runnerOutputDefaults[output] || 0;
+    for (const output of Object.keys(runnerOutputs.value)) {
+      runnerOutputs.value[output] = 0;
     }
     isRunning.value = false;
   };
   const runnerOutputs: Ref<Record<string, number>> = ref({});
-  const runnerOutputDefaults: Record<string, number> = {};
   const runnerInputs: Ref<Record<string, number>> = ref({});
   const updateRunnerInput = (input: string, value: number) => {
     runnerInputs.value[input] = value;
