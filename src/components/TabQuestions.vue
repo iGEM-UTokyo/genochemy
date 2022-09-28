@@ -82,6 +82,9 @@ function showAnswer() {
 </script>
 
 <style scoped>
+.tab-content {
+  user-select: text;
+}
 button {
   background-color: white;
   border: 1px solid #aaa;
