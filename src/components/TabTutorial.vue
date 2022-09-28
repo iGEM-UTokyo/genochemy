@@ -50,6 +50,9 @@ button {
   padding: 10px;
   border-radius: 10px;
 }
+.q-nav {
+  user-select: none;
+}
 .q-nav.disabled {
   color: #ddd;
 }
