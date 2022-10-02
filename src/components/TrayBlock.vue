@@ -14,7 +14,7 @@
     </tooltip>
     <svg
       :width="block.design.width"
-      :height="block.design.height + block.design.bottomAnchor"
+      :height="block.design.height + block.design.bottomAnchor + 1"
     >
       <g :transform="`translate(0, ${block.design.height})`">
         <BlockVue

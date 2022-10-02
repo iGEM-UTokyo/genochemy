@@ -2,7 +2,7 @@
   <div class="snake" :style="style">
     <svg
       :width="props.modelValue.width"
-      :height="props.modelValue.height + props.modelValue.bottomAnchor"
+      :height="props.modelValue.height + props.modelValue.bottomAnchor + 1"
     >
       <g :transform="`translate(0, ${props.modelValue.height})`">
         <Block
