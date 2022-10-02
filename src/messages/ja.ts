@@ -34,6 +34,10 @@ const ja: Messages = {
       description:
         "薬剤Aと結合すると活性化し、リプレッサーA結合プロモーター下流の転写を阻害します。",
     },
+    ctrlRepressorAbound: {
+      name: "活性リプレッサーA",
+      description: "薬剤Aと結合し活性化したリプレッサーAです。",
+    },
     ctrlEL222: {
       name: "青センサー",
       description: "青色光によって二量体を形成します。",

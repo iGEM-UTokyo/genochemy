@@ -15,12 +15,17 @@ import { v4 as uuidv4 } from "uuid";
 import {
   Actor,
   Degrader,
+  Edge,
   MatterEquations,
   OperonMessengerRNA,
+  PhyB,
+  PhyBPIF3,
+  PIF3,
   PromoterActor,
   Protein,
 } from "./utils/matter";
 import Runner, { factoryEmptyFunction } from "./utils/runner";
+import createActorNetwork, { buildDE } from "./utils/actor-network";
 
 function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
   block.uuid = uuid;
@@ -334,19 +339,12 @@ export const useStore = defineStore("main", () => {
     for (const snake of Object.values(snakes.value)) {
       beforePlaySnakes.value[snake.uuid] = Snake.copy(snake);
     }
-    const actors: Actor[] = [];
-    for (const mRNA of operonMessengerRNAs.value) {
-      for (const promoter of mRNA.promoters) {
-        actors.push(new PromoterActor(promoter, mRNA));
-      }
-      actors.push(mRNA);
-    }
-    actors.push(...proteins.value);
-    actors.push(new Degrader());
-    const matterEquations: MatterEquations = {};
-    for (const actor of actors) {
-      actor.buildDE(matterEquations);
-    }
+    const actorNetwork = createActorNetwork(
+      operonMessengerRNAs.value,
+      proteins.value
+    );
+    const matterEquations = buildDE(actorNetwork);
+    console.log(matterEquations);
     currentRunner.value = new Runner(matterEquations, 0.1);
     time.value = 0;
     for (const output of registeredOutputs) {
@@ -394,21 +392,15 @@ export const useStore = defineStore("main", () => {
       run();
       return;
     }
-    const actors: Actor[] = [];
-    for (const mRNA of operonMessengerRNAs.value) {
-      for (const promoter of mRNA.promoters) {
-        actors.push(new PromoterActor(promoter, mRNA));
-      }
-      actors.push(mRNA);
-    }
-    actors.push(...proteins.value);
-    actors.push(new Degrader());
-    const matterEquations: MatterEquations = {};
+    const actorNetwork = createActorNetwork(
+      operonMessengerRNAs.value,
+      proteins.value
+    );
+    const matterEquations = buildDE(actorNetwork);
     for (const existMatterName of currentRunner.value.matterNames) {
-      matterEquations[existMatterName] = [];
-    }
-    for (const actor of actors) {
-      actor.buildDE(matterEquations);
+      if (!matterEquations[existMatterName]) {
+        matterEquations[existMatterName] = [];
+      }
     }
     currentRunner.value.updateEquations(matterEquations);
   };

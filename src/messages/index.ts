@@ -12,6 +12,7 @@ export interface Messages {
     visiMCherry: MatterMessages;
     visiGFP: MatterMessages;
     ctrlRepressorA: MatterMessages;
+    ctrlRepressorAbound: MatterMessages;
     ctrlEL222: MatterMessages;
     ctrlPhyB: MatterMessages;
     ctrlPIF3: MatterMessages;

@@ -34,6 +34,10 @@ const en: Messages = {
       description:
         "Inhibits transcription of the downstream gene of repressor A-binding promoter when activated, bound to drug A.",
     },
+    ctrlRepressorAbound: {
+      name: "Activated Repressor A",
+      description: "Repressor A activated by bounding to Drug A.",
+    },
     ctrlEL222: {
       name: "Blue-light-sensor",
       description: "Dimers are formed when blue light is shone.",

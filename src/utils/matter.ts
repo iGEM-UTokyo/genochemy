@@ -21,6 +21,19 @@ export interface Actor {
   buildDE(matterEquations: MatterEquations): void;
 }
 
+export type DirectedEdge = {
+  from: Actor;
+  to: Actor;
+} & {
+  type: "degrate";
+};
+export type UndirectedEdge = {
+  points: [Actor, Actor];
+} & {
+  type: "diarectic";
+  aufheben: Actor;
+};
+export type Edge = DirectedEdge | UndirectedEdge;
 export abstract class Promoter {
   abstract buildDEForMessengerRNA(): Term[];
   name: MessagesAddresses | "" = "";
@@ -49,7 +62,7 @@ export class DrugRepressiblePromoter extends Promoter {
         type: "hillrev",
         deg: { type: "const", value: 1 },
         const: { type: "const", value: 0.1 },
-        value: { type: "variable", name: "protein-Repressor-bound" },
+        value: { type: "variable", name: "protein-RepressorA-bound" },
       },
     ];
   }
@@ -68,7 +81,7 @@ export class EL222ActivatedPromoter extends Promoter {
         type: "hill",
         deg: { type: "const", value: 1 },
         const: { type: "const", value: 1 },
-        value: { type: "variable", name: "protein-dimerized-EL222" },
+        value: { type: "variable", name: "protein-EL222dim" },
       },
     ];
   }
@@ -87,7 +100,7 @@ export class PhyBPIF3ActivatedPromoter extends Promoter {
         type: "hill",
         deg: { type: "const", value: 1 },
         const: { type: "const", value: 1 },
-        value: { type: "variable", name: "protein-PhyB-PIF3" },
+        value: { type: "variable", name: "protein-PhyBPIF3" },
       },
     ];
   }
@@ -195,62 +208,78 @@ export class RepressorA extends Protein {
     if (!matterEquations[this.name]) {
       matterEquations[this.name] = [];
     }
-    matterEquations[this.name].push(
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: -2 },
-          {
-            type: "multiply",
-            values: [
-              { type: "variable", name: this.name },
-              { type: "variable", name: "drug" },
-            ],
-          },
-        ],
-      },
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: 0.1 },
-          {
-            type: "variable",
-            name: "protein-Repressor-bound",
-          },
-        ],
-      }
-    );
-    if (!matterEquations["protein-Repressor-bound"]) {
-      matterEquations["protein-Repressor-bound"] = [];
+    if (!matterEquations["protein-RepressorA-bound"]) {
+      matterEquations["protein-RepressorA-bound"] = [];
     }
-    matterEquations["protein-Repressor-bound"].push(
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: 2 },
-          {
-            type: "multiply",
-            values: [
-              { type: "variable", name: this.name },
-              { type: "variable", name: "drug" },
-            ],
-          },
-        ],
-      },
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: -0.1 },
-          {
-            type: "variable",
-            name: "protein-Repressor-bound",
-          },
-        ],
-      }
-    );
     if (!matterEquations["drug"]) {
       matterEquations["drug"] = [];
     }
+    matterEquations["protein-RepressorA"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: -2 },
+        {
+          type: "multiply",
+          values: [
+            { type: "variable", name: "protein-RepressorA" },
+            { type: "variable", name: "drug" },
+          ],
+        },
+      ],
+    });
+    matterEquations["protein-RepressorA-bound"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: 2 },
+        {
+          type: "multiply",
+          values: [
+            { type: "variable", name: "protein-RepressorA" },
+            { type: "variable", name: "drug" },
+          ],
+        },
+      ],
+    });
+  }
+}
+
+export class RepressorABound extends Protein {
+  guiViews = [DrugA];
+  displayName = "matter.ctrlRepressorAbound.name" as const;
+  description = "matter.ctrlRepressorAbound.description" as const;
+  constructor() {
+    super("RepressorA-bound");
+  }
+  buildDE(matterEquations: MatterEquations) {
+    if (!matterEquations[this.name]) {
+      matterEquations[this.name] = [];
+    }
+    if (!matterEquations["protein-RepressorA"]) {
+      matterEquations["protein-RepressorA"] = [];
+    }
+    if (!matterEquations["drug"]) {
+      matterEquations["drug"] = [];
+    }
+    matterEquations["protein-RepressorA"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: 0.1 },
+        {
+          type: "variable",
+          name: "protein-RepressorA-bound",
+        },
+      ],
+    });
+    matterEquations["protein-RepressorA-bound"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: -0.1 },
+        {
+          type: "variable",
+          name: "protein-RepressorA-bound",
+        },
+      ],
+    });
   }
 }
 
@@ -263,77 +292,94 @@ export class EL222 extends Protein {
     super("EL222");
   }
   buildDE(matterEquations: MatterEquations) {
-    if (!matterEquations[this.name]) {
-      matterEquations[this.name] = [];
+    if (!matterEquations["protein-EL222"]) {
+      matterEquations["protein-EL222"] = [];
     }
-    matterEquations[this.name].push(
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: -1 },
-          {
-            type: "multiply",
-            values: [
-              { type: "variable", name: "blue-light" },
-              {
-                type: "multiply",
-                values: [
-                  { type: "variable", name: this.name },
-                  { type: "variable", name: this.name },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: 0.5 },
-          {
-            type: "variable",
-            name: "protein-dimerized-EL222",
-          },
-        ],
-      }
-    );
-    if (!matterEquations["protein-dimerized-EL222"]) {
-      matterEquations["protein-dimerized-EL222"] = [];
+    if (!matterEquations["protein-EL222dim"]) {
+      matterEquations["protein-EL222dim"] = [];
     }
-    matterEquations["protein-dimerized-EL222"].push(
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: 1 },
-          {
-            type: "multiply",
-            values: [
-              { type: "variable", name: "blue-light" },
-              {
-                type: "multiply",
-                values: [
-                  { type: "variable", name: this.name },
-                  { type: "variable", name: this.name },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: -0.5 },
-          {
-            type: "variable",
-            name: "protein-dimerized-EL222",
-          },
-        ],
-      }
-    );
     if (!matterEquations["blue-light"]) {
       matterEquations["blue-light"] = [];
     }
+    matterEquations["protein-EL222"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: -1 },
+        {
+          type: "multiply",
+          values: [
+            { type: "variable", name: "blue-light" },
+            {
+              type: "multiply",
+              values: [
+                { type: "variable", name: "protein-EL222" },
+                { type: "variable", name: "protein-EL222" },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    matterEquations["protein-EL222dim"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: 1 },
+        {
+          type: "multiply",
+          values: [
+            { type: "variable", name: "blue-light" },
+            {
+              type: "multiply",
+              values: [
+                { type: "variable", name: "protein-EL222" },
+                { type: "variable", name: "protein-EL222" },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  }
+}
+
+export class EL222dim extends Protein {
+  stageSettings = [BlueLight];
+  guiViews = [BlueLightSwitch];
+  displayName = "matter.ctrlEL222dim.name" as const;
+  description = "matter.ctrlEL222dim.description" as const;
+  constructor() {
+    super("EL222dim");
+  }
+  buildDE(matterEquations: MatterEquations) {
+    if (!matterEquations["protein-EL222"]) {
+      matterEquations["protein-EL222"] = [];
+    }
+    if (!matterEquations["protein-EL222dim"]) {
+      matterEquations["protein-EL222dim"] = [];
+    }
+    if (!matterEquations["blue-light"]) {
+      matterEquations["blue-light"] = [];
+    }
+    matterEquations["protein-EL222"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: 0.5 },
+        {
+          type: "variable",
+          name: "protein-EL222dim",
+        },
+      ],
+    });
+    matterEquations["protein-EL222dim"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: -0.5 },
+        {
+          type: "variable",
+          name: "protein-EL222dim",
+        },
+      ],
+    });
   }
 }
 
@@ -345,79 +391,8 @@ export class PhyB extends Protein {
   constructor() {
     super("PhyB");
   }
-  buildDE(matterEquations: MatterEquations) {
-    if (!matterEquations[this.name]) {
-      matterEquations[this.name] = [];
-    }
-    matterEquations[this.name].push(
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: -1 },
-          {
-            type: "multiply",
-            values: [
-              { type: "variable", name: "red-light" },
-              {
-                type: "multiply",
-                values: [
-                  { type: "variable", name: this.name },
-                  { type: "variable", name: "protein-PIF3" },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: 0.5 },
-          {
-            type: "variable",
-            name: "protein-PhyB-PIF3",
-          },
-        ],
-      }
-    );
-    if (!matterEquations["protein-PhyB-PIF3"]) {
-      matterEquations["protein-PhyB-PIF3"] = [];
-    }
-    matterEquations["protein-PhyB-PIF3"].push(
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: 1 },
-          {
-            type: "multiply",
-            values: [
-              { type: "variable", name: "red-light" },
-              {
-                type: "multiply",
-                values: [
-                  { type: "variable", name: this.name },
-                  { type: "variable", name: "protein-PIF3" },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: -0.5 },
-          {
-            type: "variable",
-            name: "protein-PhyB-PIF3",
-          },
-        ],
-      }
-    );
-    if (!matterEquations["red-light"]) {
-      matterEquations["red-light"] = [];
-    }
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  buildDE(matterEquations: MatterEquations) {}
 }
 
 export class PIF3 extends Protein {
@@ -428,47 +403,61 @@ export class PIF3 extends Protein {
   constructor() {
     super("PIF3");
   }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  buildDE(matterEquations: MatterEquations) {}
+}
+
+export class PhyBPIF3 extends Protein {
+  stageSettings = [RedLight];
+  guiViews = [RedLightSwitch];
+  displayName = "matter.ctrlPhyBPIF3.name" as const;
+  description = "matter.ctrlPhyBPIF3.description" as const;
+  constructor() {
+    super("PhyBPIF3");
+  }
   buildDE(matterEquations: MatterEquations) {
-    if (!matterEquations[this.name]) {
-      matterEquations[this.name] = [];
+    if (!matterEquations["protein-PhyB"]) {
+      matterEquations["protein-PhyB"] = [];
     }
-    matterEquations[this.name].push(
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: -1 },
-          {
-            type: "multiply",
-            values: [
-              { type: "variable", name: "red-light" },
-              {
-                type: "multiply",
-                values: [
-                  { type: "variable", name: "protein-PhyB" },
-                  { type: "variable", name: this.name },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        type: "multiply",
-        values: [
-          { type: "const", value: 0.5 },
-          {
-            type: "variable",
-            name: "protein-PhyB-PIF3",
-          },
-        ],
-      }
-    );
-    if (!matterEquations["protein-PhyB-PIF3"]) {
-      matterEquations["protein-PhyB-PIF3"] = [];
+    if (!matterEquations["protein-PIF3"]) {
+      matterEquations["protein-PIF3"] = [];
+    }
+    if (!matterEquations["protein-PhyBPIF3"]) {
+      matterEquations["protein-PhyBPIF3"] = [];
     }
     if (!matterEquations["red-light"]) {
       matterEquations["red-light"] = [];
     }
+    matterEquations["protein-PhyB"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: 0.5 },
+        {
+          type: "variable",
+          name: "protein-PhyBPIF3",
+        },
+      ],
+    });
+    matterEquations["protein-PIF3"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: 0.5 },
+        {
+          type: "variable",
+          name: "protein-PhyBPIF3",
+        },
+      ],
+    });
+    matterEquations["protein-PhyBPIF3"].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: -0.5 },
+        {
+          type: "variable",
+          name: "protein-PhyBPIF3",
+        },
+      ],
+    });
   }
 }
 
@@ -500,18 +489,22 @@ export class KillSwitch extends Protein {
 }
 
 export class Degrader implements Actor {
-  buildDE(matterEquations: MatterEquations): void {
-    for (const matterName of Object.keys(matterEquations)) {
-      if (matterName.startsWith("protein-") || matterName.startsWith("mRNA-")) {
-        matterEquations[matterName].push({
-          type: "multiply",
-          values: [
-            { type: "const", value: -1 },
-            { type: "variable", name: matterName },
-          ],
-        });
-      }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  buildDE(matterEquations: MatterEquations): void {}
+  buildDETo(matterEquations: MatterEquations, to: Actor) {
+    if (!(to instanceof Protein) && !(to instanceof OperonMessengerRNA)) {
+      throw new Error("Cannot degrade");
     }
+    if (!matterEquations[to.name]) {
+      matterEquations[to.name] = [];
+    }
+    matterEquations[to.name].push({
+      type: "multiply",
+      values: [
+        { type: "const", value: -1 },
+        { type: "variable", name: to.name },
+      ],
+    });
   }
 }
 
