@@ -54,7 +54,10 @@ const questionNumber = ref(0);
 const currentQuestion = computed(() => questions[questionNumber.value]);
 const imageNumber = ref(0);
 const currentImage = computed(
-  () => `/questions/${currentQuestion.value.imgs[imageNumber.value]}`
+  () =>
+    `https://static.igem.wiki/teams/4238/wiki/genochemy/questions/${
+      currentQuestion.value.imgs[imageNumber.value]
+    }`
 );
 function increment() {
   if (questionNumber.value >= questions.length - 1) return;

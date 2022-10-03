@@ -37,7 +37,7 @@ type Assertion =
 const questions: Question[] = [
   {
     name: "questions.1",
-    imgs: ["Question1.png"],
+    imgs: ["question1.png"],
     answer: [
       {
         blocks: ["prom-const-1", "visi-GFP", "term-1"],
@@ -58,7 +58,7 @@ const questions: Question[] = [
   },
   {
     name: "questions.2",
-    imgs: ["Question2.png"],
+    imgs: ["question2.png"],
     answer: [
       {
         blocks: ["prom-const-1", "ctrl-EL222", "term-1"],
@@ -70,7 +70,7 @@ const questions: Question[] = [
   },
   {
     name: "questions.3",
-    imgs: ["Question2.5.png"],
+    imgs: ["question2.5.png"],
     answer: [
       {
         blocks: ["prom-const-1", "ctrl-PhyB", "ctrl-PIF3", "term-1"],
@@ -82,7 +82,7 @@ const questions: Question[] = [
   },
   {
     name: "questions.4",
-    imgs: ["Question3.png"],
+    imgs: ["question3.png"],
     answer: [
       {
         blocks: ["prom-const-1", "ctrl-RepressorA", "term-1"],
@@ -94,11 +94,11 @@ const questions: Question[] = [
   },
   {
     name: "questions.5",
-    imgs: ["Question4-1.png", "Question4-2.png"],
+    imgs: ["question4-1.png", "question4-2.png"],
   },
   {
     name: "questions.6",
-    imgs: ["Question5.png"],
+    imgs: ["question5.png"],
     answer: [
       {
         blocks: [
@@ -114,15 +114,15 @@ const questions: Question[] = [
   },
   {
     name: "questions.7",
-    imgs: ["Question6.png"],
+    imgs: ["question6.png"],
   },
   {
     name: "questions.8",
-    imgs: ["Question6.5.png"],
+    imgs: ["question6.5.png"],
   },
   {
     name: "questions.9",
-    imgs: ["Question7.png"],
+    imgs: ["question7.png"],
     answer: [
       {
         blocks: [
