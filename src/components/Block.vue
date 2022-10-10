@@ -66,7 +66,7 @@ const props = defineProps<{
   showTooltip?: boolean;
 }>();
 const blockElem: Ref<HTMLElement | null> = ref(null);
-const src = computed(() => props.block.design.imageSrc);
+const src = computed(() => `/utokyo/genochemy${props.block.design.imageSrc}`);
 const displayName = computed(() => props.block.design.displayName);
 const _y = computed(
   () => -props.block.design.height + props.y + props.block.design.bottomAnchor

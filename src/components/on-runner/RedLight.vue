@@ -2,13 +2,13 @@
   <img
     class="light"
     width="70"
-    src="/runner/light-off.svg"
+    src="/utokyo/genochemy/runner/light-off.svg"
     :class="{ active: !light }"
   />
   <img
     class="light"
     width="70"
-    src="/runner/light-on-red.svg"
+    src="/utokyo/genochemy/runner/light-on-red.svg"
     :class="{ active: light }"
   />
 </template>

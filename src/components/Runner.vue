@@ -99,8 +99,8 @@ onUnmounted(() => {
 
 const genomyImg = computed(() =>
   runnerOutputs.value["kill"] === 1
-    ? "/runner/killed-bacterium.svg"
-    : "/runner/bacterium.svg"
+    ? "/utokyo/genochemy/runner/killed-bacterium.svg"
+    : "/utokyo/genochemy/runner/bacterium.svg"
 );
 </script>
 

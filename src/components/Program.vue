@@ -32,7 +32,7 @@
     <!-- <CursorMode v-model="cursorMode" /> -->
     <div class="running" v-if="isRunning" />
     <div class="buttons">
-      <img src="/logo.svg" />
+      <img src="/utokyo/genochemy/logo.svg" />
       <div style="flex: 1" />
       v0.7.1
       <ChangeLocale />
