@@ -70,7 +70,7 @@ const questions: Question[] = [
   },
   {
     name: "questions.3",
-    imgs: ["question2.5.png"],
+    imgs: ["question2-5.png"],
     answer: [
       {
         blocks: ["prom-const-1", "ctrl-PhyB", "ctrl-PIF3", "term-1"],
@@ -95,6 +95,17 @@ const questions: Question[] = [
   {
     name: "questions.5",
     imgs: ["question4-1.png", "question4-2.png"],
+    answer: [
+      {
+        blocks: ["prom-const-1", "ctrl-EL222", "term-1"],
+      },
+      {
+        blocks: ["prom-activ-EL222dim", "ctrl-RepressorA", "term-1"],
+      },
+      {
+        blocks: ["prom-repr-RepressorADrugA", "visi-mCherry", "term-1"],
+      },
+    ],
   },
   {
     name: "questions.6",
@@ -115,10 +126,44 @@ const questions: Question[] = [
   {
     name: "questions.7",
     imgs: ["question6.png"],
+    answer: [
+      {
+        blocks: [
+          "prom-const-1",
+          "ctrl-EL222",
+          "seq-recog-recomb1",
+          "term-1",
+          "seq-recog-recomb1",
+          "visi-GFP",
+          "term-1",
+        ],
+      },
+      {
+        blocks: ["prom-activ-EL222dim", "meta-recomb1", "term-1"],
+      },
+    ],
   },
   {
     name: "questions.8",
-    imgs: ["question6.5.png"],
+    imgs: ["question6-5.png"],
+    answer: [
+      {
+        blocks: [
+          "prom-const-1",
+          "ctrl-PhyB",
+          "ctrl-PIF3",
+          "seq-recog-recomb1",
+          "visi-GFP",
+          "term-1",
+          "seq-recog-recomb1",
+          "visi-mCherry",
+          "term-1",
+        ],
+      },
+      {
+        blocks: ["prom-activ-PhyBPIF3", "meta-recomb1", "term-1"],
+      },
+    ],
   },
   {
     name: "questions.9",
