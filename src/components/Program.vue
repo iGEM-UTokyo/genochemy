@@ -34,7 +34,7 @@
     <div class="buttons">
       <img src="/utokyo/genochemy/logo.svg" />
       <div style="flex: 1" />
-      v0.7.1
+      v0.7.2 (wiki ver)
       <ChangeLocale />
       <ShareTwitter />
       <ShowVDNA />
