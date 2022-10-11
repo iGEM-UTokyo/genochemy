@@ -113,7 +113,8 @@ export function createActorsByDiarectic(
 export type ActorNetwork = { actors: Actor[]; edges: Edge[] };
 export default function createActorNetwork(
   operonMessengerRNAs: OperonMessengerRNA[],
-  proteins: Protein[]
+  proteins: Protein[],
+  previousActorNetwork?: ActorNetwork | null
 ): ActorNetwork {
   let actors: Actor[] = [];
   let edges: Edge[] = [];
@@ -124,6 +125,26 @@ export default function createActorNetwork(
     actors.push(mRNA);
   }
   actors.push(...proteins);
+  if (previousActorNetwork) {
+    for (const actor of previousActorNetwork.actors) {
+      if (actor instanceof OperonMessengerRNA) {
+        if (
+          !actors.some(
+            (a) => a instanceof OperonMessengerRNA && actor.name === a.name
+          )
+        ) {
+          actor.promoters = [];
+          actors.push(actor);
+        }
+      } else if (actor instanceof Protein) {
+        if (
+          !actors.some((a) => a instanceof Protein && actor.name === a.name)
+        ) {
+          actors.push(actor);
+        }
+      }
+    }
+  }
   actors.push(new Degrader());
   let previousActorsLength = actors.length;
   edges = createEdges(actors, edges);
@@ -136,6 +157,7 @@ export default function createActorNetwork(
   return { actors, edges };
 }
 export function buildDE(actorNetwork: ActorNetwork) {
+  console.log(actorNetwork);
   const { actors, edges } = actorNetwork;
   const matterEquations: MatterEquations = {};
   for (const actor of actors) {

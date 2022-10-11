@@ -12,20 +12,12 @@ import {
 } from "./utils/block";
 import { Snake } from "./utils/snake";
 import { v4 as uuidv4 } from "uuid";
-import {
-  Actor,
-  Degrader,
-  Edge,
-  MatterEquations,
-  OperonMessengerRNA,
-  PhyB,
-  PhyBPIF3,
-  PIF3,
-  PromoterActor,
-  Protein,
-} from "./utils/matter";
+import { OperonMessengerRNA, Protein } from "./utils/matter";
 import Runner, { factoryEmptyFunction } from "./utils/runner";
-import createActorNetwork, { buildDE } from "./utils/actor-network";
+import createActorNetwork, {
+  ActorNetwork,
+  buildDE,
+} from "./utils/actor-network";
 
 function setUUID(block: Block, uuid: string): asserts block is BlockWithUUID {
   block.uuid = uuid;
@@ -36,6 +28,7 @@ export const useStore = defineStore("main", () => {
   const beforePlaySnakes = ref<Snakes>({});
   const currentRunner = ref<Runner | null>(null);
   const draggingSnake = ref<Snake | null>(null);
+  let currentActorNetwork: ActorNetwork | null = null;
   const addTempBlock = (block: Block, anchorTail: Vector2) => {
     setUUID(block, uuidv4());
     const snakeUUID = uuidv4();
@@ -343,6 +336,7 @@ export const useStore = defineStore("main", () => {
       operonMessengerRNAs.value,
       proteins.value
     );
+    currentActorNetwork = actorNetwork;
     const matterEquations = buildDE(actorNetwork);
     console.log(matterEquations);
     currentRunner.value = new Runner(matterEquations, 0.1);
@@ -394,9 +388,12 @@ export const useStore = defineStore("main", () => {
     }
     const actorNetwork = createActorNetwork(
       operonMessengerRNAs.value,
-      proteins.value
+      proteins.value,
+      currentActorNetwork ?? null
     );
+    currentActorNetwork = actorNetwork;
     const matterEquations = buildDE(actorNetwork);
+    console.log(matterEquations);
     for (const existMatterName of currentRunner.value.matterNames) {
       if (!matterEquations[existMatterName]) {
         matterEquations[existMatterName] = [];
