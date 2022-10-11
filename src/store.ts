@@ -403,6 +403,7 @@ export const useStore = defineStore("main", () => {
   };
   const stop = () => {
     snakes.value = {};
+    currentActorNetwork = null;
     for (const snake of Object.values(beforePlaySnakes.value)) {
       snakes.value[snake.uuid] = snake;
     }

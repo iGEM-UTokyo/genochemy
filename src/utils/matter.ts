@@ -19,6 +19,7 @@ export type MatterEquations = {
 };
 export interface Actor {
   buildDE(matterEquations: MatterEquations): void;
+  name: string;
 }
 
 export type DirectedEdge = {
@@ -123,6 +124,9 @@ export class PromoterActor implements Actor {
     matterEquations[this.mRNA.name].push(
       ...this.promoter.buildDEForMessengerRNA()
     );
+  }
+  get name() {
+    return this.promoter.name;
   }
 }
 
@@ -505,6 +509,9 @@ export class Degrader implements Actor {
         { type: "variable", name: to.name },
       ],
     });
+  }
+  get name() {
+    return "degrader";
   }
 }
 

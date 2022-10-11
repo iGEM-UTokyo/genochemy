@@ -103,7 +103,11 @@ export function createActorsByDiarectic(
 ): Actor[] {
   const newActors = [...actors];
   for (const edge of edges) {
-    if (edge.type === "diarectic" && !newActors.includes(edge.aufheben)) {
+    if (
+      edge.type === "diarectic" &&
+      !newActors.includes(edge.aufheben) &&
+      !actors.some((a) => a.name === edge.aufheben.name)
+    ) {
       newActors.push(edge.aufheben);
     }
   }
